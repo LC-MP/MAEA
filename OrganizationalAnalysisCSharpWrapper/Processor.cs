@@ -10,12 +10,11 @@ namespace OrganizationalAnalysis
         private static extern IntPtr insert_or_assign_agent(
             [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
             [MarshalAs(UnmanagedType.LPStr)] string agent,
-            [MarshalAs(UnmanagedType.LPStr)] string group,
             [MarshalAs(UnmanagedType.LPStr)] string role);
 
-        public void InsertOrAssignAgent(string agent, string group, string role)
+        public void InsertOrAssignAgent(string agent, string role)
         {
-            string? message = Marshal.PtrToStringAnsi(Processor.insert_or_assign_agent(this.processorObjectAddress, agent, group, role));
+            string? message = Marshal.PtrToStringAnsi(Processor.insert_or_assign_agent(this.processorObjectAddress, agent, role));
 
             if (message != null)
             {
@@ -39,15 +38,46 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern IntPtr insert_agent_group(
+            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+            [MarshalAs(UnmanagedType.LPStr)] string agent,
+            [MarshalAs(UnmanagedType.LPStr)] string group);
+
+        public void InsertAgentGroup(string agent, string group)
+        {
+            string? message = Marshal.PtrToStringAnsi(Processor.insert_agent_group(this.processorObjectAddress, agent, group));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern IntPtr erase_agent_group(
+            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+            [MarshalAs(UnmanagedType.LPStr)] string agent,
+            [MarshalAs(UnmanagedType.LPStr)] string group);
+
+        public void EraseAgentGroup(string agent, string group)
+        {
+            string? message = Marshal.PtrToStringAnsi(Processor.erase_agent_group(this.processorObjectAddress, agent, group));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
         private static extern IntPtr insert_or_edit_activity(
             [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
             [MarshalAs(UnmanagedType.LPStr)] string activity,
-            [MarshalAs(UnmanagedType.LPStr)] string name,
-            [MarshalAs(UnmanagedType.LPStr)] string group);
+            [MarshalAs(UnmanagedType.LPStr)] string name);
 
-        public void InsertOrEditActivity(string activity, string name, string group)
+        public void InsertOrEditActivity(string activity, string name)
         {
-            string? message = Marshal.PtrToStringAnsi(Processor.insert_or_edit_activity(this.processorObjectAddress, activity, name, group));
+            string? message = Marshal.PtrToStringAnsi(Processor.insert_or_edit_activity(this.processorObjectAddress, activity, name));
 
             if (message != null)
             {
@@ -63,6 +93,38 @@ namespace OrganizationalAnalysis
         public void EraseActivity(string activity)
         {
             string? message = Marshal.PtrToStringAnsi(Processor.erase_activity(this.processorObjectAddress, activity));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern IntPtr insert_activity_group(
+            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+            [MarshalAs(UnmanagedType.LPStr)] string activity,
+            [MarshalAs(UnmanagedType.LPStr)] string group);
+
+        public void InsertActivityGroup(string activity, string group)
+        {
+            string? message = Marshal.PtrToStringAnsi(Processor.insert_activity_group(this.processorObjectAddress, activity, group));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern IntPtr erase_activity_group(
+            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+            [MarshalAs(UnmanagedType.LPStr)] string activity,
+            [MarshalAs(UnmanagedType.LPStr)] string group);
+
+        public void EraseActivityGroup(string activity, string group)
+        {
+            string? message = Marshal.PtrToStringAnsi(Processor.erase_activity_group(this.processorObjectAddress, activity, group));
 
             if (message != null)
             {
@@ -138,12 +200,11 @@ namespace OrganizationalAnalysis
         private static extern IntPtr insert_or_edit_component(
            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string component,
-           [MarshalAs(UnmanagedType.LPStr)] string name,
-           [MarshalAs(UnmanagedType.LPStr)] string group);
+           [MarshalAs(UnmanagedType.LPStr)] string name);
 
-        public void InsertOrEditComponent(string component, string name, string group)
+        public void InsertOrEditComponent(string component, string name)
         {
-            string? message = Marshal.PtrToStringAnsi(Processor.insert_or_edit_component(this.processorObjectAddress, component, name, group));
+            string? message = Marshal.PtrToStringAnsi(Processor.insert_or_edit_component(this.processorObjectAddress, component, name));
 
             if (message != null)
             {
@@ -159,6 +220,38 @@ namespace OrganizationalAnalysis
         public void EraseComponent(string component)
         {
             string? message = Marshal.PtrToStringAnsi(Processor.erase_component(this.processorObjectAddress, component));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern IntPtr insert_component_group(
+            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+            [MarshalAs(UnmanagedType.LPStr)] string component,
+            [MarshalAs(UnmanagedType.LPStr)] string group);
+
+        public void InsertComponentGroup(string component, string group)
+        {
+            string? message = Marshal.PtrToStringAnsi(Processor.insert_component_group(this.processorObjectAddress, component, group));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern IntPtr erase_component_group(
+            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+            [MarshalAs(UnmanagedType.LPStr)] string component,
+            [MarshalAs(UnmanagedType.LPStr)] string group);
+
+        public void EraseComponentGroup(string component, string group)
+        {
+            string? message = Marshal.PtrToStringAnsi(Processor.erase_component_group(this.processorObjectAddress, component, group));
 
             if (message != null)
             {

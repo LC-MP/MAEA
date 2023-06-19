@@ -28,7 +28,6 @@ extern "C"
 	_declspec(dllexport) const char *insert_or_assign_agent(
 		const uintptr_t address,
 		const char *agent,
-		const char *group,
 		const char *role)
 	{
 		auto processor =
@@ -36,7 +35,7 @@ extern "C"
 
 		try
 		{
-			processor->insert_or_assign_agent(agent, group, role);
+			processor->insert_or_assign_agent(agent, role);
 		}
 		catch (const std::exception &exception)
 		{
@@ -73,10 +72,9 @@ extern "C"
 		return nullptr;
 	}
 
-	_declspec(dllexport) const char *insert_or_edit_activity(
-		uintptr_t address,
-		const char *activity,
-		const char *name,
+	_declspec(dllexport) const char *insert_agent_group(
+		const uintptr_t address,
+		const char *agent,
 		const char *group)
 	{
 		auto processor =
@@ -84,7 +82,55 @@ extern "C"
 
 		try
 		{
-			processor->insert_or_edit_activity(activity, name, group);
+			processor->insert_agent_group(agent, group);
+		}
+		catch (const std::exception &exception)
+		{
+			static std::string message;
+
+			message = exception.what();
+
+			return message.c_str();
+		}
+
+		return nullptr;
+	}
+
+	_declspec(dllexport) const char *erase_agent_group(
+		uintptr_t address,
+		const char *agent,
+		const char *group)
+	{
+		auto processor =
+			reinterpret_cast < xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
+
+		try
+		{
+			processor->erase_agent_group(agent, group);
+		}
+		catch (const std::exception &exception)
+		{
+			static std::string message;
+
+			message = exception.what();
+
+			return message.c_str();
+		}
+
+		return nullptr;
+	}
+
+	_declspec(dllexport) const char *insert_or_edit_activity(
+		uintptr_t address,
+		const char *activity,
+		const char *name)
+	{
+		auto processor =
+			reinterpret_cast < xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
+
+		try
+		{
+			processor->insert_or_edit_activity(activity, name);
 		}
 		catch (const std::exception &exception)
 		{
@@ -108,6 +154,54 @@ extern "C"
 		try
 		{
 			processor->erase_activity(activity);
+		}
+		catch (const std::exception &exception)
+		{
+			static std::string message;
+
+			message = exception.what();
+
+			return message.c_str();
+		}
+
+		return nullptr;
+	}
+
+	_declspec(dllexport) const char *insert_activity_group(
+		const uintptr_t address,
+		const char *activity,
+		const char *group)
+	{
+		auto processor =
+			reinterpret_cast < xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
+
+		try
+		{
+			processor->insert_activity_group(activity, group);
+		}
+		catch (const std::exception &exception)
+		{
+			static std::string message;
+
+			message = exception.what();
+
+			return message.c_str();
+		}
+
+		return nullptr;
+	}
+
+	_declspec(dllexport) const char *erase_activity_group(
+		uintptr_t address,
+		const char *activity,
+		const char *group)
+	{
+		auto processor =
+			reinterpret_cast < xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
+
+		try
+		{
+			processor->erase_activity_group(activity, group);
 		}
 		catch (const std::exception &exception)
 		{
@@ -220,15 +314,14 @@ extern "C"
 	_declspec(dllexport) const char *insert_or_edit_component(
 		uintptr_t address,
 		const char *component,
-		const char *name,
-		const char *group)
+		const char *name)
 	{
 		auto processor =
 			reinterpret_cast < xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
 
 		try
 		{
-			processor->insert_or_edit_component(component, name, group);
+			processor->insert_or_edit_component(component, name);
 		}
 		catch (const std::exception &exception)
 		{
@@ -252,6 +345,54 @@ extern "C"
 		try
 		{
 			processor->erase_component(component);
+		}
+		catch (const std::exception &exception)
+		{
+			static std::string message;
+
+			message = exception.what();
+
+			return message.c_str();
+		}
+
+		return nullptr;
+	}
+
+	_declspec(dllexport) const char *insert_component_group(
+		const uintptr_t address,
+		const char *component,
+		const char *group)
+	{
+		auto processor =
+			reinterpret_cast < xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
+
+		try
+		{
+			processor->insert_component_group(component, group);
+		}
+		catch (const std::exception &exception)
+		{
+			static std::string message;
+
+			message = exception.what();
+
+			return message.c_str();
+		}
+
+		return nullptr;
+	}
+
+	_declspec(dllexport) const char *erase_component_group(
+		uintptr_t address,
+		const char *component,
+		const char *group)
+	{
+		auto processor =
+			reinterpret_cast < xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
+
+		try
+		{
+			processor->erase_component_group(component, group);
 		}
 		catch (const std::exception &exception)
 		{

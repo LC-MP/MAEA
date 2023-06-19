@@ -29,8 +29,6 @@
 // funding this research project.
 // FAPESP process number: 2020/15909-8
 
-import <clocale>;
-
 import xablau.io;
 import xablau.organizational_analysis;
 

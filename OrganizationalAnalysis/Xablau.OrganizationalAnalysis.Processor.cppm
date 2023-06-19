@@ -549,12 +549,11 @@ export namespace xablau::organizational_analysis
 	public:
 		void insert_or_assign_agent(
 			const string_type &agent,
-			const string_type &group,
 			const string_type &role)
 		{
 			this->_agents.descriptions.insert_or_assign(
 				agent,
-				typename agents_type::description{ group, role });
+				typename agents_type::description{ std::set < string_type > {}, role });
 		}
 
 		void erase_agent(const string_type &agent)
@@ -579,10 +578,33 @@ export namespace xablau::organizational_analysis
 			}
 		}
 
+		void insert_agent_group(const string_type &agent, const string_type &group)
+		{
+			const auto iterator = this->_agents.descriptions.find(agent);
+
+			if (iterator == this->_agents.descriptions.end())
+			{
+				throw std::runtime_error(std::format("Agent \"{}\" does not exist.", agent));
+			}
+
+			iterator->second.groups.insert(group);
+		}
+
+		void erase_agent_group(const string_type &agent, const string_type &group)
+		{
+			const auto iterator = this->_agents.descriptions.find(agent);
+
+			if (iterator == this->_agents.descriptions.end())
+			{
+				throw std::runtime_error(std::format("Agent \"{}\" does not exist.", agent));
+			}
+
+			iterator->second.groups.erase(group);
+		}
+
 		void insert_or_edit_activity(
 			const string_type &activity,
-			const string_type &name,
-			const string_type &group)
+			const string_type &name)
 		{
 			const auto pair =
 				this->_activities.descriptions.insert(
@@ -590,7 +612,7 @@ export namespace xablau::organizational_analysis
 						activity,
 						typename activities_type::description{
 							name,
-							group,
+							std::set < string_type > {},
 							std::set < string_type > {} }));
 
 			if (pair.second)
@@ -601,7 +623,6 @@ export namespace xablau::organizational_analysis
 			else
 			{
 				pair.first->second.name = name;
-				pair.first->second.group = group;
 			}
 		}
 
@@ -617,6 +638,30 @@ export namespace xablau::organizational_analysis
 			this->_activities.descriptions.erase(iterator);
 			this->_activities.dependencies.erase(activity);
 			this->_affiliations.responsabilities.erase(activity);
+		}
+
+		void insert_activity_group(const string_type &activity, const string_type &group)
+		{
+			const auto iterator = this->_activities.descriptions.find(activity);
+
+			if (iterator == this->_activities.descriptions.end())
+			{
+				throw std::runtime_error(std::format("Activity \"{}\" does not exist.", activity));
+			}
+
+			iterator->second.groups.insert(group);
+		}
+
+		void erase_activity_group(const string_type &activity, const string_type &group)
+		{
+			const auto iterator = this->_activities.descriptions.find(activity);
+
+			if (iterator == this->_activities.descriptions.end())
+			{
+				throw std::runtime_error(std::format("Activity \"{}\" does not exist.", activity));
+			}
+
+			iterator->second.groups.erase(group);
 		}
 
 		void insert_agent_in_charge_of_activity(
@@ -693,8 +738,7 @@ export namespace xablau::organizational_analysis
 
 		void insert_or_edit_component(
 			const string_type &component,
-			const string_type &name,
-			const string_type &group)
+			const string_type &name)
 		{
 			const auto pair =
 				this->_components.descriptions.insert(
@@ -702,7 +746,7 @@ export namespace xablau::organizational_analysis
 						component,
 						typename components_type::description{
 							name,
-							group,
+							std::set < string_type > {},
 							std::set < string_type > {} }));
 
 			if (pair.second)
@@ -713,7 +757,6 @@ export namespace xablau::organizational_analysis
 			else
 			{
 				pair.first->second.name = name;
-				pair.first->second.group = group;
 			}
 		}
 
@@ -733,6 +776,30 @@ export namespace xablau::organizational_analysis
 			{
 				ratedComponent.erase(component);
 			}
+		}
+
+		void insert_component_group(const string_type &component, const string_type &group)
+		{
+			const auto iterator = this->_components.descriptions.find(component);
+
+			if (iterator == this->_components.descriptions.end())
+			{
+				throw std::runtime_error(std::format("Component \"{}\" does not exist.", component));
+			}
+
+			iterator->second.groups.insert(group);
+		}
+
+		void erase_component_group(const string_type &component, const string_type &group)
+		{
+			const auto iterator = this->_components.descriptions.find(component);
+
+			if (iterator == this->_components.descriptions.end())
+			{
+				throw std::runtime_error(std::format("Component \"{}\" does not exist.", component));
+			}
+
+			iterator->second.groups.erase(group);
 		}
 
 		void insert_component_interface(

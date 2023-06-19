@@ -64,7 +64,12 @@ export namespace xablau::organizational_analysis::writer
 		for (const auto &[identification, description] : agents.descriptions)
 		{
 			output << identification << separator;
-			output << description.group << separator;
+
+			for (const auto &group : description.groups)
+			{
+				output << group << (separator == CharType{','} ? CharType{';'} : CharType{','});
+			}
+
 			output << description.role << CharType{'\n'};
 		}
 
@@ -113,7 +118,12 @@ export namespace xablau::organizational_analysis::writer
 			}
 
 			output << separator;
-			output << description1.group << separator;
+
+			for (const auto &group : description1.groups)
+			{
+				output << group << (separator == CharType{','} ? CharType{';'} : CharType{','});
+			}
+
 			output << description1.name << separator;
 			output << identification1 << separator;
 
@@ -186,7 +196,11 @@ export namespace xablau::organizational_analysis::writer
 
 		for (const auto &[identification1, description1] : components.descriptions)
 		{
-			output << description1.group << separator;
+			for (const auto &group : description1.groups)
+			{
+				output << group << (separator == CharType{','} ? CharType{';'} : CharType{','});
+			}
+
 			output << description1.name << separator;
 			output << identification1 << separator;
 

@@ -67,7 +67,7 @@ export namespace xablau::organizational_analysis
 
 		struct description
 		{
-			string_type group{};
+			std::set < string_type > groups{};
 			string_type role{};
 		};
 
@@ -82,7 +82,7 @@ export namespace xablau::organizational_analysis
 		struct description
 		{
 			string_type name{};
-			string_type group{};
+			std::set < string_type > groups{};
 			std::set < string_type > agents_in_charge{};
 		};
 
@@ -102,7 +102,7 @@ export namespace xablau::organizational_analysis
 		struct description
 		{
 			string_type name{};
-			string_type group{};
+			std::set < string_type > groups{};
 			std::set < string_type > agents_in_charge{};
 		};
 
