@@ -739,6 +739,150 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern IntPtr write_activities_matrix(
+           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string filename,
+           [MarshalAs(UnmanagedType.I1)] sbyte separator);
+
+        public void WriteActivitiesMatrix(string filename, char separator)
+        {
+            string? message = Marshal.PtrToStringAnsi(Processor.write_activities_matrix(this.processorObjectAddress, filename, Convert.ToSByte(separator)));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern IntPtr write_weak_affiliations_matrix(
+           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string filename,
+           [MarshalAs(UnmanagedType.I1)] sbyte separator);
+
+        public void WriteWeakAffiliationsMatrix(string filename, char separator)
+        {
+            string? message = Marshal.PtrToStringAnsi(Processor.write_weak_affiliations_matrix(this.processorObjectAddress, filename, Convert.ToSByte(separator)));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern IntPtr write_strong_affiliations_matrix(
+           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string filename,
+           [MarshalAs(UnmanagedType.I1)] sbyte separator);
+
+        public void WriteStrongAffiliationsMatrix(string filename, char separator)
+        {
+            string? message = Marshal.PtrToStringAnsi(Processor.write_strong_affiliations_matrix(this.processorObjectAddress, filename, Convert.ToSByte(separator)));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern IntPtr write_components_matrix(
+           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string filename,
+           [MarshalAs(UnmanagedType.I1)] sbyte separator);
+
+        public void WriteComponentsMatrix(string filename, char separator)
+        {
+            string? message = Marshal.PtrToStringAnsi(Processor.write_components_matrix(this.processorObjectAddress, filename, Convert.ToSByte(separator)));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern IntPtr write_total_potential_matrix(
+           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string filename,
+           [MarshalAs(UnmanagedType.I1)] sbyte separator);
+
+        public void WriteTotalPotentialMatrix(string filename, char separator)
+        {
+            string? message = Marshal.PtrToStringAnsi(Processor.write_total_potential_matrix(this.processorObjectAddress, filename, Convert.ToSByte(separator)));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern IntPtr write_strong_potential_matrix_without_redundancies(
+           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string filename,
+           [MarshalAs(UnmanagedType.I1)] sbyte separator);
+
+        public void WriteStrongPotentialMatrixWithoutRedundancies(string filename, char separator)
+        {
+            string? message = Marshal.PtrToStringAnsi(Processor.write_strong_potential_matrix_without_redundancies(this.processorObjectAddress, filename, Convert.ToSByte(separator)));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern IntPtr write_strong_potential_matrix_with_redundancies(
+           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string filename,
+           [MarshalAs(UnmanagedType.I1)] sbyte separator);
+
+        public void WriteStrongPotentialMatrixWithRedundancies(string filename, char separator)
+        {
+            string? message = Marshal.PtrToStringAnsi(Processor.write_strong_potential_matrix_with_redundancies(this.processorObjectAddress, filename, Convert.ToSByte(separator)));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern IntPtr write_comparative_matrix_without_redundancies(
+           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string filename,
+           [MarshalAs(UnmanagedType.I1)] sbyte separator);
+
+        public void WriteComparativeMatrixWithoutRedundancies(string filename, char separator)
+        {
+            string? message = Marshal.PtrToStringAnsi(Processor.write_comparative_matrix_without_redundancies(this.processorObjectAddress, filename, Convert.ToSByte(separator)));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern IntPtr write_comparative_matrix_with_redundancies(
+           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string filename,
+           [MarshalAs(UnmanagedType.I1)] sbyte separator);
+
+        public void WriteComparativeMatrixWithRedundancies(string filename, char separator)
+        {
+            string? message = Marshal.PtrToStringAnsi(Processor.write_comparative_matrix_with_redundancies(this.processorObjectAddress, filename, Convert.ToSByte(separator)));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
         private static extern ulong construct();
 
         public Processor()
