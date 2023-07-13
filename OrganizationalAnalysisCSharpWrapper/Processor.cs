@@ -412,24 +412,24 @@ namespace OrganizationalAnalysis
            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
            [MarshalAs(UnmanagedType.FunctionPtr)] InsertString inserter);
 
-        public SortedDictionary<string, ulong> ValidateAgentsInChargeForComponents()
+        public List<string> ValidateAgentsInChargeForComponents()
         {
-            var priorities = new SortedDictionary<string, ulong>();
+            var componentsWithoutAgents = new List<string>();
 
-            InsertPairOfStringAndSizeT inserter =
-                ([MarshalAs(UnmanagedType.LPStr)] string activity, [MarshalAs(UnmanagedType.U8)] ulong priority) =>
+            InsertString inserter =
+                ([MarshalAs(UnmanagedType.LPStr)] string componentWithoutAgents) =>
                 {
-                    priorities.Add(new string(activity), priority);
+                    componentsWithoutAgents.Add(new string(componentWithoutAgents));
                 };
 
-            string? message = Marshal.PtrToStringAnsi(Processor.identify_priorities(this.processorObjectAddress, inserter));
+            string? message = Marshal.PtrToStringAnsi(Processor.validate_agents_in_charge_for_components(this.processorObjectAddress, inserter));
 
             if (message != null)
             {
                 throw new Exception(message);
             }
 
-            return priorities;
+            return componentsWithoutAgents;
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
