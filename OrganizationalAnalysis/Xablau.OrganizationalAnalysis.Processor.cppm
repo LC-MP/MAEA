@@ -401,7 +401,7 @@ export namespace xablau::organizational_analysis
 				throw std::runtime_error("There are no registered components.");
 			}
 
-			if constexpr (AlignmentMode == alignment_mode::activity_and_organization)
+			if constexpr (AlignmentMode == alignment_mode::component_and_organization)
 			{
 				if (this->validate_agents_in_charge_for_components().size() != 0)
 				{
@@ -413,7 +413,7 @@ export namespace xablau::organizational_analysis
 			{
 				activityKeyToIndexMap.insert(std::make_pair(identification, index));
 
-				if constexpr (AlignmentMode == alignment_mode::component_and_organization)
+				if constexpr (AlignmentMode == alignment_mode::activity_and_organization)
 				{
 					baseIndexToKeyMap.insert(std::make_pair(index, identification));
 				}
@@ -427,7 +427,7 @@ export namespace xablau::organizational_analysis
 			{
 				componentKeyToIndexMap.insert(std::make_pair(identification, index));
 
-				if constexpr (AlignmentMode == alignment_mode::activity_and_organization)
+				if constexpr (AlignmentMode == alignment_mode::component_and_organization)
 				{
 					baseIndexToKeyMap.insert(std::make_pair(index, identification));
 				}
@@ -441,7 +441,7 @@ export namespace xablau::organizational_analysis
 
 			std::reference_wrapper < matrix_type > baseMatrix = this->_activities_dependencies_matrix;
 
-			if constexpr (AlignmentMode == alignment_mode::component_and_organization)
+			if constexpr (AlignmentMode == alignment_mode::activity_and_organization)
 			{
 				this->_potential_matrices[0] =
 					this->_affiliations_matrices[0] * this->_components_interfaces_matrix * this->_affiliations_matrices[0].transpose();
@@ -456,7 +456,7 @@ export namespace xablau::organizational_analysis
 						this->_activities.descriptions);
 			}
 
-			else if constexpr (AlignmentMode == alignment_mode::activity_and_organization)
+			else if constexpr (AlignmentMode == alignment_mode::component_and_organization)
 			{
 				this->_potential_matrices[0] =
 					this->_affiliations_matrices[0].transpose() * this->_activities_dependencies_matrix * this->_affiliations_matrices[0];
@@ -478,7 +478,7 @@ export namespace xablau::organizational_analysis
 				throw std::runtime_error("Unknown alignment.");
 			}
 
-			if constexpr (AlignmentMode == alignment_mode::component_and_organization)
+			if constexpr (AlignmentMode == alignment_mode::activity_and_organization)
 			{
 				this->_comparative_matrix_without_redundancies_step_1.resize(this->_activities_dependencies_matrix.dimensionalities());
 			}
@@ -502,7 +502,7 @@ export namespace xablau::organizational_analysis
 				this->_potential_matrices[0],
 				baseMatrix.get());
 
-			if constexpr (AlignmentMode == alignment_mode::component_and_organization)
+			if constexpr (AlignmentMode == alignment_mode::activity_and_organization)
 			{
 				this->_comparative_matrix_with_redundancies_step_1.resize(this->_activities_dependencies_matrix.dimensionalities());
 			}
@@ -1016,17 +1016,17 @@ export namespace xablau::organizational_analysis
 			}
 		}
 
-		void align_architecture_process_between_components_and_organization(
+		void compare_activities_and_organization(
 			const float minimumRelationDegree)
 		{
 			std::map < size_t, string_type > activityIndexToKeyMap;
 
 			this->attribute_agents_in_charge_for_components(minimumRelationDegree);
 
-			this->align_architecture_process < alignment_mode::component_and_organization > (activityIndexToKeyMap);
+			this->align_architecture_process < alignment_mode::activity_and_organization > (activityIndexToKeyMap);
 		}
 
-		void align_architecture_process_between_components_and_organization(
+		void compare_activities_and_organization(
 			const float minimumRelationDegree,
 			std::basic_ostream < CharType, Traits > &outputReportWithoutRedundancies,
 			std::basic_ostream < CharType, Traits > &outputReportWithRedundancies)
@@ -1035,7 +1035,7 @@ export namespace xablau::organizational_analysis
 
 			this->attribute_agents_in_charge_for_components(minimumRelationDegree);
 
-			this->align_architecture_process < alignment_mode::component_and_organization > (activityIndexToKeyMap);
+			this->align_architecture_process < alignment_mode::activity_and_organization > (activityIndexToKeyMap);
 
 			writer::write_report(
 				outputReportWithoutRedundancies,
@@ -1048,17 +1048,17 @@ export namespace xablau::organizational_analysis
 				activityIndexToKeyMap);
 		}
 
-		void align_architecture_process_between_activities_and_organization(
+		void compare_components_and_organization(
 			const float minimumRelationDegree)
 		{
 			std::map < size_t, string_type > componentIndexToKeyMap;
 
 			this->attribute_agents_in_charge_for_components(minimumRelationDegree);
 
-			this->align_architecture_process < alignment_mode::activity_and_organization > (componentIndexToKeyMap);
+			this->align_architecture_process < alignment_mode::component_and_organization > (componentIndexToKeyMap);
 		}
 
-		void align_architecture_process_between_activities_and_organization(
+		void compare_components_and_organization(
 			const float minimumRelationDegree,
 			std::basic_ostream < CharType, Traits > &outputReportWithoutRedundancies,
 			std::basic_ostream < CharType, Traits > &outputReportWithRedundancies)
@@ -1067,7 +1067,7 @@ export namespace xablau::organizational_analysis
 
 			this->attribute_agents_in_charge_for_components(minimumRelationDegree);
 
-			this->align_architecture_process < alignment_mode::activity_and_organization > (componentIndexToKeyMap);
+			this->align_architecture_process < alignment_mode::component_and_organization > (componentIndexToKeyMap);
 
 			writer::write_report(
 				outputReportWithoutRedundancies,

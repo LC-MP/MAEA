@@ -625,7 +625,7 @@ extern "C"
 		return nullptr;
 	}
 
-	_declspec(dllexport) const char *align_architecture_process_between_components_and_organization(
+	_declspec(dllexport) const char *compare_activities_and_organization(
 		uintptr_t address,
 		float minimumRelationDegree)
 	{
@@ -634,7 +634,7 @@ extern "C"
 
 		try
 		{
-			processor->align_architecture_process_between_components_and_organization(minimumRelationDegree);
+			processor->compare_activities_and_organization(minimumRelationDegree);
 		}
 		catch (const std::exception &exception)
 		{
@@ -648,7 +648,7 @@ extern "C"
 		return nullptr;
 	}
 
-	_declspec(dllexport) const char *align_architecture_process_between_activities_and_organization(
+	_declspec(dllexport) const char *compare_components_and_organization(
 		uintptr_t address,
 		float minimumRelationDegree)
 	{
@@ -657,7 +657,7 @@ extern "C"
 
 		try
 		{
-			processor->align_architecture_process_between_activities_and_organization(minimumRelationDegree);
+			processor->compare_components_and_organization(minimumRelationDegree);
 		}
 		catch (const std::exception &exception)
 		{

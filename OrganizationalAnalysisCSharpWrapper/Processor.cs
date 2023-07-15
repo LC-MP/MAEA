@@ -448,13 +448,13 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr align_architecture_process_between_components_and_organization(
+        private static extern IntPtr compare_activities_and_organization(
            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
            [MarshalAs(UnmanagedType.R4)] float minimumRelationDegree);
 
-        public void AlignArchitectureProcessBetweenComponentsAndOrganization(float minimumRelationDegree)
+        public void CompareActivitiesAndOrganization(float minimumRelationDegree)
         {
-            string? message = Marshal.PtrToStringAnsi(Processor.align_architecture_process_between_components_and_organization(this.processorObjectAddress, minimumRelationDegree));
+            string? message = Marshal.PtrToStringAnsi(Processor.compare_activities_and_organization(this.processorObjectAddress, minimumRelationDegree));
 
             if (message != null)
             {
@@ -463,13 +463,13 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr align_architecture_process_between_activities_and_organization(
+        private static extern IntPtr compare_components_and_organization(
            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
            [MarshalAs(UnmanagedType.R4)] float minimumRelationDegree);
 
-        public void AlignArchitectureProcessBetweenActivitiesAndOrganization(float minimumRelationDegree)
+        public void CompareComponentsAndOrganization(float minimumRelationDegree)
         {
-            string? message = Marshal.PtrToStringAnsi(Processor.align_architecture_process_between_activities_and_organization(this.processorObjectAddress, minimumRelationDegree));
+            string? message = Marshal.PtrToStringAnsi(Processor.compare_components_and_organization(this.processorObjectAddress, minimumRelationDegree));
 
             if (message != null)
             {

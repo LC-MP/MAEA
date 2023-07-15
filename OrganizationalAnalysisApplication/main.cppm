@@ -154,7 +154,7 @@ int main(int argc, char** argv)
 
 		if (std::atoi(argv[5]) == 0)
 		{
-			processor.align_architecture_process_between_components_and_organization(
+			processor.compare_activities_and_organization(
 				minimumRelationDegree,
 				reportWithoutRedundanciesOutput,
 				reportWithRedundanciesOutput);
@@ -162,7 +162,7 @@ int main(int argc, char** argv)
 
 		else
 		{
-			processor.align_architecture_process_between_activities_and_organization(
+			processor.compare_components_and_organization(
 				minimumRelationDegree,
 				reportWithoutRedundanciesOutput,
 				reportWithRedundanciesOutput);
