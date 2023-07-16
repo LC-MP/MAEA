@@ -278,11 +278,11 @@ export namespace xablau::organizational_analysis
 
 						bool thereAreRedundancies = false;
 
-						for (const auto personInCharge1 : agentsInCharge1)
+						for (const auto agentInCharge1 : agentsInCharge1)
 						{
-							for (const auto personInCharge2 : agentsInCharge2)
+							for (const auto agentInCharge2 : agentsInCharge2)
 							{
-								if (personInCharge1 == personInCharge2)
+								if (agentInCharge1 == agentInCharge2)
 								{
 									thereAreRedundancies = true;
 
@@ -404,9 +404,17 @@ export namespace xablau::organizational_analysis
 
 			if constexpr (ComparisonMode == comparison_mode::component_and_organization)
 			{
-				if (this->validate_agents_in_charge_for_components().size() != 0)
+				if (this->components_without_agents_in_charge().size() != 0)
 				{
 					throw std::runtime_error("There are components without agents in charge.");
+				}
+			}
+
+			else if constexpr (ComparisonMode == comparison_mode::activity_and_organization)
+			{
+				if (this->activities_without_agents_in_charge().size() != 0)
+				{
+					throw std::runtime_error("There are activities without agents in charge.");
 				}
 			}
 
@@ -953,22 +961,37 @@ export namespace xablau::organizational_analysis
 			return priorities;
 		}
 
-		[[nodiscard]] auto validate_agents_in_charge_for_components() const
+		[[nodiscard]] auto components_without_agents_in_charge() const
 		{
-			std::vector < string_type > componentsWithoutAgents;
+			std::vector < string_type > componentsWithoutAgentsInCharge;
 
 			for (auto &[component, description] : this->_components.descriptions)
 			{
 				if (description.agents_in_charge.empty())
 				{
-					componentsWithoutAgents.push_back(component);
+					componentsWithoutAgentsInCharge.push_back(component);
 				}
 			}
 
-			return componentsWithoutAgents;
+			return componentsWithoutAgentsInCharge;
 		}
 
-		void attribute_agents_in_charge_for_components(const float minimumRelationDegree)
+		[[nodiscard]] auto activities_without_agents_in_charge() const
+		{
+			std::vector < string_type > activitiesWithoutAgentsInCharge;
+
+			for (const auto &[activity, description] : this->_activities.descriptions)
+			{
+				if (description.agents_in_charge.empty())
+				{
+					activitiesWithoutAgentsInCharge.push_back(activity);
+				}
+			}
+
+			return activitiesWithoutAgentsInCharge;
+		}
+
+		void minimum_relation_degree_for_agents_in_charge_of_components(const float degree)
 		{
 			for (auto &[component, description] : this->_components.descriptions)
 			{
@@ -977,7 +1000,7 @@ export namespace xablau::organizational_analysis
 				for (const auto &[activity, componentsOnAffiliations] : this->_affiliations.responsabilities)
 				{
 					if (componentsOnAffiliations.contains(component) &&
-						componentsOnAffiliations.at(component) >= minimumRelationDegree)
+						componentsOnAffiliations.at(component) >= degree)
 					{
 						const auto &agentsInChargeOfActivity =
 							this->_activities.descriptions.at(activity).agents_in_charge;
@@ -990,24 +1013,18 @@ export namespace xablau::organizational_analysis
 			}
 		}
 
-		void compare_activities_and_organization(
-			const float minimumRelationDegree)
+		void compare_activities_and_organization()
 		{
 			std::map < size_t, string_type > activityIndexToKeyMap;
-
-			this->attribute_agents_in_charge_for_components(minimumRelationDegree);
 
 			this->align_architecture_process < comparison_mode::activity_and_organization > (activityIndexToKeyMap);
 		}
 
 		void compare_activities_and_organization(
-			const float minimumRelationDegree,
 			std::basic_ostream < CharType, Traits > &outputReportWithoutRedundancies,
 			std::basic_ostream < CharType, Traits > &outputReportWithRedundancies)
 		{
 			std::map < size_t, string_type > activityIndexToKeyMap;
-
-			this->attribute_agents_in_charge_for_components(minimumRelationDegree);
 
 			this->align_architecture_process < comparison_mode::activity_and_organization > (activityIndexToKeyMap);
 
@@ -1023,23 +1040,25 @@ export namespace xablau::organizational_analysis
 		}
 
 		void compare_components_and_organization(
-			const float minimumRelationDegree)
+			const float minimumRelationDegreeForAgentsInChargeOfComponents)
 		{
 			std::map < size_t, string_type > componentIndexToKeyMap;
 
-			this->attribute_agents_in_charge_for_components(minimumRelationDegree);
+			this->minimum_relation_degree_for_agents_in_charge_of_components(
+				minimumRelationDegreeForAgentsInChargeOfComponents);
 
 			this->align_architecture_process < comparison_mode::component_and_organization > (componentIndexToKeyMap);
 		}
 
 		void compare_components_and_organization(
-			const float minimumRelationDegree,
+			const float minimumRelationDegreeForAgentsInChargeOfComponents,
 			std::basic_ostream < CharType, Traits > &outputReportWithoutRedundancies,
 			std::basic_ostream < CharType, Traits > &outputReportWithRedundancies)
 		{
 			std::map < size_t, string_type > componentIndexToKeyMap;
 
-			this->attribute_agents_in_charge_for_components(minimumRelationDegree);
+			this->minimum_relation_degree_for_agents_in_charge_of_components(
+				minimumRelationDegreeForAgentsInChargeOfComponents);
 
 			this->align_architecture_process < comparison_mode::component_and_organization > (componentIndexToKeyMap);
 
@@ -1054,7 +1073,7 @@ export namespace xablau::organizational_analysis
 				componentIndexToKeyMap);
 		}
 
-		const matrix_type &activities_dependencies_matrix() const
+		[[nodiscard]] const matrix_type &activities_dependencies_matrix() const
 		{
 			if (!this->_up_to_date)
 			{
@@ -1064,7 +1083,7 @@ export namespace xablau::organizational_analysis
 			return this->_activities_dependencies_matrix;
 		}
 
-		const matrix_type &components_interfaces_matrix() const
+		[[nodiscard]] const matrix_type &components_interfaces_matrix() const
 		{
 			if (!this->_up_to_date)
 			{
@@ -1074,7 +1093,7 @@ export namespace xablau::organizational_analysis
 			return this->_components_interfaces_matrix;
 		}
 
-		const matrix_type &weak_affiliations_matrix() const
+		[[nodiscard]] const matrix_type &weak_affiliations_matrix() const
 		{
 			if (!this->_up_to_date)
 			{
@@ -1084,7 +1103,7 @@ export namespace xablau::organizational_analysis
 			return this->_affiliations_matrices[0];
 		}
 
-		const matrix_type &strong_affiliations_matrix() const
+		[[nodiscard]] const matrix_type &strong_affiliations_matrix() const
 		{
 			if (!this->_up_to_date)
 			{
@@ -1094,7 +1113,7 @@ export namespace xablau::organizational_analysis
 			return this->_affiliations_matrices[1];
 		}
 
-		const matrix_type &comparative_matrix_without_redundancies() const
+		[[nodiscard]] const matrix_type &comparative_matrix_without_redundancies() const
 		{
 			if (!this->_up_to_date)
 			{
@@ -1104,7 +1123,7 @@ export namespace xablau::organizational_analysis
 			return this->_comparative_matrix_without_redundancies_step_2;
 		}
 
-		const matrix_type &comparative_matrix_with_redundancies() const
+		[[nodiscard]] const matrix_type &comparative_matrix_with_redundancies() const
 		{
 			if (!this->_up_to_date)
 			{

@@ -408,11 +408,11 @@ namespace OrganizationalAnalysis
             [MarshalAs(UnmanagedType.LPStr)] string componentWithoutAgents);
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr validate_agents_in_charge_for_components(
+        private static extern IntPtr components_without_agents_in_charge(
            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
            [MarshalAs(UnmanagedType.FunctionPtr)] InsertString inserter);
 
-        public List<string> ValidateAgentsInChargeForComponents()
+        public List<string> ComponentsWithoutAgentsInCharge()
         {
             var componentsWithoutAgents = new List<string>();
 
@@ -422,7 +422,7 @@ namespace OrganizationalAnalysis
                     componentsWithoutAgents.Add(new string(componentWithoutAgents));
                 };
 
-            string? message = Marshal.PtrToStringAnsi(Processor.validate_agents_in_charge_for_components(this.processorObjectAddress, inserter));
+            string? message = Marshal.PtrToStringAnsi(Processor.components_without_agents_in_charge(this.processorObjectAddress, inserter));
 
             if (message != null)
             {
@@ -433,13 +433,38 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr attribute_agents_in_charge_for_components(
+        private static extern IntPtr activities_without_agents_in_charge(
            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
-           [MarshalAs(UnmanagedType.R4)] float minimumRelationDegree);
+           [MarshalAs(UnmanagedType.FunctionPtr)] InsertString inserter);
 
-        public void AttributeAgentsInChargeForComponents(float minimumRelationDegree)
+        public List<string> ActivitiesWithoutAgentsInCharge()
         {
-            string? message = Marshal.PtrToStringAnsi(Processor.attribute_agents_in_charge_for_components(this.processorObjectAddress, minimumRelationDegree));
+            var activitiesWithoutAgents = new List<string>();
+
+            InsertString inserter =
+                ([MarshalAs(UnmanagedType.LPStr)] string componentWithoutAgents) =>
+                {
+                    activitiesWithoutAgents.Add(new string(componentWithoutAgents));
+                };
+
+            string? message = Marshal.PtrToStringAnsi(Processor.activities_without_agents_in_charge(this.processorObjectAddress, inserter));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+
+            return activitiesWithoutAgents;
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern IntPtr minimum_relation_degree_for_agents_in_charge_of_components(
+           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+           [MarshalAs(UnmanagedType.R4)] float degree);
+
+        public void MinimumRelationDegreeForAgentsInChargeOfComponents(float degree)
+        {
+            string? message = Marshal.PtrToStringAnsi(Processor.minimum_relation_degree_for_agents_in_charge_of_components(this.processorObjectAddress, degree));
 
             if (message != null)
             {
@@ -449,12 +474,11 @@ namespace OrganizationalAnalysis
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
         private static extern IntPtr compare_activities_and_organization(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
-           [MarshalAs(UnmanagedType.R4)] float minimumRelationDegree);
+           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress);
 
-        public void CompareActivitiesAndOrganization(float minimumRelationDegree)
+        public void CompareActivitiesAndOrganization()
         {
-            string? message = Marshal.PtrToStringAnsi(Processor.compare_activities_and_organization(this.processorObjectAddress, minimumRelationDegree));
+            string? message = Marshal.PtrToStringAnsi(Processor.compare_activities_and_organization(this.processorObjectAddress));
 
             if (message != null)
             {
@@ -465,11 +489,15 @@ namespace OrganizationalAnalysis
         [DllImport("OrganizationalAnalysisLibrary.dll")]
         private static extern IntPtr compare_components_and_organization(
            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
-           [MarshalAs(UnmanagedType.R4)] float minimumRelationDegree);
+           [MarshalAs(UnmanagedType.R4)] float minimumRelationDegreeForAgentsInChargeOfComponents);
 
-        public void CompareComponentsAndOrganization(float minimumRelationDegree)
+        public void CompareComponentsAndOrganization(float minimumRelationDegreeForAgentsInChargeOfComponents)
         {
-            string? message = Marshal.PtrToStringAnsi(Processor.compare_components_and_organization(this.processorObjectAddress, minimumRelationDegree));
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.compare_components_and_organization(
+                        this.processorObjectAddress,
+                        minimumRelationDegreeForAgentsInChargeOfComponents));
 
             if (message != null)
             {

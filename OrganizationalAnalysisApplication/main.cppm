@@ -104,29 +104,18 @@ int main(int argc, char** argv)
 		bool everyProductHasAnAgentInCharge = false;
 		float minimumRelationDegree = std::stof(argv[6], nullptr);
 
-		while (!everyProductHasAnAgentInCharge)
+		while (std::atoi(argv[5]) == 1 && !everyProductHasAnAgentInCharge)
 		{
 			if (minimumRelationDegree <= 0.0f)
 			{
 				std::cout << "Minimum relation degree between agent and component is null or negative.\n";
+				std::cout << "Exiting...\n";
 
-				if (std::atoi(argv[5]) == 1)
-				{
-					std::cout << "Exiting...\n";
-
-					return -2;
-				}
-
-				else
-				{
-					std::cout << "Bypassing this requirement...\n";
-
-					break;
-				}
+				return -2;
 			}
 
-			processor.attribute_agents_in_charge_for_components(minimumRelationDegree);
-			const auto productsWithoutAgentsInCharge = processor.validate_agents_in_charge_for_components();
+			processor.minimum_relation_degree_for_agents_in_charge_of_components(minimumRelationDegree);
+			const auto productsWithoutAgentsInCharge = processor.components_without_agents_in_charge();
 
 			if (productsWithoutAgentsInCharge.size() != 0)
 			{
@@ -156,7 +145,6 @@ int main(int argc, char** argv)
 		if (std::atoi(argv[5]) == 0)
 		{
 			processor.compare_activities_and_organization(
-				minimumRelationDegree,
 				reportWithoutRedundanciesOutput,
 				reportWithRedundanciesOutput);
 		}

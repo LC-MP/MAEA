@@ -574,7 +574,7 @@ extern "C"
 		return nullptr;
 	}
 
-	_declspec(dllexport) const char *validate_agents_in_charge_for_components(
+	_declspec(dllexport) const char *components_without_agents_in_charge(
 		uintptr_t address,
 		InsertStringInContainer inserter)
 	{
@@ -583,7 +583,7 @@ extern "C"
 
 		try
 		{
-			const auto componentsWithoutAgents = processor->validate_agents_in_charge_for_components();
+			const auto componentsWithoutAgents = processor->components_without_agents_in_charge();
 
 			for (const auto &componentWithoutAgents : componentsWithoutAgents)
 			{
@@ -602,16 +602,21 @@ extern "C"
 		return nullptr;
 	}
 
-	_declspec(dllexport) const char *attribute_agents_in_charge_for_components(
+	_declspec(dllexport) const char *activities_without_agents_in_charge(
 		uintptr_t address,
-		float minimumRelationDegree)
+		InsertStringInContainer inserter)
 	{
 		auto processor =
-			reinterpret_cast < xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
+			reinterpret_cast < const xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
 
 		try
 		{
-			processor->attribute_agents_in_charge_for_components(minimumRelationDegree);
+			const auto componentsWithoutAgents = processor->activities_without_agents_in_charge();
+
+			for (const auto &componentWithoutAgents : componentsWithoutAgents)
+			{
+				inserter(componentWithoutAgents.c_str());
+			}
 		}
 		catch (const std::exception &exception)
 		{
@@ -625,16 +630,37 @@ extern "C"
 		return nullptr;
 	}
 
-	_declspec(dllexport) const char *compare_activities_and_organization(
+	_declspec(dllexport) const char *minimum_relation_degree_for_agents_in_charge_of_components(
 		uintptr_t address,
-		float minimumRelationDegree)
+		float degree)
 	{
 		auto processor =
 			reinterpret_cast < xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
 
 		try
 		{
-			processor->compare_activities_and_organization(minimumRelationDegree);
+			processor->minimum_relation_degree_for_agents_in_charge_of_components(degree);
+		}
+		catch (const std::exception &exception)
+		{
+			static std::string message;
+
+			message = exception.what();
+
+			return message.c_str();
+		}
+
+		return nullptr;
+	}
+
+	_declspec(dllexport) const char *compare_activities_and_organization(uintptr_t address)
+	{
+		auto processor =
+			reinterpret_cast < xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
+
+		try
+		{
+			processor->compare_activities_and_organization();
 		}
 		catch (const std::exception &exception)
 		{
@@ -650,14 +676,14 @@ extern "C"
 
 	_declspec(dllexport) const char *compare_components_and_organization(
 		uintptr_t address,
-		float minimumRelationDegree)
+		float minimumRelationDegreeForAgentsInChargeOfComponents)
 	{
 		auto processor =
 			reinterpret_cast < xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
 
 		try
 		{
-			processor->compare_components_and_organization(minimumRelationDegree);
+			processor->compare_components_and_organization(minimumRelationDegreeForAgentsInChargeOfComponents);
 		}
 		catch (const std::exception &exception)
 		{
