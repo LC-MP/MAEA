@@ -39,14 +39,15 @@ int main(int argc, char** argv)
 
 	try
 	{
-		if (argc < 25)
+		if (argc < 24)
 		{
 			std::cout << "There are not enough parameters.";
 
 			return -1;
 		}
 
-		CharType separator{argv[24][0]};
+		CharType separator{argv[22][0]};
+		CharType lister{argv[23][0]};
 
 		xablau::organizational_analysis::processor < true, CharType, Traits > processor{};
 
@@ -63,7 +64,7 @@ int main(int argc, char** argv)
 		std::cout << "\n\n";
 		std::cout << "\n---------------Possible parallelizations---------------\n";
 
-		xablau::io::fstream < CharType > parallelizationsOutput(argv[22], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > parallelizationsOutput(argv[20], std::ios_base::out | std::ios_base::trunc);
 		const auto parallelizations = processor.identify_parallelizations();
 
 		size_t level{};
@@ -88,7 +89,7 @@ int main(int argc, char** argv)
 		std::cout << "\n\n";
 		std::cout << "\n-----------------------Priorities----------------------\n";
 
-		xablau::io::fstream < CharType > prioritiesOutput(argv[23], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > prioritiesOutput(argv[21], std::ios_base::out | std::ios_base::trunc);
 		const auto priorities = processor.identify_priorities();
 
 		for (const auto &priority : priorities)
@@ -149,8 +150,8 @@ int main(int argc, char** argv)
 			}
 		}
 
-		xablau::io::fstream < CharType > reportWithoutRedundanciesOutput(argv[20], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > reportWithRedundanciesOutput(argv[21], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > reportWithoutRedundanciesOutput(argv[18], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > reportWithRedundanciesOutput(argv[19], std::ios_base::out | std::ios_base::trunc);
 
 		if (std::atoi(argv[5]) == 0)
 		{
@@ -177,27 +178,26 @@ int main(int argc, char** argv)
 		xablau::io::fstream < CharType > componentsOutput(argv[9], std::ios_base::out | std::ios_base::trunc);
 		xablau::io::fstream < CharType > affiliationsOutput(argv[10], std::ios_base::out | std::ios_base::trunc);
 
-		processor.write(agentsOutput, activitiesOutput, componentsOutput, affiliationsOutput, separator);
+		processor.write_agents(agentsOutput, separator, lister);
+		processor.write_activities(activitiesOutput, separator, lister);
+		processor.write_components(componentsOutput, separator, lister);
+		processor.write_affiliations(affiliationsOutput, separator, lister);
 
-		xablau::io::fstream < CharType > activitiesMatrixOutput(argv[11], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > weakAffiliationsOutput(argv[12], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > strongAffiliationsOutput(argv[13], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > componentsMatrixOutput(argv[14], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > totalPotentialOutput(argv[15], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > strongTotalPotentialWithoutRedundanciesOutput(argv[16], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > strongTotalPotentialWithRedundanciesOutput(argv[17], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > comparativeWithoutRedundanciesOutput(argv[18], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > comparativeWithRedundanciesOutput(argv[19], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > weakAffiliationsOutput(argv[11], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > strongAffiliationsOutput(argv[12], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > totalPotentialOutput(argv[13], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > strongTotalPotentialWithoutRedundanciesOutput(argv[14], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > strongTotalPotentialWithRedundanciesOutput(argv[15], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > comparativeWithoutRedundanciesOutput(argv[16], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > comparativeWithRedundanciesOutput(argv[17], std::ios_base::out | std::ios_base::trunc);
 
-		processor.write_activities_matrix(activitiesMatrixOutput, separator);
-		processor.write_weak_affiliations_matrix(weakAffiliationsOutput, separator);
-		processor.write_strong_affiliations_matrix(strongAffiliationsOutput, separator);
-		processor.write_components_matrix(componentsMatrixOutput, separator);
-		processor.write_total_potential_matrix(totalPotentialOutput, separator);
-		processor.write_strong_potential_matrix_without_redundancies(strongTotalPotentialWithoutRedundanciesOutput, separator);
-		processor.write_strong_potential_matrix_with_redundancies(strongTotalPotentialWithRedundanciesOutput, separator);
-		processor.write_comparative_matrix_without_redundancies(comparativeWithoutRedundanciesOutput, separator);
-		processor.write_comparative_matrix_with_redundancies(comparativeWithRedundanciesOutput, separator);
+		processor.write_weak_affiliations_matrix(weakAffiliationsOutput, separator, lister);
+		processor.write_strong_affiliations_matrix(strongAffiliationsOutput, separator, lister);
+		processor.write_total_potential_matrix(totalPotentialOutput, separator, lister);
+		processor.write_strong_potential_matrix_without_redundancies(strongTotalPotentialWithoutRedundanciesOutput, separator, lister);
+		processor.write_strong_potential_matrix_with_redundancies(strongTotalPotentialWithRedundanciesOutput, separator, lister);
+		processor.write_comparative_matrix_without_redundancies(comparativeWithoutRedundanciesOutput, separator, lister);
+		processor.write_comparative_matrix_with_redundancies(comparativeWithRedundanciesOutput, separator, lister);
 
 		std::cout << "\n-------------------------------------------------------\n";
 	}

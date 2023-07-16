@@ -739,14 +739,90 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr write_activities_matrix(
+        private static extern IntPtr write_agents(
            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string filename,
-           [MarshalAs(UnmanagedType.I1)] sbyte separator);
+           [MarshalAs(UnmanagedType.I1)] sbyte separator,
+           [MarshalAs(UnmanagedType.I1)] sbyte lister);
 
-        public void WriteActivitiesMatrix(string filename, char separator)
+        public void WriteAgents(string filename, char separator, char lister)
         {
-            string? message = Marshal.PtrToStringAnsi(Processor.write_activities_matrix(this.processorObjectAddress, filename, Convert.ToSByte(separator)));
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.write_agents(
+                        this.processorObjectAddress,
+                        filename,
+                        Convert.ToSByte(separator),
+                        Convert.ToSByte(lister)));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern IntPtr write_activities(
+           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string filename,
+           [MarshalAs(UnmanagedType.I1)] sbyte separator,
+           [MarshalAs(UnmanagedType.I1)] sbyte lister);
+
+        public void WriteActivities(string filename, char separator, char lister)
+        {
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.write_activities(
+                        this.processorObjectAddress,
+                        filename,
+                        Convert.ToSByte(separator),
+                        Convert.ToSByte(lister)));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern IntPtr write_components(
+           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string filename,
+           [MarshalAs(UnmanagedType.I1)] sbyte separator,
+           [MarshalAs(UnmanagedType.I1)] sbyte lister);
+
+        public void WriteComponents(string filename, char separator, char lister)
+        {
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.write_components(
+                        this.processorObjectAddress,
+                        filename,
+                        Convert.ToSByte(separator),
+                        Convert.ToSByte(lister)));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern IntPtr write_affiliations(
+           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string filename,
+           [MarshalAs(UnmanagedType.I1)] sbyte separator,
+           [MarshalAs(UnmanagedType.I1)] sbyte lister);
+
+        public void WriteAffiliations(string filename, char separator, char lister)
+        {
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.write_affiliations(
+                        this.processorObjectAddress,
+                        filename,
+                        Convert.ToSByte(separator),
+                        Convert.ToSByte(lister)));
 
             if (message != null)
             {
@@ -758,11 +834,18 @@ namespace OrganizationalAnalysis
         private static extern IntPtr write_weak_affiliations_matrix(
            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string filename,
-           [MarshalAs(UnmanagedType.I1)] sbyte separator);
+           [MarshalAs(UnmanagedType.I1)] sbyte separator,
+           [MarshalAs(UnmanagedType.I1)] sbyte lister);
 
-        public void WriteWeakAffiliationsMatrix(string filename, char separator)
+        public void WriteWeakAffiliationsMatrix(string filename, char separator, char lister)
         {
-            string? message = Marshal.PtrToStringAnsi(Processor.write_weak_affiliations_matrix(this.processorObjectAddress, filename, Convert.ToSByte(separator)));
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.write_weak_affiliations_matrix(
+                        this.processorObjectAddress,
+                        filename,
+                        Convert.ToSByte(separator),
+                        Convert.ToSByte(lister)));
 
             if (message != null)
             {
@@ -774,27 +857,18 @@ namespace OrganizationalAnalysis
         private static extern IntPtr write_strong_affiliations_matrix(
            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string filename,
-           [MarshalAs(UnmanagedType.I1)] sbyte separator);
+           [MarshalAs(UnmanagedType.I1)] sbyte separator,
+           [MarshalAs(UnmanagedType.I1)] sbyte lister);
 
-        public void WriteStrongAffiliationsMatrix(string filename, char separator)
+        public void WriteStrongAffiliationsMatrix(string filename, char separator, char lister)
         {
-            string? message = Marshal.PtrToStringAnsi(Processor.write_strong_affiliations_matrix(this.processorObjectAddress, filename, Convert.ToSByte(separator)));
-
-            if (message != null)
-            {
-                throw new Exception(message);
-            }
-        }
-
-        [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr write_components_matrix(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
-           [MarshalAs(UnmanagedType.LPStr)] string filename,
-           [MarshalAs(UnmanagedType.I1)] sbyte separator);
-
-        public void WriteComponentsMatrix(string filename, char separator)
-        {
-            string? message = Marshal.PtrToStringAnsi(Processor.write_components_matrix(this.processorObjectAddress, filename, Convert.ToSByte(separator)));
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.write_strong_affiliations_matrix(
+                        this.processorObjectAddress,
+                        filename,
+                        Convert.ToSByte(separator),
+                        Convert.ToSByte(lister)));
 
             if (message != null)
             {
@@ -806,11 +880,18 @@ namespace OrganizationalAnalysis
         private static extern IntPtr write_total_potential_matrix(
            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string filename,
-           [MarshalAs(UnmanagedType.I1)] sbyte separator);
+           [MarshalAs(UnmanagedType.I1)] sbyte separator,
+           [MarshalAs(UnmanagedType.I1)] sbyte lister);
 
-        public void WriteTotalPotentialMatrix(string filename, char separator)
+        public void WriteTotalPotentialMatrix(string filename, char separator, char lister)
         {
-            string? message = Marshal.PtrToStringAnsi(Processor.write_total_potential_matrix(this.processorObjectAddress, filename, Convert.ToSByte(separator)));
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.write_total_potential_matrix(
+                        this.processorObjectAddress,
+                        filename,
+                        Convert.ToSByte(separator),
+                        Convert.ToSByte(lister)));
 
             if (message != null)
             {
@@ -822,11 +903,18 @@ namespace OrganizationalAnalysis
         private static extern IntPtr write_strong_potential_matrix_without_redundancies(
            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string filename,
-           [MarshalAs(UnmanagedType.I1)] sbyte separator);
+           [MarshalAs(UnmanagedType.I1)] sbyte separator,
+           [MarshalAs(UnmanagedType.I1)] sbyte lister);
 
-        public void WriteStrongPotentialMatrixWithoutRedundancies(string filename, char separator)
+        public void WriteStrongPotentialMatrixWithoutRedundancies(string filename, char separator, char lister)
         {
-            string? message = Marshal.PtrToStringAnsi(Processor.write_strong_potential_matrix_without_redundancies(this.processorObjectAddress, filename, Convert.ToSByte(separator)));
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.write_strong_potential_matrix_without_redundancies(
+                        this.processorObjectAddress,
+                        filename,
+                        Convert.ToSByte(separator),
+                        Convert.ToSByte(lister)));
 
             if (message != null)
             {
@@ -838,11 +926,18 @@ namespace OrganizationalAnalysis
         private static extern IntPtr write_strong_potential_matrix_with_redundancies(
            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string filename,
-           [MarshalAs(UnmanagedType.I1)] sbyte separator);
+           [MarshalAs(UnmanagedType.I1)] sbyte separator,
+           [MarshalAs(UnmanagedType.I1)] sbyte lister);
 
-        public void WriteStrongPotentialMatrixWithRedundancies(string filename, char separator)
+        public void WriteStrongPotentialMatrixWithRedundancies(string filename, char separator, char lister)
         {
-            string? message = Marshal.PtrToStringAnsi(Processor.write_strong_potential_matrix_with_redundancies(this.processorObjectAddress, filename, Convert.ToSByte(separator)));
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.write_strong_potential_matrix_with_redundancies(
+                        this.processorObjectAddress,
+                        filename,
+                        Convert.ToSByte(separator),
+                        Convert.ToSByte(lister)));
 
             if (message != null)
             {
@@ -854,11 +949,18 @@ namespace OrganizationalAnalysis
         private static extern IntPtr write_comparative_matrix_without_redundancies(
            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string filename,
-           [MarshalAs(UnmanagedType.I1)] sbyte separator);
+           [MarshalAs(UnmanagedType.I1)] sbyte separator,
+           [MarshalAs(UnmanagedType.I1)] sbyte lister);
 
-        public void WriteComparativeMatrixWithoutRedundancies(string filename, char separator)
+        public void WriteComparativeMatrixWithoutRedundancies(string filename, char separator, char lister)
         {
-            string? message = Marshal.PtrToStringAnsi(Processor.write_comparative_matrix_without_redundancies(this.processorObjectAddress, filename, Convert.ToSByte(separator)));
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.write_comparative_matrix_without_redundancies(
+                        this.processorObjectAddress,
+                        filename,
+                        Convert.ToSByte(separator),
+                        Convert.ToSByte(lister)));
 
             if (message != null)
             {
@@ -870,11 +972,18 @@ namespace OrganizationalAnalysis
         private static extern IntPtr write_comparative_matrix_with_redundancies(
            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string filename,
-           [MarshalAs(UnmanagedType.I1)] sbyte separator);
+           [MarshalAs(UnmanagedType.I1)] sbyte separator,
+           [MarshalAs(UnmanagedType.I1)] sbyte lister);
 
-        public void WriteComparativeMatrixWithRedundancies(string filename, char separator)
+        public void WriteComparativeMatrixWithRedundancies(string filename, char separator, char lister)
         {
-            string? message = Marshal.PtrToStringAnsi(Processor.write_comparative_matrix_with_redundancies(this.processorObjectAddress, filename, Convert.ToSByte(separator)));
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.write_comparative_matrix_with_redundancies(
+                        this.processorObjectAddress,
+                        filename,
+                        Convert.ToSByte(separator),
+                        Convert.ToSByte(lister)));
 
             if (message != null)
             {

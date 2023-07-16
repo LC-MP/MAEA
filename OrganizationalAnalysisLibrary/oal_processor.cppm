@@ -875,10 +875,11 @@ extern "C"
 		return nullptr;
 	}
 
-	_declspec(dllexport) const char *write_activities_matrix(
+	_declspec(dllexport) const char *write_agents(
 		uintptr_t address,
 		const char *filename,
-		const char separator)
+		const char separator,
+		const char lister)
 	{
 		auto processor =
 			reinterpret_cast < const xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
@@ -887,7 +888,88 @@ extern "C"
 		{
 			std::fstream file(filename, std::ios_base::out | std::ios_base::trunc);
 
-			processor->write_activities_matrix(file, separator);
+			processor->write_agents(file, separator, lister);
+		}
+		catch (const std::exception &exception)
+		{
+			static std::string message;
+
+			message = exception.what();
+
+			return message.c_str();
+		}
+
+		return nullptr;
+	}
+
+	_declspec(dllexport) const char *write_activities(
+		uintptr_t address,
+		const char *filename,
+		const char separator,
+		const char lister)
+	{
+		auto processor =
+			reinterpret_cast < const xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
+
+		try
+		{
+			std::fstream file(filename, std::ios_base::out | std::ios_base::trunc);
+
+			processor->write_activities(file, separator, lister);
+		}
+		catch (const std::exception &exception)
+		{
+			static std::string message;
+
+			message = exception.what();
+
+			return message.c_str();
+		}
+
+		return nullptr;
+	}
+
+	_declspec(dllexport) const char *write_components(
+		uintptr_t address,
+		const char *filename,
+		const char separator,
+		const char lister)
+	{
+		auto processor =
+			reinterpret_cast < const xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
+
+		try
+		{
+			std::fstream file(filename, std::ios_base::out | std::ios_base::trunc);
+
+			processor->write_components(file, separator, lister);
+		}
+		catch (const std::exception &exception)
+		{
+			static std::string message;
+
+			message = exception.what();
+
+			return message.c_str();
+		}
+
+		return nullptr;
+	}
+
+	_declspec(dllexport) const char *write_affiliations(
+		uintptr_t address,
+		const char *filename,
+		const char separator,
+		const char lister)
+	{
+		auto processor =
+			reinterpret_cast < const xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
+
+		try
+		{
+			std::fstream file(filename, std::ios_base::out | std::ios_base::trunc);
+
+			processor->write_affiliations(file, separator, lister);
 		}
 		catch (const std::exception &exception)
 		{
@@ -904,7 +986,8 @@ extern "C"
 	_declspec(dllexport) const char *write_weak_affiliations_matrix(
 		uintptr_t address,
 		const char *filename,
-		const char separator)
+		const char separator,
+		const char lister)
 	{
 		auto processor =
 			reinterpret_cast < const xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
@@ -913,7 +996,7 @@ extern "C"
 		{
 			std::fstream file(filename, std::ios_base::out | std::ios_base::trunc);
 
-			processor->write_weak_affiliations_matrix(file, separator);
+			processor->write_weak_affiliations_matrix(file, separator, lister);
 		}
 		catch (const std::exception &exception)
 		{
@@ -930,7 +1013,8 @@ extern "C"
 	_declspec(dllexport) const char *write_strong_affiliations_matrix(
 		uintptr_t address,
 		const char *filename,
-		const char separator)
+		const char separator,
+		const char lister)
 	{
 		auto processor =
 			reinterpret_cast < const xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
@@ -939,33 +1023,7 @@ extern "C"
 		{
 			std::fstream file(filename, std::ios_base::out | std::ios_base::trunc);
 
-			processor->write_strong_affiliations_matrix(file, separator);
-		}
-		catch (const std::exception &exception)
-		{
-			static std::string message;
-
-			message = exception.what();
-
-			return message.c_str();
-		}
-
-		return nullptr;
-	}
-
-	_declspec(dllexport) const char *write_components_matrix(
-		uintptr_t address,
-		const char *filename,
-		const char separator)
-	{
-		auto processor =
-			reinterpret_cast < const xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
-
-		try
-		{
-			std::fstream file(filename, std::ios_base::out | std::ios_base::trunc);
-
-			processor->write_components_matrix(file, separator);
+			processor->write_strong_affiliations_matrix(file, separator, lister);
 		}
 		catch (const std::exception &exception)
 		{
@@ -982,7 +1040,8 @@ extern "C"
 	_declspec(dllexport) const char *write_total_potential_matrix(
 		uintptr_t address,
 		const char *filename,
-		const char separator)
+		const char separator,
+		const char lister)
 	{
 		auto processor =
 			reinterpret_cast < const xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
@@ -991,7 +1050,7 @@ extern "C"
 		{
 			std::fstream file(filename, std::ios_base::out | std::ios_base::trunc);
 
-			processor->write_total_potential_matrix(file, separator);
+			processor->write_total_potential_matrix(file, separator, lister);
 		}
 		catch (const std::exception &exception)
 		{
@@ -1008,7 +1067,8 @@ extern "C"
 	_declspec(dllexport) const char *write_strong_potential_matrix_without_redundancies(
 		uintptr_t address,
 		const char *filename,
-		const char separator)
+		const char separator,
+		const char lister)
 	{
 		auto processor =
 			reinterpret_cast < const xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
@@ -1017,7 +1077,7 @@ extern "C"
 		{
 			std::fstream file(filename, std::ios_base::out | std::ios_base::trunc);
 
-			processor->write_strong_potential_matrix_without_redundancies(file, separator);
+			processor->write_strong_potential_matrix_without_redundancies(file, separator, lister);
 		}
 		catch (const std::exception &exception)
 		{
@@ -1034,7 +1094,8 @@ extern "C"
 	_declspec(dllexport) const char *write_strong_potential_matrix_with_redundancies(
 		uintptr_t address,
 		const char *filename,
-		const char separator)
+		const char separator,
+		const char lister)
 	{
 		auto processor =
 			reinterpret_cast < const xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
@@ -1043,7 +1104,7 @@ extern "C"
 		{
 			std::fstream file(filename, std::ios_base::out | std::ios_base::trunc);
 
-			processor->write_strong_potential_matrix_with_redundancies(file, separator);
+			processor->write_strong_potential_matrix_with_redundancies(file, separator, lister);
 		}
 		catch (const std::exception &exception)
 		{
@@ -1060,7 +1121,8 @@ extern "C"
 	_declspec(dllexport) const char *write_comparative_matrix_without_redundancies(
 		uintptr_t address,
 		const char *filename,
-		const char separator)
+		const char separator,
+		const char lister)
 	{
 		auto processor =
 			reinterpret_cast < const xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
@@ -1069,7 +1131,7 @@ extern "C"
 		{
 			std::fstream file(filename, std::ios_base::out | std::ios_base::trunc);
 
-			processor->write_comparative_matrix_without_redundancies(file, separator);
+			processor->write_comparative_matrix_without_redundancies(file, separator, lister);
 		}
 		catch (const std::exception &exception)
 		{
@@ -1086,7 +1148,8 @@ extern "C"
 	_declspec(dllexport) const char *write_comparative_matrix_with_redundancies(
 		uintptr_t address,
 		const char *filename,
-		const char separator)
+		const char separator,
+		const char lister)
 	{
 		auto processor =
 			reinterpret_cast < const xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
@@ -1095,7 +1158,7 @@ extern "C"
 		{
 			std::fstream file(filename, std::ios_base::out | std::ios_base::trunc);
 
-			processor->write_comparative_matrix_with_redundancies(file, separator);
+			processor->write_comparative_matrix_with_redundancies(file, separator, lister);
 		}
 		catch (const std::exception &exception)
 		{
