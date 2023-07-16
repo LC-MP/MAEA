@@ -32,6 +32,7 @@
 export module xablau.organizational_analysis:writer;
 export import :fundamental_definitions;
 
+export import <algorithm>;
 export import <concepts>;
 export import <iostream>;
 export import <istream>;
@@ -44,6 +45,22 @@ import xablau.algebra;
 
 export namespace xablau::organizational_analysis::writer
 {
+	namespace internals
+	{
+		template < typename CharType, typename Traits >
+		std::basic_string < CharType, Traits > remove_separator(
+			const std::basic_string < CharType, Traits > &string,
+			const CharType separator)
+		{
+			const auto replacement = (separator == CharType{','} ? CharType{';'} : CharType{','});
+			auto filteredString = string;
+
+			std::replace(filteredString.begin(), filteredString.end(), separator, replacement);
+
+			return filteredString;
+		}
+	}
+
 	template < typename CharType, typename Traits >
 	requires (std::same_as < CharType, char > || std::same_as < CharType, wchar_t >)
 	std::basic_ostream < CharType, Traits > &write_agents(
@@ -63,14 +80,14 @@ export namespace xablau::organizational_analysis::writer
 
 		for (const auto &[identification, description] : agents.descriptions)
 		{
-			output << identification << separator;
+			output << internals::remove_separator(identification, separator) << separator;
 
 			for (const auto &group : description.groups)
 			{
-				output << group << (separator == CharType{','} ? CharType{';'} : CharType{','});
+				output << internals::remove_separator(group, separator) << (separator == CharType{','} ? CharType{';'} : CharType{','});
 			}
 
-			output << description.role << CharType{'\n'};
+			output << internals::remove_separator(description.role, separator) << CharType{'\n'};
 		}
 
 		return output;
@@ -96,9 +113,9 @@ export namespace xablau::organizational_analysis::writer
 			output << L"Agent in charge" << separator << "Group" << separator << "Activity" << separator;
 		}
 
-		for (const auto & [identification, description] : activities.descriptions)
+		for (const auto &[identification, description] : activities.descriptions)
 		{
-			output << separator << identification;
+			output << separator << internals::remove_separator(identification, separator);
 		}
 
 		output << CharType{'\n'};
@@ -107,7 +124,7 @@ export namespace xablau::organizational_analysis::writer
 		{
 			for (const auto item : description1.agents_in_charge)
 			{
-				output << agents.descriptions.at(item).role;
+				output << internals::remove_separator(agents.descriptions.at(item).role, separator);
 				output << (separator == CharType{','} ? CharType{';'} : CharType{','});
 				output << CharType{' '};
 			}
@@ -121,11 +138,11 @@ export namespace xablau::organizational_analysis::writer
 
 			for (const auto &group : description1.groups)
 			{
-				output << group << (separator == CharType{','} ? CharType{';'} : CharType{','});
+				output << internals::remove_separator(group, separator) << (separator == CharType{','} ? CharType{';'} : CharType{','});
 			}
 
-			output << description1.name << separator;
-			output << identification1 << separator;
+			output << internals::remove_separator(description1.name, separator) << separator;
+			output << internals::remove_separator(identification1, separator) << separator;
 
 			for (const auto &[identification2, description2] : activities.descriptions)
 			{
@@ -142,20 +159,9 @@ export namespace xablau::organizational_analysis::writer
 					}
 				}
 
-				else
+				else if (activities.dependencies.contains(identification1, identification2))
 				{
-					if (activities.dependencies.contains(identification1, identification2))
-					{
-						if constexpr (std::same_as < CharType, char >)
-						{
-							output << std::to_string(1);
-						}
-
-						else
-						{
-							output << std::to_wstring(1);
-						}
-					}
+					output << 1;
 				}
 
 				output << separator;
@@ -189,7 +195,7 @@ export namespace xablau::organizational_analysis::writer
 
 		for (const auto &[identification, description] : components.descriptions)
 		{
-			output << separator << identification;
+			output << separator << internals::remove_separator(identification, separator);
 		}
 
 		output << CharType{'\n'};
@@ -198,11 +204,11 @@ export namespace xablau::organizational_analysis::writer
 		{
 			for (const auto &group : description1.groups)
 			{
-				output << group << (separator == CharType{','} ? CharType{';'} : CharType{','});
+				output << internals::remove_separator(group, separator) << (separator == CharType{','} ? CharType{';'} : CharType{','});
 			}
 
-			output << description1.name << separator;
-			output << identification1 << separator;
+			output << internals::remove_separator(description1.name, separator) << separator;
+			output << internals::remove_separator(identification1, separator) << separator;
 
 			for (const auto &[identification2, description2] : components.descriptions)
 			{
@@ -219,20 +225,9 @@ export namespace xablau::organizational_analysis::writer
 					}
 				}
 
-				else
+				else if (components.interactions.contains(identification1, identification2))
 				{
-					if (components.interactions.contains(identification1, identification2))
-					{
-						if constexpr (std::same_as < CharType, char >)
-						{
-							output << std::to_string(1);
-						}
-
-						else
-						{
-							output << std::to_wstring(1);
-						}
-					}
+					output << 1;
 				}
 
 				output << separator;
@@ -267,7 +262,7 @@ export namespace xablau::organizational_analysis::writer
 		for (const auto &[identification, description] : components.descriptions)
 		{
 			output << separator;
-			output << description.name;
+			output << internals::remove_separator(description.name, separator);
 		}
 
 		output << CharType{'\n'} << separator;
@@ -285,17 +280,17 @@ export namespace xablau::organizational_analysis::writer
 		for (const auto &[identification, description] : components.descriptions)
 		{
 			output << separator;
-			output << identification;
+			output << internals::remove_separator(identification, separator);
 		}
 
 		output << CharType{'\n'};
 
 		for (const auto &[identification1, description1] : affiliations.responsabilities)
 		{
-			output << activities.descriptions.at(identification1).name;
+			output << internals::remove_separator(activities.descriptions.at(identification1).name, separator);
 			output << separator;
 
-			output << identification1;
+			output << internals::remove_separator(identification1, separator);
 			output << separator;
 
 			auto iterator = description1.cbegin();
