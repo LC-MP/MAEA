@@ -11,6 +11,7 @@ using InsertPairOfStringAndSizeT = void(*)(const char *string, size_t i);
 using InsertStringInContainer = void(*)(const char *string);
 using ResizeMatrix = void(*)(size_t rows, size_t columns);
 using InsertFloatIntoPosition2 = void(*)(float value, size_t i, size_t j);
+using CopyNativeStringToManagedString = void(*)(const char *string);
 
 extern "C"
 {
@@ -640,6 +641,78 @@ extern "C"
 		try
 		{
 			processor->minimum_relation_degree_for_agents_in_charge_of_components(degree);
+		}
+		catch (const std::exception &exception)
+		{
+			static std::string message;
+
+			message = exception.what();
+
+			return message.c_str();
+		}
+
+		return nullptr;
+	}
+
+	_declspec(dllexport) const char *agent_role(
+		uintptr_t address,
+		const char *agent,
+		CopyNativeStringToManagedString copier)
+	{
+		auto processor =
+			reinterpret_cast < const xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
+
+		try
+		{
+			copier(processor->agent_role(agent).c_str());
+		}
+		catch (const std::exception &exception)
+		{
+			static std::string message;
+
+			message = exception.what();
+
+			return message.c_str();
+		}
+
+		return nullptr;
+	}
+
+	_declspec(dllexport) const char *activity_name(
+		uintptr_t address,
+		const char *activity,
+		CopyNativeStringToManagedString copier)
+	{
+		auto processor =
+			reinterpret_cast < const xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
+
+		try
+		{
+			copier(processor->activity_name(activity).c_str());
+		}
+		catch (const std::exception &exception)
+		{
+			static std::string message;
+
+			message = exception.what();
+
+			return message.c_str();
+		}
+
+		return nullptr;
+	}
+
+	_declspec(dllexport) const char *component_name(
+		uintptr_t address,
+		const char *component,
+		CopyNativeStringToManagedString copier)
+	{
+		auto processor =
+			reinterpret_cast < const xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
+
+		try
+		{
+			copier(processor->component_name(component).c_str());
 		}
 		catch (const std::exception &exception)
 		{

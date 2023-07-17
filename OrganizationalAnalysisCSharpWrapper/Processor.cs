@@ -405,7 +405,7 @@ namespace OrganizationalAnalysis
         }
 
         private delegate void InsertString(
-            [MarshalAs(UnmanagedType.LPStr)] string componentWithoutAgents);
+            [MarshalAs(UnmanagedType.LPStr)] string elementWithoutAgentsInCharge);
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
         private static extern IntPtr components_without_agents_in_charge(
@@ -417,9 +417,9 @@ namespace OrganizationalAnalysis
             var componentsWithoutAgents = new List<string>();
 
             InsertString inserter =
-                ([MarshalAs(UnmanagedType.LPStr)] string componentWithoutAgents) =>
+                ([MarshalAs(UnmanagedType.LPStr)] string elementWithoutAgentsInCharge) =>
                 {
-                    componentsWithoutAgents.Add(new string(componentWithoutAgents));
+                    componentsWithoutAgents.Add(new string(elementWithoutAgentsInCharge));
                 };
 
             string? message = Marshal.PtrToStringAnsi(Processor.components_without_agents_in_charge(this.processorObjectAddress, inserter));
@@ -442,9 +442,9 @@ namespace OrganizationalAnalysis
             var activitiesWithoutAgents = new List<string>();
 
             InsertString inserter =
-                ([MarshalAs(UnmanagedType.LPStr)] string componentWithoutAgents) =>
+                ([MarshalAs(UnmanagedType.LPStr)] string elementWithoutAgentsInCharge) =>
                 {
-                    activitiesWithoutAgents.Add(new string(componentWithoutAgents));
+                    activitiesWithoutAgents.Add(new string(elementWithoutAgentsInCharge));
                 };
 
             string? message = Marshal.PtrToStringAnsi(Processor.activities_without_agents_in_charge(this.processorObjectAddress, inserter));
@@ -470,6 +470,87 @@ namespace OrganizationalAnalysis
             {
                 throw new Exception(message);
             }
+        }
+
+        private delegate void CopyString(
+            [MarshalAs(UnmanagedType.LPStr)] string nativeString);
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern IntPtr agent_role(
+           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string agent,
+           [MarshalAs(UnmanagedType.FunctionPtr)] CopyString copier);
+
+        public string AgentRole(string agent)
+        {
+            string managedString = "";
+
+            CopyString copier =
+                ([MarshalAs(UnmanagedType.LPStr)] string nativeString) =>
+                {
+                    managedString = new string(nativeString);
+                };
+
+            string? message = Marshal.PtrToStringAnsi(Processor.agent_role(this.processorObjectAddress, agent, copier));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+
+            return managedString;
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern IntPtr activity_name(
+           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string activity,
+           [MarshalAs(UnmanagedType.FunctionPtr)] CopyString copier);
+
+        public string ActivityName(string activity)
+        {
+            string managedString = "";
+
+            CopyString copier =
+                ([MarshalAs(UnmanagedType.LPStr)] string nativeString) =>
+                {
+                    managedString = new string(nativeString);
+                };
+
+            string? message = Marshal.PtrToStringAnsi(Processor.activity_name(this.processorObjectAddress, activity, copier));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+
+            return managedString;
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern IntPtr component_name(
+           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string component,
+           [MarshalAs(UnmanagedType.FunctionPtr)] CopyString copier);
+
+        public string ComponentName(string component)
+        {
+            string managedString = "";
+
+            CopyString copier =
+                ([MarshalAs(UnmanagedType.LPStr)] string nativeString) =>
+                {
+                    managedString = new string(nativeString);
+                };
+
+            string? message = Marshal.PtrToStringAnsi(Processor.component_name(this.processorObjectAddress, component, copier));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+
+            return managedString;
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]

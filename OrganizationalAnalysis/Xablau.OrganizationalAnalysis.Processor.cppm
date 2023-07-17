@@ -1013,6 +1013,21 @@ export namespace xablau::organizational_analysis
 			}
 		}
 
+		[[nodiscard]] string_type agent_role(const string_type &agent) const
+		{
+			return this->_agents.descriptions.at(agent).role;
+		}
+
+		[[nodiscard]] string_type activity_name(const string_type &activity) const
+		{
+			return this->_activities.descriptions.at(activity).name;
+		}
+
+		[[nodiscard]] string_type component_name(const string_type &component) const
+		{
+			return this->_components.descriptions.at(component).name;
+		}
+
 		void compare_activities_and_organization()
 		{
 			std::map < size_t, string_type > activityIndexToKeyMap;
