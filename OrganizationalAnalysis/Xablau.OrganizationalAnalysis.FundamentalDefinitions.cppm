@@ -56,10 +56,6 @@ export namespace xablau::organizational_analysis
 		}
 	}
 
-	constexpr float indirectly_related = 1.0f;
-	constexpr float related = 2.0f;
-	constexpr float directly_related = 3.0f;
-
 	template < typename CharType, typename Traits >
 	struct agents
 	{

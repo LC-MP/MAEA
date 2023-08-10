@@ -480,7 +480,10 @@ export namespace xablau::organizational_analysis::writer
 	std::basic_ostream < CharType, Traits > &write_report(
 		std::basic_ostream < CharType, Traits > &output,
 		const MatrixType &comparativeMatrix,
-		const std::map < size_t, std::basic_string < CharType, Traits > > &baseIndexToKeyMap)
+		const std::map < size_t, std::basic_string < CharType, Traits > > &baseIndexToKeyMap,
+		const float indirectlyRelatedDegree,
+		const float relatedDegree,
+		const float directlyRelatedDegree)
 	{
 		std::array < std::vector < size_t >, 3 > interactions =
 		{
@@ -495,34 +498,34 @@ export namespace xablau::organizational_analysis::writer
 			{
 				const auto cell1 = comparativeMatrix(i, j);
 
-				if (cell1 == organizational_analysis::indirectly_related)
+				if (cell1 >= indirectlyRelatedDegree && cell1 < relatedDegree)
 				{
 					interactions[0][i]++;
 				}
 
-				else if (cell1 == organizational_analysis::related)
+				else if (cell1 >= relatedDegree && cell1 < directlyRelatedDegree)
 				{
 					interactions[1][i]++;
 				}
 
-				else if (cell1 == organizational_analysis::directly_related)
+				else
 				{
 					interactions[2][i]++;
 				}
 
 				const auto cell2 = comparativeMatrix(j, i);
 
-				if (cell2 == organizational_analysis::indirectly_related)
+				if (cell2 >= indirectlyRelatedDegree && cell2 < relatedDegree)
 				{
 					interactions[0][i]++;
 				}
 
-				else if (cell2 == organizational_analysis::related)
+				else if (cell2 >= relatedDegree && cell2 < directlyRelatedDegree)
 				{
 					interactions[1][i]++;
 				}
 
-				else if (cell2 == organizational_analysis::directly_related)
+				else
 				{
 					interactions[2][i]++;
 				}

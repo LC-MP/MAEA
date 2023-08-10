@@ -136,11 +136,11 @@ export namespace xablau::organizational_analysis
 			return componentsMatrix;
 		}
 
-		[[nodiscard]] std::array < matrix_type, 2 > create_affiliations_matrices(
+		[[nodiscard]] std::array < matrix_type, 3 > create_affiliations_matrices(
 			const std::map < string_type, size_t > &activityKeyToIndexMap,
 			const std::map < string_type, size_t > &componentKeyToIndexMap) const
 		{
-			std::array < matrix_type, 2 > affiliationsMatrices;
+			std::array < matrix_type, 3 > affiliationsMatrices;
 
 			affiliationsMatrices[0].resize(
 				this->_activities.descriptions.size(),
@@ -148,6 +148,11 @@ export namespace xablau::organizational_analysis
 				float{});
 
 			affiliationsMatrices[1].resize(
+				this->_activities.descriptions.size(),
+				this->_components.descriptions.size(),
+				float{});
+
+			affiliationsMatrices[2].resize(
 				this->_activities.descriptions.size(),
 				this->_components.descriptions.size(),
 				float{});
@@ -175,19 +180,23 @@ export namespace xablau::organizational_analysis
 				
 					if (iterator2 != iterator1->second.cend())
 					{
-						if (iterator2->second >= float{1})
+						if (iterator2->second >= this->_indirectly_related_degree)
 						{
 							affiliationsMatrices[0](
 								activityKeyToIndexMap.at(identification1),
 								componentKeyToIndexMap.at(identification2)) = float{1};
 						}
 
-						if (iterator2->second >= float{3})
+						if (iterator2->second >= this->_directly_related_degree)
 						{
 							affiliationsMatrices[1](
 								activityKeyToIndexMap.at(identification1),
 								componentKeyToIndexMap.at(identification2)) = float{1};
 						}
+
+						affiliationsMatrices[2](
+							activityKeyToIndexMap.at(identification1),
+							componentKeyToIndexMap.at(identification2)) = iterator2->second;
 					}
 				}
 			}
@@ -195,7 +204,7 @@ export namespace xablau::organizational_analysis
 			return affiliationsMatrices;
 		}
 
-		static void create_comparative_matrix_step_1(
+		void create_comparative_matrix_step_1(
 			matrix_type &comparativeMatrix,
 			const matrix_type &strongPotentialMatrix,
 			const matrix_type &baseMatrix)
@@ -215,13 +224,13 @@ export namespace xablau::organizational_analysis
 
 					if (strongPotentialMatrixCell > float{} && baseMatrixCell == float{})
 					{
-						finalComparativeMatrixCell = organizational_analysis::indirectly_related;
+						finalComparativeMatrixCell = this->_indirectly_related_degree;
 					}
 				}
 			}
 		}
 
-		static void create_comparative_matrix_step_2(
+		void create_comparative_matrix_step_2(
 			matrix_type &finalComparativeMatrix,
 			const matrix_type &totalPotentialMatrix,
 			const matrix_type &baseMatrix)
@@ -243,12 +252,12 @@ export namespace xablau::organizational_analysis
 					{
 						if (totalPotentialMatrixCell != float{})
 						{
-							finalComparativeMatrixCell = organizational_analysis::related;
+							finalComparativeMatrixCell = this->_related_degree;
 						}
 
 						else
 						{
-							finalComparativeMatrixCell = organizational_analysis::directly_related;
+							finalComparativeMatrixCell = this->_directly_related_degree;
 						}
 					}
 				}
@@ -547,9 +556,12 @@ export namespace xablau::organizational_analysis
 		bool _up_to_date = false;
 		comparison_mode _last_comparison_mode = comparison_mode::invalid;
 
+		float _indirectly_related_degree{};
+		float _related_degree{};
+		float _directly_related_degree{};
 		matrix_type _components_interfaces_matrix{};
 		matrix_type _activities_dependencies_matrix{};
-		std::array < matrix_type, 2 > _affiliations_matrices{};
+		std::array < matrix_type, 3 > _affiliations_matrices{};
 		std::array < matrix_type, 2 > _potential_matrices{};
 		matrix_type _strong_potential_matrix_without_redundancies{};
 		matrix_type _comparative_matrix_without_redundancies_step_1{};
@@ -558,6 +570,21 @@ export namespace xablau::organizational_analysis
 		matrix_type _comparative_matrix_with_redundancies_step_2{};
 
 	public:
+		void indirectly_related_degree(const float degree) noexcept
+		{
+			this->_indirectly_related_degree = degree;
+		}
+
+		void related_degree(const float degree) noexcept
+		{
+			this->_related_degree = degree;
+		}
+
+		void directly_related_degree(const float degree) noexcept
+		{
+			this->_directly_related_degree = degree;
+		}
+
 		void insert_or_assign_agent(
 			const string_type &agent,
 			const string_type &role)
@@ -1046,12 +1073,18 @@ export namespace xablau::organizational_analysis
 			writer::write_report(
 				outputReportWithoutRedundancies,
 				this->_comparative_matrix_without_redundancies_step_2,
-				activityIndexToKeyMap);
+				activityIndexToKeyMap,
+				this->_indirectly_related_degree,
+				this->_related_degree,
+				this->_directly_related_degree);
 
 			writer::write_report(
 				outputReportWithRedundancies,
 				this->_comparative_matrix_with_redundancies_step_2,
-				activityIndexToKeyMap);
+				activityIndexToKeyMap,
+				this->_indirectly_related_degree,
+				this->_related_degree,
+				this->_directly_related_degree);
 		}
 
 		void compare_components_and_organization(
@@ -1080,12 +1113,18 @@ export namespace xablau::organizational_analysis
 			writer::write_report(
 				outputReportWithoutRedundancies,
 				this->_comparative_matrix_without_redundancies_step_2,
-				componentIndexToKeyMap);
+				componentIndexToKeyMap,
+				this->_indirectly_related_degree,
+				this->_related_degree,
+				this->_directly_related_degree);
 
 			writer::write_report(
 				outputReportWithRedundancies,
 				this->_comparative_matrix_with_redundancies_step_2,
-				componentIndexToKeyMap);
+				componentIndexToKeyMap,
+				this->_indirectly_related_degree,
+				this->_related_degree,
+				this->_directly_related_degree);
 		}
 
 		[[nodiscard]] const matrix_type &activities_dependencies_matrix() const
@@ -1126,6 +1165,16 @@ export namespace xablau::organizational_analysis
 			}
 
 			return this->_affiliations_matrices[1];
+		}
+
+		[[nodiscard]] const matrix_type &total_affiliations_matrix() const
+		{
+			if (!this->_up_to_date)
+			{
+				throw std::runtime_error("\"processor\" is not up to date.");
+			}
+
+			return this->_affiliations_matrices[2];
 		}
 
 		[[nodiscard]] const matrix_type &comparative_matrix_without_redundancies() const
@@ -1258,6 +1307,38 @@ export namespace xablau::organizational_analysis
 			const auto optionalColumnLabels = std::make_optional(std::move(columnLabels));
 
 			writer::write_matrix(output, this->_affiliations_matrices[1], separator, lister, optionalRowLabels, optionalColumnLabels);
+		}
+
+		void write_total_affiliations_matrix(
+			std::basic_ostream < CharType, Traits > &output,
+			const CharType separator,
+			const CharType lister) const
+		{
+			if (!this->_up_to_date)
+			{
+				throw std::runtime_error("\"processor\" is not updated.");
+			}
+
+			std::vector < string_type > rowLabels{};
+			std::vector < string_type > columnLabels{};
+
+			rowLabels.reserve(this->_activities.descriptions.size());
+			columnLabels.reserve(this->_components.descriptions.size());
+
+			for (const auto &activity : this->_activities.descriptions)
+			{
+				rowLabels.push_back(activity.first + lister + activity.second.name);
+			}
+
+			for (const auto &component : this->_components.descriptions)
+			{
+				columnLabels.push_back(component.first + lister + component.second.name);
+			}
+
+			const auto optionalRowLabels = std::make_optional(std::move(rowLabels));
+			const auto optionalColumnLabels = std::make_optional(std::move(columnLabels));
+
+			writer::write_matrix(output, this->_affiliations_matrices[2], separator, lister, optionalRowLabels, optionalColumnLabels);
 		}
 
 		void write_total_potential_matrix(

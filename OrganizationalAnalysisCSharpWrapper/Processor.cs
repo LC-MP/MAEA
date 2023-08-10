@@ -7,6 +7,51 @@ namespace OrganizationalAnalysis
         readonly private ulong processorObjectAddress;
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern IntPtr indirectly_related_degree(
+            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+            [MarshalAs(UnmanagedType.R4)] float degree);
+
+        public void IndirectlyRelatedDegree(float degree)
+        {
+            string? message = Marshal.PtrToStringAnsi(Processor.indirectly_related_degree(this.processorObjectAddress, degree));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern IntPtr related_degree(
+            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+            [MarshalAs(UnmanagedType.R4)] float degree);
+
+        public void RelatedDegree(float degree)
+        {
+            string? message = Marshal.PtrToStringAnsi(Processor.related_degree(this.processorObjectAddress, degree));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern IntPtr directly_related_degree(
+            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+            [MarshalAs(UnmanagedType.R4)] float degree);
+
+        public void DirectlyRelatedDegree(float degree)
+        {
+            string? message = Marshal.PtrToStringAnsi(Processor.directly_related_degree(this.processorObjectAddress, degree));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
         private static extern IntPtr insert_or_assign_agent(
             [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
             [MarshalAs(UnmanagedType.LPStr)] string agent,
@@ -764,6 +809,48 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern IntPtr total_affiliations_matrix(
+          [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+          [MarshalAs(UnmanagedType.FunctionPtr)] ResizeMatrix resizer,
+          [MarshalAs(UnmanagedType.FunctionPtr)] InsertFloatIntoPosition2 inserter);
+
+        public List<List<float>> TotalAffiliationsMatrix()
+        {
+            List<List<float>> matrix = new List<List<float>>();
+
+            ResizeMatrix resizer =
+                ([MarshalAs(UnmanagedType.U8)] ulong rows, [MarshalAs(UnmanagedType.U8)] ulong columns) =>
+                {
+                    matrix = new List<List<float>>((int)rows);
+
+                    for (ulong i = 0; i < rows; i++)
+                    {
+                        matrix.Add(new List<float>((int)columns));
+
+                        for (ulong j = 0; j < columns; j++)
+                        {
+                            matrix[(int)i].Add(new float());
+                        }
+                    }
+                };
+
+            InsertFloatIntoPosition2 inserter =
+                ([MarshalAs(UnmanagedType.R4)] float value, [MarshalAs(UnmanagedType.U8)] ulong row, [MarshalAs(UnmanagedType.U8)] ulong column) =>
+                {
+                    matrix[(int)row][(int)column] = value;
+                };
+
+            string? message = Marshal.PtrToStringAnsi(Processor.total_affiliations_matrix(this.processorObjectAddress, resizer, inserter));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+
+            return matrix;
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
         private static extern IntPtr comparative_matrix_without_redundancies(
            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
            [MarshalAs(UnmanagedType.FunctionPtr)] ResizeMatrix resizer,
@@ -974,6 +1061,29 @@ namespace OrganizationalAnalysis
             string? message =
                 Marshal.PtrToStringAnsi(
                     Processor.write_strong_affiliations_matrix(
+                        this.processorObjectAddress,
+                        filename,
+                        Convert.ToSByte(separator),
+                        Convert.ToSByte(lister)));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern IntPtr write_total_affiliations_matrix(
+           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string filename,
+           [MarshalAs(UnmanagedType.I1)] sbyte separator,
+           [MarshalAs(UnmanagedType.I1)] sbyte lister);
+
+        public void WriteTotalAffiliationsMatrix(string filename, char separator, char lister)
+        {
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.write_total_affiliations_matrix(
                         this.processorObjectAddress,
                         filename,
                         Convert.ToSByte(separator),

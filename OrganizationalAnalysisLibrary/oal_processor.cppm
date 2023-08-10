@@ -27,6 +27,42 @@ extern "C"
 		delete reinterpret_cast < xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
 	}
 
+	_declspec(dllexport) const char *indirectly_related_degree(
+		const uintptr_t address,
+		const float degree)
+	{
+		auto processor =
+			reinterpret_cast < xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
+
+		processor->indirectly_related_degree(degree);
+
+		return nullptr;
+	}
+
+	_declspec(dllexport) const char *related_degree(
+		const uintptr_t address,
+		const float degree)
+	{
+		auto processor =
+			reinterpret_cast < xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
+
+		processor->related_degree(degree);
+
+		return nullptr;
+	}
+
+	_declspec(dllexport) const char *directly_related_degree(
+		const uintptr_t address,
+		const float degree)
+	{
+		auto processor =
+			reinterpret_cast < xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
+
+		processor->directly_related_degree(degree);
+
+		return nullptr;
+	}
+
 	_declspec(dllexport) const char *insert_or_assign_agent(
 		const uintptr_t address,
 		const char *agent,
@@ -906,6 +942,40 @@ extern "C"
 		return nullptr;
 	}
 
+	_declspec(dllexport) const char *total_affiliations_matrix(
+		uintptr_t address,
+		ResizeMatrix resizer,
+		InsertFloatIntoPosition2 inserter)
+	{
+		auto processor =
+			reinterpret_cast < const xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
+
+		try
+		{
+			const auto &affiliations_matrix = processor->total_affiliations_matrix();
+
+			resizer(affiliations_matrix.rows(), affiliations_matrix.columns());
+
+			for (size_t i = 0; i < affiliations_matrix.rows(); i++)
+			{
+				for (size_t j = 0; j < affiliations_matrix.columns(); j++)
+				{
+					inserter(affiliations_matrix(i, j), i, j);
+				}
+			}
+		}
+		catch (const std::exception &exception)
+		{
+			static std::string message;
+
+			message = exception.what();
+
+			return message.c_str();
+		}
+
+		return nullptr;
+	}
+
 	_declspec(dllexport) const char *comparative_matrix_without_redundancies(
 		uintptr_t address,
 		ResizeMatrix resizer,
@@ -1123,6 +1193,33 @@ extern "C"
 			std::fstream file(filename, std::ios_base::out | std::ios_base::trunc);
 
 			processor->write_strong_affiliations_matrix(file, separator, lister);
+		}
+		catch (const std::exception &exception)
+		{
+			static std::string message;
+
+			message = exception.what();
+
+			return message.c_str();
+		}
+
+		return nullptr;
+	}
+
+	_declspec(dllexport) const char *write_total_affiliations_matrix(
+		uintptr_t address,
+		const char *filename,
+		const char separator,
+		const char lister)
+	{
+		auto processor =
+			reinterpret_cast < const xablau::organizational_analysis::processor < true, char, std::char_traits < char > > * > (address);
+
+		try
+		{
+			std::fstream file(filename, std::ios_base::out | std::ios_base::trunc);
+
+			processor->write_total_affiliations_matrix(file, separator, lister);
 		}
 		catch (const std::exception &exception)
 		{

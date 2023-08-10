@@ -39,17 +39,21 @@ int main(int argc, char** argv)
 
 	try
 	{
-		if (argc < 24)
+		if (argc < 25)
 		{
 			std::cout << "There are not enough parameters.";
 
 			return -1;
 		}
 
-		CharType separator{argv[22][0]};
-		CharType lister{argv[23][0]};
+		CharType separator{argv[23][0]};
+		CharType lister{argv[24][0]};
 
 		xablau::organizational_analysis::processor < true, CharType, Traits > processor{};
+
+		processor.indirectly_related_degree(1.0f);
+		processor.related_degree(2.0f);
+		processor.directly_related_degree(3.0f);
 
 		xablau::io::fstream < CharType > agentsInput(argv[1], std::ios_base::in);
 		xablau::io::fstream < CharType > activitiesInput(argv[2], std::ios_base::in);
@@ -64,7 +68,7 @@ int main(int argc, char** argv)
 		std::cout << "\n\n";
 		std::cout << "\n---------------Possible parallelizations---------------\n";
 
-		xablau::io::fstream < CharType > parallelizationsOutput(argv[20], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > parallelizationsOutput(argv[21], std::ios_base::out | std::ios_base::trunc);
 		const auto parallelizations = processor.identify_parallelizations();
 
 		size_t level{};
@@ -89,7 +93,7 @@ int main(int argc, char** argv)
 		std::cout << "\n\n";
 		std::cout << "\n-----------------------Priorities----------------------\n";
 
-		xablau::io::fstream < CharType > prioritiesOutput(argv[21], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > prioritiesOutput(argv[22], std::ios_base::out | std::ios_base::trunc);
 		const auto priorities = processor.identify_priorities();
 
 		for (const auto &priority : priorities)
@@ -139,8 +143,8 @@ int main(int argc, char** argv)
 			}
 		}
 
-		xablau::io::fstream < CharType > reportWithoutRedundanciesOutput(argv[18], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > reportWithRedundanciesOutput(argv[19], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > reportWithoutRedundanciesOutput(argv[19], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > reportWithRedundanciesOutput(argv[20], std::ios_base::out | std::ios_base::trunc);
 
 		if (std::atoi(argv[5]) == 0)
 		{
@@ -173,14 +177,16 @@ int main(int argc, char** argv)
 
 		xablau::io::fstream < CharType > weakAffiliationsOutput(argv[11], std::ios_base::out | std::ios_base::trunc);
 		xablau::io::fstream < CharType > strongAffiliationsOutput(argv[12], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > totalPotentialOutput(argv[13], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > strongTotalPotentialWithoutRedundanciesOutput(argv[14], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > strongTotalPotentialWithRedundanciesOutput(argv[15], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > comparativeWithoutRedundanciesOutput(argv[16], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > comparativeWithRedundanciesOutput(argv[17], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > totalAffiliationsOutput(argv[13], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > totalPotentialOutput(argv[14], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > strongTotalPotentialWithoutRedundanciesOutput(argv[15], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > strongTotalPotentialWithRedundanciesOutput(argv[16], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > comparativeWithoutRedundanciesOutput(argv[17], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > comparativeWithRedundanciesOutput(argv[18], std::ios_base::out | std::ios_base::trunc);
 
 		processor.write_weak_affiliations_matrix(weakAffiliationsOutput, separator, lister);
 		processor.write_strong_affiliations_matrix(strongAffiliationsOutput, separator, lister);
+		processor.write_total_affiliations_matrix(totalAffiliationsOutput, separator, lister);
 		processor.write_total_potential_matrix(totalPotentialOutput, separator, lister);
 		processor.write_strong_potential_matrix_without_redundancies(strongTotalPotentialWithoutRedundanciesOutput, separator, lister);
 		processor.write_strong_potential_matrix_with_redundancies(strongTotalPotentialWithRedundanciesOutput, separator, lister);
