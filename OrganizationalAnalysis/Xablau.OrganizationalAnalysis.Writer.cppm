@@ -4,8 +4,8 @@
 
 // MIT License
 //
-// Copyright (c) 2023 Jean Amaro <jean.amaro@outlook.com.br>
-// Copyright (c) 2023 Lucas Melchiori Pereira <lc.melchiori@gmail.com>
+// Copyright (c) 2023 Jean Amaro <jean.amaro@outlook.com.br>,
+//                    Lucas Melchiori Pereira <lc.melchiori@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,40 +32,78 @@
 export module xablau.organizational_analysis:writer;
 export import :fundamental_definitions;
 
+export import <algorithm>;
 export import <concepts>;
 export import <iostream>;
 export import <istream>;
 export import <format>;
 export import <locale>;
+export import <optional>;
+export import <ranges>;
 export import <regex>;
+export import <stdexcept>;
 export import <vector>;
 
 import xablau.algebra;
 
 export namespace xablau::organizational_analysis::writer
 {
+	namespace internals
+	{
+		template < typename CharType, typename Traits >
+		std::basic_string < CharType, Traits > remove_separator(
+			const std::basic_string < CharType, Traits > &string,
+			const CharType separator,
+			const CharType lister)
+		{
+			auto filteredString = string;
+
+			std::replace(filteredString.begin(), filteredString.end(), separator, lister);
+
+			return filteredString;
+		}
+	}
+
 	template < typename CharType, typename Traits >
 	requires (std::same_as < CharType, char > || std::same_as < CharType, wchar_t >)
 	std::basic_ostream < CharType, Traits > &write_agents(
 		std::basic_ostream < CharType, Traits > &output,
 		const organizational_analysis::agents < CharType, Traits > &agents,
-		const CharType separator)
+		const CharType separator,
+		const CharType lister)
 	{
 		if constexpr (std::same_as < CharType, char >)
 		{
-			output << "Identification" << separator << "Group" << separator << "Role\n";
+			output << "Identification" << separator << "Groups" << separator << "Role\n";
 		}
 
 		else
 		{
-			output << L"Identification" << separator << L"Group" << separator << L"Role\n";
+			output << L"Identification" << separator << L"Groups" << separator << L"Role\n";
 		}
 
 		for (const auto &[identification, description] : agents.descriptions)
 		{
-			output << identification << separator;
-			output << description.group << separator;
-			output << description.role << CharType{'\n'};
+			output << internals::remove_separator(identification, separator, lister) << separator;
+
+			size_t i = 1;
+			const auto groupCount = description.groups.size();
+
+			for (const auto &group : description.groups)
+			{
+				output << internals::remove_separator(group, separator, lister);
+
+				if (i < groupCount)
+				{
+					output << lister;
+					output << CharType{' '};
+				}
+
+				i++;
+			}
+
+			output << separator;
+			output << internals::remove_separator(description.role, separator, lister) << CharType{'\n'};
 		}
 
 		return output;
@@ -77,45 +115,73 @@ export namespace xablau::organizational_analysis::writer
 		std::basic_ostream < CharType, Traits > &output,
 		const organizational_analysis::activities < CharType, Traits > &activities,
 		const organizational_analysis::agents < CharType, Traits > &agents,
-		const CharType separator)
+		const CharType separator,
+		const CharType lister)
 	{
 		using offset_type = typename std::basic_ostream < CharType, Traits > ::off_type;
 
 		if constexpr (std::same_as < CharType, char >)
 		{
-			output << "Agent in charge" << separator << "Group" << separator << "Activity" << separator;
+			output << "Agent in charge" << separator << "Groups" << separator << "Activity" << separator;
 		}
 
 		else
 		{
-			output << L"Agent in charge" << separator << "Group" << separator << "Activity" << separator;
+			output << L"Agent in charge" << separator << "Groups" << separator << "Activity" << separator;
 		}
 
-		for (const auto & [identification, description] : activities.descriptions)
+		for (const auto &[identification, description] : activities.descriptions)
 		{
-			output << separator << identification;
+			output << separator;
+			output << internals::remove_separator(identification, separator, lister);
 		}
 
 		output << CharType{'\n'};
 
 		for (const auto &[identification1, description1] : activities.descriptions)
 		{
+			size_t i = 1;
+			const auto agentCount = description1.agents_in_charge.size();
+
 			for (const auto item : description1.agents_in_charge)
 			{
-				output << agents.descriptions.at(item).role;
-				output << (separator == CharType{','} ? CharType{';'} : CharType{','});
-				output << CharType{' '};
-			}
+				output << internals::remove_separator(agents.descriptions.at(item).role, separator, lister);
 
-			if (!description1.agents_in_charge.empty())
-			{
-				output.seekp(offset_type{-2}, std::ios_base::cur);
+				if (i < agentCount)
+				{
+					output << lister;
+					output << CharType{' '};
+				}
+
+				i++;
 			}
 
 			output << separator;
-			output << description1.group << separator;
-			output << description1.name << separator;
-			output << identification1 << separator;
+
+			i = 1;
+			const auto groupCount = description1.groups.size();
+
+			for (const auto &group : description1.groups)
+			{
+				output << internals::remove_separator(group, separator, lister);
+
+				if (i < groupCount)
+				{
+					output << lister;
+					output << CharType{' '};
+				}
+
+				i++;
+			}
+
+			output << separator;
+			output << internals::remove_separator(description1.name, separator, lister);
+			output << separator;
+			output << internals::remove_separator(identification1, separator, lister);
+			output << separator;
+
+			i = 1;
+			const auto descriptionCount = activities.descriptions.size();
 
 			for (const auto &[identification2, description2] : activities.descriptions)
 			{
@@ -132,26 +198,19 @@ export namespace xablau::organizational_analysis::writer
 					}
 				}
 
-				else
+				else if (activities.dependencies.contains(identification1, identification2))
 				{
-					if (activities.dependencies.contains(identification1, identification2))
-					{
-						if constexpr (std::same_as < CharType, char >)
-						{
-							output << std::to_string(1);
-						}
-
-						else
-						{
-							output << std::to_wstring(1);
-						}
-					}
+					output << 1;
 				}
 
-				output << separator;
+				if (i < descriptionCount)
+				{
+					output << separator;
+				}
+
+				i++;
 			}
 
-			output.seekp(offset_type{-1}, std::ios_base::cur);
 			output << CharType{'\n'};
 		}
 
@@ -163,32 +222,55 @@ export namespace xablau::organizational_analysis::writer
 	std::basic_ostream < CharType, Traits > &write_components(
 		std::basic_ostream < CharType, Traits > &output,
 		const organizational_analysis::components < InterfacesAreReciprocal, CharType, Traits > &components,
-		const CharType separator)
+		const CharType separator,
+		const CharType lister)
 	{
 		using offset_type = typename std::basic_ostream < CharType, Traits > ::off_type;
 
 		if constexpr (std::same_as < CharType, char >)
 		{
-			output << "Group" << separator << "Component" << separator;
+			output << "Groups" << separator << "Component" << separator;
 		}
 
 		else
 		{
-			output << L"Group" << separator << L"Component" << separator;
+			output << L"Groups" << separator << L"Component" << separator;
 		}
 
 		for (const auto &[identification, description] : components.descriptions)
 		{
-			output << separator << identification;
+			output << separator;
+			output << internals::remove_separator(identification, separator, lister);
 		}
 
 		output << CharType{'\n'};
 
 		for (const auto &[identification1, description1] : components.descriptions)
 		{
-			output << description1.group << separator;
-			output << description1.name << separator;
-			output << identification1 << separator;
+			size_t i = 1;
+			const auto groupCount = description1.groups.size();
+
+			for (const auto &group : description1.groups)
+			{
+				output << internals::remove_separator(group, separator, lister);
+
+				if (i < groupCount)
+				{
+					output << lister;
+					output << CharType{' '};
+				}
+
+				i++;
+			}
+
+			output << separator;
+			output << internals::remove_separator(description1.name, separator, lister);
+			output << separator;
+			output << internals::remove_separator(identification1, separator, lister);
+			output << separator;
+
+			i = 1;
+			const auto componentCount = components.descriptions.size();
 
 			for (const auto &[identification2, description2] : components.descriptions)
 			{
@@ -205,26 +287,19 @@ export namespace xablau::organizational_analysis::writer
 					}
 				}
 
-				else
+				else if (components.interactions.contains(identification1, identification2))
 				{
-					if (components.interactions.contains(identification1, identification2))
-					{
-						if constexpr (std::same_as < CharType, char >)
-						{
-							output << std::to_string(1);
-						}
-
-						else
-						{
-							output << std::to_wstring(1);
-						}
-					}
+					output << 1;
 				}
 
-				output << separator;
+				if (i < componentCount)
+				{
+					output << separator;
+				}
+
+				i++;
 			}
 
-			output.seekp(offset_type{-1}, std::ios_base::cur);
 			output << CharType{'\n'};
 		}
 
@@ -238,7 +313,8 @@ export namespace xablau::organizational_analysis::writer
 		const organizational_analysis::activities < CharType, Traits > &activities,
 		const organizational_analysis::affiliations < CharType, Traits > &affiliations,
 		const organizational_analysis::components < InterfacesAreReciprocal, CharType, Traits > &components,
-		const CharType separator)
+		const CharType separator,
+		const CharType lister)
 	{
 		if constexpr (std::same_as < CharType, char >)
 		{
@@ -253,10 +329,11 @@ export namespace xablau::organizational_analysis::writer
 		for (const auto &[identification, description] : components.descriptions)
 		{
 			output << separator;
-			output << description.name;
+			output << internals::remove_separator(description.name, separator, lister);
 		}
 
-		output << CharType{'\n'} << separator;
+		output << CharType{'\n'};
+		output << separator;
 
 		if constexpr (std::same_as < CharType, char >)
 		{
@@ -271,17 +348,17 @@ export namespace xablau::organizational_analysis::writer
 		for (const auto &[identification, description] : components.descriptions)
 		{
 			output << separator;
-			output << identification;
+			output << internals::remove_separator(identification, separator, lister);
 		}
 
 		output << CharType{'\n'};
 
 		for (const auto &[identification1, description1] : affiliations.responsabilities)
 		{
-			output << activities.descriptions.at(identification1).name;
+			output << internals::remove_separator(activities.descriptions.at(identification1).name, separator, lister);
 			output << separator;
 
-			output << identification1;
+			output << internals::remove_separator(identification1, separator, lister);
 			output << separator;
 
 			auto iterator = description1.cbegin();
@@ -307,16 +384,78 @@ export namespace xablau::organizational_analysis::writer
 	template <
 		typename CharType,
 		typename Traits,
-		xablau::algebra::concepts::xablau_matrix MatrixType >
-	requires (std::same_as < CharType, char > || std::same_as < CharType, wchar_t >)
+		typename MatrixType,
+		typename OptionalRowRangeType,
+		typename OptionalColumnRangeType >
+	requires (
+		xablau::algebra::concepts::xablau_matrix < MatrixType > &&
+		(std::same_as < CharType, char > || std::same_as < CharType, wchar_t >) &&
+		std::ranges::forward_range < typename OptionalRowRangeType::value_type > &&
+		std::ranges::forward_range < typename OptionalColumnRangeType::value_type > &&
+		std::same_as < std::ranges::range_value_t < typename OptionalRowRangeType::value_type >, std::basic_string < CharType, Traits > > &&
+		std::same_as < std::ranges::range_value_t < typename OptionalColumnRangeType::value_type >, std::basic_string < CharType, Traits > >)
 	std::basic_ostream < CharType, Traits > &write_matrix(
 		std::basic_ostream < CharType, Traits > &output,
 		const MatrixType &matrix,
-		const CharType separator)
+		const CharType separator,
+		const CharType lister,
+		const OptionalRowRangeType optionalRowLabels,
+		const OptionalColumnRangeType optionalColumnLabels)
 	requires (std::same_as < typename MatrixType::value_type, float >)
 	{
+		const bool hasRowLabels = optionalRowLabels.has_value();
+		const bool hasColumnLabels = optionalColumnLabels.has_value();
+
+		if (hasRowLabels && optionalRowLabels.value().size() != matrix.dimensionalities()[0])
+		{
+			throw
+				std::runtime_error(
+					std::format(
+						"\"optionalRowLabels\" size and matrix row count are different: {} != {}.",
+						optionalRowLabels.value().size(),
+						matrix.dimensionalities()[0]));
+		}
+
+		if (hasColumnLabels && optionalColumnLabels.value().size() != matrix.dimensionalities()[1])
+		{
+			throw
+				std::runtime_error(
+					std::format(
+						"\"optionalColumnLabels\" size and matrix column count are different: {} != {}.",
+						optionalColumnLabels.value().size(),
+						matrix.dimensionalities()[1]));
+		}
+
+		if (hasRowLabels && hasColumnLabels)
+		{
+			output << separator;
+		}
+
+		if (hasColumnLabels)
+		{
+			const auto &range = optionalColumnLabels.value();
+
+			for (const auto &columnLabel : range)
+			{
+				output << internals::remove_separator(columnLabel, separator, lister);
+				output << separator;
+			}
+
+			output << CharType{'\n'};
+		}
+
+		auto iterator = optionalRowLabels.value().cbegin();
+
 		for (size_t i = 0; i < matrix.dimensionalities()[0]; i++)
 		{
+			if (hasRowLabels)
+			{
+				output << internals::remove_separator(*iterator, separator, lister);
+				output << separator;
+
+				++iterator;
+			}
+
 			for (size_t j = 0; j < matrix.dimensionalities()[1]; j++)
 			{
 				if (matrix(i, j) != float{})
@@ -341,7 +480,10 @@ export namespace xablau::organizational_analysis::writer
 	std::basic_ostream < CharType, Traits > &write_report(
 		std::basic_ostream < CharType, Traits > &output,
 		const MatrixType &comparativeMatrix,
-		const std::map < size_t, std::basic_string < CharType, Traits > > &baseIndexToKeyMap)
+		const std::map < size_t, std::basic_string < CharType, Traits > > &baseIndexToKeyMap,
+		const float indirectlyRelatedDegree,
+		const float relatedDegree,
+		const float directlyRelatedDegree)
 	{
 		std::array < std::vector < size_t >, 3 > interactions =
 		{
@@ -356,34 +498,34 @@ export namespace xablau::organizational_analysis::writer
 			{
 				const auto cell1 = comparativeMatrix(i, j);
 
-				if (cell1 == organizational_analysis::indirectly_related)
+				if (cell1 >= indirectlyRelatedDegree && cell1 < relatedDegree)
 				{
 					interactions[0][i]++;
 				}
 
-				else if (cell1 == organizational_analysis::related)
+				else if (cell1 >= relatedDegree && cell1 < directlyRelatedDegree)
 				{
 					interactions[1][i]++;
 				}
 
-				else if (cell1 == organizational_analysis::directly_related)
+				else
 				{
 					interactions[2][i]++;
 				}
 
 				const auto cell2 = comparativeMatrix(j, i);
 
-				if (cell2 == organizational_analysis::indirectly_related)
+				if (cell2 >= indirectlyRelatedDegree && cell2 < relatedDegree)
 				{
 					interactions[0][i]++;
 				}
 
-				else if (cell2 == organizational_analysis::related)
+				else if (cell2 >= relatedDegree && cell2 < directlyRelatedDegree)
 				{
 					interactions[1][i]++;
 				}
 
-				else if (cell2 == organizational_analysis::directly_related)
+				else
 				{
 					interactions[2][i]++;
 				}

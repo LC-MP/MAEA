@@ -4,8 +4,8 @@
 
 // MIT License
 //
-// Copyright (c) 2023 Jean Amaro <jean.amaro@outlook.com.br>
-// Copyright (c) 2023 Lucas Melchiori Pereira <lc.melchiori@gmail.com>
+// Copyright (c) 2023 Jean Amaro <jean.amaro@outlook.com.br>,
+//                    Lucas Melchiori Pereira <lc.melchiori@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -56,10 +56,6 @@ export namespace xablau::organizational_analysis
 		}
 	}
 
-	constexpr float indirectly_related = 1.0f;
-	constexpr float related = 2.0f;
-	constexpr float directly_related = 3.0f;
-
 	template < typename CharType, typename Traits >
 	struct agents
 	{
@@ -67,7 +63,7 @@ export namespace xablau::organizational_analysis
 
 		struct description
 		{
-			string_type group{};
+			std::set < string_type > groups{};
 			string_type role{};
 		};
 
@@ -82,7 +78,7 @@ export namespace xablau::organizational_analysis
 		struct description
 		{
 			string_type name{};
-			string_type group{};
+			std::set < string_type > groups{};
 			std::set < string_type > agents_in_charge{};
 		};
 
@@ -102,7 +98,7 @@ export namespace xablau::organizational_analysis
 		struct description
 		{
 			string_type name{};
-			string_type group{};
+			std::set < string_type > groups{};
 			std::set < string_type > agents_in_charge{};
 		};
 

@@ -29,8 +29,6 @@
 // funding this research project.
 // FAPESP process number: 2020/15909-8
 
-import <clocale>;
-
 import xablau.io;
 import xablau.organizational_analysis;
 
@@ -48,9 +46,14 @@ int main(int argc, char** argv)
 			return -1;
 		}
 
-		CharType separator{argv[24][0]};
+		CharType separator{argv[23][0]};
+		CharType lister{argv[24][0]};
 
 		xablau::organizational_analysis::processor < true, CharType, Traits > processor{};
+
+		processor.indirectly_related_degree(1.0f);
+		processor.related_degree(2.0f);
+		processor.directly_related_degree(3.0f);
 
 		xablau::io::fstream < CharType > agentsInput(argv[1], std::ios_base::in);
 		xablau::io::fstream < CharType > activitiesInput(argv[2], std::ios_base::in);
@@ -65,7 +68,7 @@ int main(int argc, char** argv)
 		std::cout << "\n\n";
 		std::cout << "\n---------------Possible parallelizations---------------\n";
 
-		xablau::io::fstream < CharType > parallelizationsOutput(argv[22], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > parallelizationsOutput(argv[21], std::ios_base::out | std::ios_base::trunc);
 		const auto parallelizations = processor.identify_parallelizations();
 
 		size_t level{};
@@ -90,7 +93,7 @@ int main(int argc, char** argv)
 		std::cout << "\n\n";
 		std::cout << "\n-----------------------Priorities----------------------\n";
 
-		xablau::io::fstream < CharType > prioritiesOutput(argv[23], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > prioritiesOutput(argv[22], std::ios_base::out | std::ios_base::trunc);
 		const auto priorities = processor.identify_priorities();
 
 		for (const auto &priority : priorities)
@@ -105,29 +108,18 @@ int main(int argc, char** argv)
 		bool everyProductHasAnAgentInCharge = false;
 		float minimumRelationDegree = std::stof(argv[6], nullptr);
 
-		while (!everyProductHasAnAgentInCharge)
+		while (std::atoi(argv[5]) == 1 && !everyProductHasAnAgentInCharge)
 		{
 			if (minimumRelationDegree <= 0.0f)
 			{
 				std::cout << "Minimum relation degree between agent and component is null or negative.\n";
+				std::cout << "Exiting...\n";
 
-				if (std::atoi(argv[5]) == 1)
-				{
-					std::cout << "Exiting...\n";
-
-					return -2;
-				}
-
-				else
-				{
-					std::cout << "Bypassing this requirement...\n";
-
-					break;
-				}
+				return -2;
 			}
 
-			processor.attribute_agents_in_charge_for_components(minimumRelationDegree);
-			const auto productsWithoutAgentsInCharge = processor.validate_agents_in_charge_for_components();
+			processor.minimum_relation_degree_for_agents_in_charge_of_components(minimumRelationDegree);
+			const auto productsWithoutAgentsInCharge = processor.components_without_agents_in_charge();
 
 			if (productsWithoutAgentsInCharge.size() != 0)
 			{
@@ -151,20 +143,19 @@ int main(int argc, char** argv)
 			}
 		}
 
-		xablau::io::fstream < CharType > reportWithoutRedundanciesOutput(argv[20], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > reportWithRedundanciesOutput(argv[21], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > reportWithoutRedundanciesOutput(argv[19], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > reportWithRedundanciesOutput(argv[20], std::ios_base::out | std::ios_base::trunc);
 
 		if (std::atoi(argv[5]) == 0)
 		{
-			processor.align_architecture_process_between_components_and_organization(
-				minimumRelationDegree,
+			processor.compare_activities_and_organization(
 				reportWithoutRedundanciesOutput,
 				reportWithRedundanciesOutput);
 		}
 
 		else
 		{
-			processor.align_architecture_process_between_activities_and_organization(
+			processor.compare_components_and_organization(
 				minimumRelationDegree,
 				reportWithoutRedundanciesOutput,
 				reportWithRedundanciesOutput);
@@ -179,27 +170,28 @@ int main(int argc, char** argv)
 		xablau::io::fstream < CharType > componentsOutput(argv[9], std::ios_base::out | std::ios_base::trunc);
 		xablau::io::fstream < CharType > affiliationsOutput(argv[10], std::ios_base::out | std::ios_base::trunc);
 
-		processor.write(agentsOutput, activitiesOutput, componentsOutput, affiliationsOutput, separator);
+		processor.write_agents(agentsOutput, separator, lister);
+		processor.write_activities(activitiesOutput, separator, lister);
+		processor.write_components(componentsOutput, separator, lister);
+		processor.write_affiliations(affiliationsOutput, separator, lister);
 
-		xablau::io::fstream < CharType > activitiesMatrixOutput(argv[11], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > weakAffiliationsOutput(argv[12], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > strongAffiliationsOutput(argv[13], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > componentsMatrixOutput(argv[14], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > totalPotentialOutput(argv[15], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > strongTotalPotentialWithoutRedundanciesOutput(argv[16], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > strongTotalPotentialWithRedundanciesOutput(argv[17], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > comparativeWithoutRedundanciesOutput(argv[18], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > comparativeWithRedundanciesOutput(argv[19], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > weakAffiliationsOutput(argv[11], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > strongAffiliationsOutput(argv[12], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > totalAffiliationsOutput(argv[13], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > totalPotentialOutput(argv[14], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > strongTotalPotentialWithoutRedundanciesOutput(argv[15], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > strongTotalPotentialWithRedundanciesOutput(argv[16], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > comparativeWithoutRedundanciesOutput(argv[17], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < CharType > comparativeWithRedundanciesOutput(argv[18], std::ios_base::out | std::ios_base::trunc);
 
-		processor.write_activities_matrix(activitiesMatrixOutput, separator);
-		processor.write_weak_affiliations_matrix(weakAffiliationsOutput, separator);
-		processor.write_strong_affiliations_matrix(strongAffiliationsOutput, separator);
-		processor.write_components_matrix(componentsMatrixOutput, separator);
-		processor.write_total_potential_matrix(totalPotentialOutput, separator);
-		processor.write_strong_potential_matrix_without_redundancies(strongTotalPotentialWithoutRedundanciesOutput, separator);
-		processor.write_strong_potential_matrix_with_redundancies(strongTotalPotentialWithRedundanciesOutput, separator);
-		processor.write_comparative_matrix_without_redundancies(comparativeWithoutRedundanciesOutput, separator);
-		processor.write_comparative_matrix_with_redundancies(comparativeWithRedundanciesOutput, separator);
+		processor.write_weak_affiliations_matrix(weakAffiliationsOutput, separator, lister);
+		processor.write_strong_affiliations_matrix(strongAffiliationsOutput, separator, lister);
+		processor.write_total_affiliations_matrix(totalAffiliationsOutput, separator, lister);
+		processor.write_total_potential_matrix(totalPotentialOutput, separator, lister);
+		processor.write_strong_potential_matrix_without_redundancies(strongTotalPotentialWithoutRedundanciesOutput, separator, lister);
+		processor.write_strong_potential_matrix_with_redundancies(strongTotalPotentialWithRedundanciesOutput, separator, lister);
+		processor.write_comparative_matrix_without_redundancies(comparativeWithoutRedundanciesOutput, separator, lister);
+		processor.write_comparative_matrix_with_redundancies(comparativeWithRedundanciesOutput, separator, lister);
 
 		std::cout << "\n-------------------------------------------------------\n";
 	}

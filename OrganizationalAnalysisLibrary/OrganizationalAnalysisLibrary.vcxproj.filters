@@ -7,7 +7,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="processor.ixx">
+    <ClCompile Include="oal_processor.cppm">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

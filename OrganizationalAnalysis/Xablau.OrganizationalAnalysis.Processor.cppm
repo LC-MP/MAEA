@@ -4,8 +4,8 @@
 
 // MIT License
 //
-// Copyright (c) 2023 Jean Amaro <jean.amaro@outlook.com.br>
-// Copyright (c) 2023 Lucas Melchiori Pereira <lc.melchiori@gmail.com>
+// Copyright (c) 2023 Jean Amaro <jean.amaro@outlook.com.br>,
+//                    Lucas Melchiori Pereira <lc.melchiori@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -61,10 +61,11 @@ export namespace xablau::organizational_analysis
 		using affiliations_type = organizational_analysis::affiliations < CharType, Traits >;
 		using node_type = xablau::graph::node < string_type >;
 
-		enum class alignment_mode
+		enum class comparison_mode
 		{
 			component_and_organization,
-			activity_and_organization
+			activity_and_organization,
+			invalid
 		};
 
 		using matrix_type =
@@ -135,11 +136,11 @@ export namespace xablau::organizational_analysis
 			return componentsMatrix;
 		}
 
-		[[nodiscard]] std::array < matrix_type, 2 > create_affiliations_matrices(
+		[[nodiscard]] std::array < matrix_type, 3 > create_affiliations_matrices(
 			const std::map < string_type, size_t > &activityKeyToIndexMap,
 			const std::map < string_type, size_t > &componentKeyToIndexMap) const
 		{
-			std::array < matrix_type, 2 > affiliationsMatrices;
+			std::array < matrix_type, 3 > affiliationsMatrices;
 
 			affiliationsMatrices[0].resize(
 				this->_activities.descriptions.size(),
@@ -147,6 +148,11 @@ export namespace xablau::organizational_analysis
 				float{});
 
 			affiliationsMatrices[1].resize(
+				this->_activities.descriptions.size(),
+				this->_components.descriptions.size(),
+				float{});
+
+			affiliationsMatrices[2].resize(
 				this->_activities.descriptions.size(),
 				this->_components.descriptions.size(),
 				float{});
@@ -174,19 +180,23 @@ export namespace xablau::organizational_analysis
 				
 					if (iterator2 != iterator1->second.cend())
 					{
-						if (iterator2->second >= float{1})
+						if (iterator2->second >= this->_indirectly_related_degree)
 						{
 							affiliationsMatrices[0](
 								activityKeyToIndexMap.at(identification1),
 								componentKeyToIndexMap.at(identification2)) = float{1};
 						}
 
-						if (iterator2->second >= float{3})
+						if (iterator2->second >= this->_directly_related_degree)
 						{
 							affiliationsMatrices[1](
 								activityKeyToIndexMap.at(identification1),
 								componentKeyToIndexMap.at(identification2)) = float{1};
 						}
+
+						affiliationsMatrices[2](
+							activityKeyToIndexMap.at(identification1),
+							componentKeyToIndexMap.at(identification2)) = iterator2->second;
 					}
 				}
 			}
@@ -194,7 +204,7 @@ export namespace xablau::organizational_analysis
 			return affiliationsMatrices;
 		}
 
-		static void create_comparative_matrix_step_1(
+		void create_comparative_matrix_step_1(
 			matrix_type &comparativeMatrix,
 			const matrix_type &strongPotentialMatrix,
 			const matrix_type &baseMatrix)
@@ -214,13 +224,13 @@ export namespace xablau::organizational_analysis
 
 					if (strongPotentialMatrixCell > float{} && baseMatrixCell == float{})
 					{
-						finalComparativeMatrixCell = organizational_analysis::indirectly_related;
+						finalComparativeMatrixCell = this->_indirectly_related_degree;
 					}
 				}
 			}
 		}
 
-		static void create_comparative_matrix_step_2(
+		void create_comparative_matrix_step_2(
 			matrix_type &finalComparativeMatrix,
 			const matrix_type &totalPotentialMatrix,
 			const matrix_type &baseMatrix)
@@ -242,12 +252,12 @@ export namespace xablau::organizational_analysis
 					{
 						if (totalPotentialMatrixCell != float{})
 						{
-							finalComparativeMatrixCell = organizational_analysis::related;
+							finalComparativeMatrixCell = this->_related_degree;
 						}
 
 						else
 						{
-							finalComparativeMatrixCell = organizational_analysis::directly_related;
+							finalComparativeMatrixCell = this->_directly_related_degree;
 						}
 					}
 				}
@@ -277,11 +287,11 @@ export namespace xablau::organizational_analysis
 
 						bool thereAreRedundancies = false;
 
-						for (const auto personInCharge1 : agentsInCharge1)
+						for (const auto agentInCharge1 : agentsInCharge1)
 						{
-							for (const auto personInCharge2 : agentsInCharge2)
+							for (const auto agentInCharge2 : agentsInCharge2)
 							{
-								if (personInCharge1 == personInCharge2)
+								if (agentInCharge1 == agentInCharge2)
 								{
 									thereAreRedundancies = true;
 
@@ -383,7 +393,7 @@ export namespace xablau::organizational_analysis
 			return finalActivitiesSequence;
 		}
 
-		template < alignment_mode AlignmentMode >
+		template < comparison_mode ComparisonMode >
 		void align_architecture_process(
 			std::map < size_t, string_type > &baseIndexToKeyMap)
 		{
@@ -401,11 +411,19 @@ export namespace xablau::organizational_analysis
 				throw std::runtime_error("There are no registered components.");
 			}
 
-			if constexpr (AlignmentMode == alignment_mode::activity_and_organization)
+			if constexpr (ComparisonMode == comparison_mode::component_and_organization)
 			{
-				if (this->validate_agents_in_charge_for_components().size() != 0)
+				if (this->components_without_agents_in_charge().size() != 0)
 				{
 					throw std::runtime_error("There are components without agents in charge.");
+				}
+			}
+
+			else if constexpr (ComparisonMode == comparison_mode::activity_and_organization)
+			{
+				if (this->activities_without_agents_in_charge().size() != 0)
+				{
+					throw std::runtime_error("There are activities without agents in charge.");
 				}
 			}
 
@@ -413,7 +431,7 @@ export namespace xablau::organizational_analysis
 			{
 				activityKeyToIndexMap.insert(std::make_pair(identification, index));
 
-				if constexpr (AlignmentMode == alignment_mode::component_and_organization)
+				if constexpr (ComparisonMode == comparison_mode::activity_and_organization)
 				{
 					baseIndexToKeyMap.insert(std::make_pair(index, identification));
 				}
@@ -427,7 +445,7 @@ export namespace xablau::organizational_analysis
 			{
 				componentKeyToIndexMap.insert(std::make_pair(identification, index));
 
-				if constexpr (AlignmentMode == alignment_mode::activity_and_organization)
+				if constexpr (ComparisonMode == comparison_mode::component_and_organization)
 				{
 					baseIndexToKeyMap.insert(std::make_pair(index, identification));
 				}
@@ -441,7 +459,7 @@ export namespace xablau::organizational_analysis
 
 			std::reference_wrapper < matrix_type > baseMatrix = this->_activities_dependencies_matrix;
 
-			if constexpr (AlignmentMode == alignment_mode::component_and_organization)
+			if constexpr (ComparisonMode == comparison_mode::activity_and_organization)
 			{
 				this->_potential_matrices[0] =
 					this->_affiliations_matrices[0] * this->_components_interfaces_matrix * this->_affiliations_matrices[0].transpose();
@@ -456,7 +474,7 @@ export namespace xablau::organizational_analysis
 						this->_activities.descriptions);
 			}
 
-			else if constexpr (AlignmentMode == alignment_mode::activity_and_organization)
+			else if constexpr (ComparisonMode == comparison_mode::component_and_organization)
 			{
 				this->_potential_matrices[0] =
 					this->_affiliations_matrices[0].transpose() * this->_activities_dependencies_matrix * this->_affiliations_matrices[0];
@@ -478,7 +496,7 @@ export namespace xablau::organizational_analysis
 				throw std::runtime_error("Unknown alignment.");
 			}
 
-			if constexpr (AlignmentMode == alignment_mode::component_and_organization)
+			if constexpr (ComparisonMode == comparison_mode::activity_and_organization)
 			{
 				this->_comparative_matrix_without_redundancies_step_1.resize(this->_activities_dependencies_matrix.dimensionalities());
 			}
@@ -502,7 +520,7 @@ export namespace xablau::organizational_analysis
 				this->_potential_matrices[0],
 				baseMatrix.get());
 
-			if constexpr (AlignmentMode == alignment_mode::component_and_organization)
+			if constexpr (ComparisonMode == comparison_mode::activity_and_organization)
 			{
 				this->_comparative_matrix_with_redundancies_step_1.resize(this->_activities_dependencies_matrix.dimensionalities());
 			}
@@ -527,6 +545,7 @@ export namespace xablau::organizational_analysis
 				baseMatrix.get());
 
 			this->_up_to_date = true;
+			this->_last_comparison_mode = ComparisonMode;
 		}
 
 		agents_type _agents{};
@@ -535,10 +554,14 @@ export namespace xablau::organizational_analysis
 		affiliations_type _affiliations{};
 
 		bool _up_to_date = false;
+		comparison_mode _last_comparison_mode = comparison_mode::invalid;
 
+		float _indirectly_related_degree{};
+		float _related_degree{};
+		float _directly_related_degree{};
 		matrix_type _components_interfaces_matrix{};
 		matrix_type _activities_dependencies_matrix{};
-		std::array < matrix_type, 2 > _affiliations_matrices{};
+		std::array < matrix_type, 3 > _affiliations_matrices{};
 		std::array < matrix_type, 2 > _potential_matrices{};
 		matrix_type _strong_potential_matrix_without_redundancies{};
 		matrix_type _comparative_matrix_without_redundancies_step_1{};
@@ -547,14 +570,28 @@ export namespace xablau::organizational_analysis
 		matrix_type _comparative_matrix_with_redundancies_step_2{};
 
 	public:
+		void indirectly_related_degree(const float degree) noexcept
+		{
+			this->_indirectly_related_degree = degree;
+		}
+
+		void related_degree(const float degree) noexcept
+		{
+			this->_related_degree = degree;
+		}
+
+		void directly_related_degree(const float degree) noexcept
+		{
+			this->_directly_related_degree = degree;
+		}
+
 		void insert_or_assign_agent(
 			const string_type &agent,
-			const string_type &group,
 			const string_type &role)
 		{
 			this->_agents.descriptions.insert_or_assign(
 				agent,
-				typename agents_type::description{ group, role });
+				typename agents_type::description{ std::set < string_type > {}, role });
 		}
 
 		void erase_agent(const string_type &agent)
@@ -579,10 +616,33 @@ export namespace xablau::organizational_analysis
 			}
 		}
 
+		void insert_agent_group(const string_type &agent, const string_type &group)
+		{
+			const auto iterator = this->_agents.descriptions.find(agent);
+
+			if (iterator == this->_agents.descriptions.end())
+			{
+				throw std::runtime_error(std::format("Agent \"{}\" does not exist.", agent));
+			}
+
+			iterator->second.groups.insert(group);
+		}
+
+		void erase_agent_group(const string_type &agent, const string_type &group)
+		{
+			const auto iterator = this->_agents.descriptions.find(agent);
+
+			if (iterator == this->_agents.descriptions.end())
+			{
+				throw std::runtime_error(std::format("Agent \"{}\" does not exist.", agent));
+			}
+
+			iterator->second.groups.erase(group);
+		}
+
 		void insert_or_edit_activity(
 			const string_type &activity,
-			const string_type &name,
-			const string_type &group)
+			const string_type &name)
 		{
 			const auto pair =
 				this->_activities.descriptions.insert(
@@ -590,7 +650,7 @@ export namespace xablau::organizational_analysis
 						activity,
 						typename activities_type::description{
 							name,
-							group,
+							std::set < string_type > {},
 							std::set < string_type > {} }));
 
 			if (pair.second)
@@ -601,7 +661,6 @@ export namespace xablau::organizational_analysis
 			else
 			{
 				pair.first->second.name = name;
-				pair.first->second.group = group;
 			}
 		}
 
@@ -617,6 +676,30 @@ export namespace xablau::organizational_analysis
 			this->_activities.descriptions.erase(iterator);
 			this->_activities.dependencies.erase(activity);
 			this->_affiliations.responsabilities.erase(activity);
+		}
+
+		void insert_activity_group(const string_type &activity, const string_type &group)
+		{
+			const auto iterator = this->_activities.descriptions.find(activity);
+
+			if (iterator == this->_activities.descriptions.end())
+			{
+				throw std::runtime_error(std::format("Activity \"{}\" does not exist.", activity));
+			}
+
+			iterator->second.groups.insert(group);
+		}
+
+		void erase_activity_group(const string_type &activity, const string_type &group)
+		{
+			const auto iterator = this->_activities.descriptions.find(activity);
+
+			if (iterator == this->_activities.descriptions.end())
+			{
+				throw std::runtime_error(std::format("Activity \"{}\" does not exist.", activity));
+			}
+
+			iterator->second.groups.erase(group);
 		}
 
 		void insert_agent_in_charge_of_activity(
@@ -693,8 +776,7 @@ export namespace xablau::organizational_analysis
 
 		void insert_or_edit_component(
 			const string_type &component,
-			const string_type &name,
-			const string_type &group)
+			const string_type &name)
 		{
 			const auto pair =
 				this->_components.descriptions.insert(
@@ -702,7 +784,7 @@ export namespace xablau::organizational_analysis
 						component,
 						typename components_type::description{
 							name,
-							group,
+							std::set < string_type > {},
 							std::set < string_type > {} }));
 
 			if (pair.second)
@@ -713,7 +795,6 @@ export namespace xablau::organizational_analysis
 			else
 			{
 				pair.first->second.name = name;
-				pair.first->second.group = group;
 			}
 		}
 
@@ -733,6 +814,30 @@ export namespace xablau::organizational_analysis
 			{
 				ratedComponent.erase(component);
 			}
+		}
+
+		void insert_component_group(const string_type &component, const string_type &group)
+		{
+			const auto iterator = this->_components.descriptions.find(component);
+
+			if (iterator == this->_components.descriptions.end())
+			{
+				throw std::runtime_error(std::format("Component \"{}\" does not exist.", component));
+			}
+
+			iterator->second.groups.insert(group);
+		}
+
+		void erase_component_group(const string_type &component, const string_type &group)
+		{
+			const auto iterator = this->_components.descriptions.find(component);
+
+			if (iterator == this->_components.descriptions.end())
+			{
+				throw std::runtime_error(std::format("Component \"{}\" does not exist.", component));
+			}
+
+			iterator->second.groups.erase(group);
 		}
 
 		void insert_component_interface(
@@ -816,35 +921,6 @@ export namespace xablau::organizational_analysis
 			this->_affiliations.responsabilities.at(activity).erase(component);
 		}
 
-		void read(
-			std::basic_istream < CharType, Traits > &agentsInput,
-			std::basic_istream < CharType, Traits > &activitiesInput,
-			std::basic_istream < CharType, Traits > &componentsInput,
-			std::basic_istream < CharType, Traits > &affiliationsInput,
-			std::basic_ostream < CharType, Traits > &errorOutput = internals::default_error_output < CharType > (),
-			const std::locale &locale = std::locale(""))
-		{
-			this->_up_to_date = false;
-
-			reader::read_agents(agentsInput, this->_agents, errorOutput, locale);
-			reader::read_activities(activitiesInput, this->_activities, this->_agents, errorOutput, locale);
-			reader::read_components(componentsInput, this->_components, errorOutput, locale);
-			reader::read_affiliations(affiliationsInput, this->_affiliations, this->_activities, this->_components, errorOutput, locale);
-		}
-
-		void write(
-			std::basic_ostream < CharType, Traits > &agentsOutput,
-			std::basic_ostream < CharType, Traits > &activitiesOutput,
-			std::basic_ostream < CharType, Traits > &componentsOutput,
-			std::basic_ostream < CharType, Traits > &affiliationsOutput,
-			const CharType separator) const
-		{
-			writer::write_agents(agentsOutput, this->_agents, separator);
-			writer::write_activities(activitiesOutput, this->_activities, this->_agents, separator);
-			writer::write_components(componentsOutput, this->_components, separator);
-			writer::write_affiliations(affiliationsOutput, this->_activities, this->_affiliations, this->_components, separator);
-		}
-
 		void clear() noexcept
 		{
 			this->_agents.descriptions.clear();
@@ -912,22 +988,37 @@ export namespace xablau::organizational_analysis
 			return priorities;
 		}
 
-		[[nodiscard]] auto validate_agents_in_charge_for_components() const
+		[[nodiscard]] auto components_without_agents_in_charge() const
 		{
-			std::vector < string_type > componentsWithoutAgents;
+			std::vector < string_type > componentsWithoutAgentsInCharge;
 
 			for (auto &[component, description] : this->_components.descriptions)
 			{
 				if (description.agents_in_charge.empty())
 				{
-					componentsWithoutAgents.push_back(component);
+					componentsWithoutAgentsInCharge.push_back(component);
 				}
 			}
 
-			return componentsWithoutAgents;
+			return componentsWithoutAgentsInCharge;
 		}
 
-		void attribute_agents_in_charge_for_components(const float minimumRelationDegree)
+		[[nodiscard]] auto activities_without_agents_in_charge() const
+		{
+			std::vector < string_type > activitiesWithoutAgentsInCharge;
+
+			for (const auto &[activity, description] : this->_activities.descriptions)
+			{
+				if (description.agents_in_charge.empty())
+				{
+					activitiesWithoutAgentsInCharge.push_back(activity);
+				}
+			}
+
+			return activitiesWithoutAgentsInCharge;
+		}
+
+		void minimum_relation_degree_for_agents_in_charge_of_components(const float degree)
 		{
 			for (auto &[component, description] : this->_components.descriptions)
 			{
@@ -936,7 +1027,7 @@ export namespace xablau::organizational_analysis
 				for (const auto &[activity, componentsOnAffiliations] : this->_affiliations.responsabilities)
 				{
 					if (componentsOnAffiliations.contains(component) &&
-						componentsOnAffiliations.at(component) >= minimumRelationDegree)
+						componentsOnAffiliations.at(component) >= degree)
 					{
 						const auto &agentsInChargeOfActivity =
 							this->_activities.descriptions.at(activity).agents_in_charge;
@@ -949,71 +1040,94 @@ export namespace xablau::organizational_analysis
 			}
 		}
 
-		void align_architecture_process_between_components_and_organization(
-			const float minimumRelationDegree)
+		[[nodiscard]] string_type agent_role(const string_type &agent) const
+		{
+			return this->_agents.descriptions.at(agent).role;
+		}
+
+		[[nodiscard]] string_type activity_name(const string_type &activity) const
+		{
+			return this->_activities.descriptions.at(activity).name;
+		}
+
+		[[nodiscard]] string_type component_name(const string_type &component) const
+		{
+			return this->_components.descriptions.at(component).name;
+		}
+
+		void compare_activities_and_organization()
 		{
 			std::map < size_t, string_type > activityIndexToKeyMap;
 
-			this->attribute_agents_in_charge_for_components(minimumRelationDegree);
-
-			this->align_architecture_process < alignment_mode::component_and_organization > (activityIndexToKeyMap);
+			this->align_architecture_process < comparison_mode::activity_and_organization > (activityIndexToKeyMap);
 		}
 
-		void align_architecture_process_between_components_and_organization(
-			const float minimumRelationDegree,
+		void compare_activities_and_organization(
 			std::basic_ostream < CharType, Traits > &outputReportWithoutRedundancies,
 			std::basic_ostream < CharType, Traits > &outputReportWithRedundancies)
 		{
 			std::map < size_t, string_type > activityIndexToKeyMap;
 
-			this->attribute_agents_in_charge_for_components(minimumRelationDegree);
-
-			this->align_architecture_process < alignment_mode::component_and_organization > (activityIndexToKeyMap);
+			this->align_architecture_process < comparison_mode::activity_and_organization > (activityIndexToKeyMap);
 
 			writer::write_report(
 				outputReportWithoutRedundancies,
 				this->_comparative_matrix_without_redundancies_step_2,
-				activityIndexToKeyMap);
+				activityIndexToKeyMap,
+				this->_indirectly_related_degree,
+				this->_related_degree,
+				this->_directly_related_degree);
 
 			writer::write_report(
 				outputReportWithRedundancies,
 				this->_comparative_matrix_with_redundancies_step_2,
-				activityIndexToKeyMap);
+				activityIndexToKeyMap,
+				this->_indirectly_related_degree,
+				this->_related_degree,
+				this->_directly_related_degree);
 		}
 
-		void align_architecture_process_between_activities_and_organization(
-			const float minimumRelationDegree)
+		void compare_components_and_organization(
+			const float minimumRelationDegreeForAgentsInChargeOfComponents)
 		{
 			std::map < size_t, string_type > componentIndexToKeyMap;
 
-			this->attribute_agents_in_charge_for_components(minimumRelationDegree);
+			this->minimum_relation_degree_for_agents_in_charge_of_components(
+				minimumRelationDegreeForAgentsInChargeOfComponents);
 
-			this->align_architecture_process < alignment_mode::activity_and_organization > (componentIndexToKeyMap);
+			this->align_architecture_process < comparison_mode::component_and_organization > (componentIndexToKeyMap);
 		}
 
-		void align_architecture_process_between_activities_and_organization(
-			const float minimumRelationDegree,
+		void compare_components_and_organization(
+			const float minimumRelationDegreeForAgentsInChargeOfComponents,
 			std::basic_ostream < CharType, Traits > &outputReportWithoutRedundancies,
 			std::basic_ostream < CharType, Traits > &outputReportWithRedundancies)
 		{
 			std::map < size_t, string_type > componentIndexToKeyMap;
 
-			this->attribute_agents_in_charge_for_components(minimumRelationDegree);
+			this->minimum_relation_degree_for_agents_in_charge_of_components(
+				minimumRelationDegreeForAgentsInChargeOfComponents);
 
-			this->align_architecture_process < alignment_mode::activity_and_organization > (componentIndexToKeyMap);
+			this->align_architecture_process < comparison_mode::component_and_organization > (componentIndexToKeyMap);
 
 			writer::write_report(
 				outputReportWithoutRedundancies,
 				this->_comparative_matrix_without_redundancies_step_2,
-				componentIndexToKeyMap);
+				componentIndexToKeyMap,
+				this->_indirectly_related_degree,
+				this->_related_degree,
+				this->_directly_related_degree);
 
 			writer::write_report(
 				outputReportWithRedundancies,
 				this->_comparative_matrix_with_redundancies_step_2,
-				componentIndexToKeyMap);
+				componentIndexToKeyMap,
+				this->_indirectly_related_degree,
+				this->_related_degree,
+				this->_directly_related_degree);
 		}
 
-		const matrix_type &activities_dependencies_matrix() const
+		[[nodiscard]] const matrix_type &activities_dependencies_matrix() const
 		{
 			if (!this->_up_to_date)
 			{
@@ -1023,7 +1137,7 @@ export namespace xablau::organizational_analysis
 			return this->_activities_dependencies_matrix;
 		}
 
-		const matrix_type &components_interfaces_matrix() const
+		[[nodiscard]] const matrix_type &components_interfaces_matrix() const
 		{
 			if (!this->_up_to_date)
 			{
@@ -1033,7 +1147,7 @@ export namespace xablau::organizational_analysis
 			return this->_components_interfaces_matrix;
 		}
 
-		const matrix_type &weak_affiliations_matrix() const
+		[[nodiscard]] const matrix_type &weak_affiliations_matrix() const
 		{
 			if (!this->_up_to_date)
 			{
@@ -1043,7 +1157,7 @@ export namespace xablau::organizational_analysis
 			return this->_affiliations_matrices[0];
 		}
 
-		const matrix_type &strong_affiliations_matrix() const
+		[[nodiscard]] const matrix_type &strong_affiliations_matrix() const
 		{
 			if (!this->_up_to_date)
 			{
@@ -1053,7 +1167,17 @@ export namespace xablau::organizational_analysis
 			return this->_affiliations_matrices[1];
 		}
 
-		const matrix_type &comparative_matrix_without_redundancies() const
+		[[nodiscard]] const matrix_type &total_affiliations_matrix() const
+		{
+			if (!this->_up_to_date)
+			{
+				throw std::runtime_error("\"processor\" is not up to date.");
+			}
+
+			return this->_affiliations_matrices[2];
+		}
+
+		[[nodiscard]] const matrix_type &comparative_matrix_without_redundancies() const
 		{
 			if (!this->_up_to_date)
 			{
@@ -1063,7 +1187,7 @@ export namespace xablau::organizational_analysis
 			return this->_comparative_matrix_without_redundancies_step_2;
 		}
 
-		const matrix_type &comparative_matrix_with_redundancies() const
+		[[nodiscard]] const matrix_type &comparative_matrix_with_redundancies() const
 		{
 			if (!this->_up_to_date)
 			{
@@ -1073,112 +1197,348 @@ export namespace xablau::organizational_analysis
 			return this->_comparative_matrix_with_redundancies_step_2;
 		}
 
-		void write_activities_matrix(
-			std::basic_ostream < CharType, Traits > &output,
-			const CharType separator) const
+		void read(
+			std::basic_istream < CharType, Traits > &agentsInput,
+			std::basic_istream < CharType, Traits > &activitiesInput,
+			std::basic_istream < CharType, Traits > &componentsInput,
+			std::basic_istream < CharType, Traits > &affiliationsInput,
+			std::basic_ostream < CharType, Traits > &errorOutput = internals::default_error_output < CharType > (),
+			const std::locale &locale = std::locale(""))
 		{
-			if (!this->_up_to_date)
-			{
-				throw std::runtime_error("\"processor\" is not aligned.");
-			}
+			this->_up_to_date = false;
 
-			writer::write_matrix(output, this->_activities_dependencies_matrix, separator);
+			reader::read_agents(agentsInput, this->_agents, errorOutput, locale);
+			reader::read_activities(activitiesInput, this->_activities, this->_agents, errorOutput, locale);
+			reader::read_components(componentsInput, this->_components, errorOutput, locale);
+			reader::read_affiliations(affiliationsInput, this->_affiliations, this->_activities, this->_components, errorOutput, locale);
+		}
+
+		void write_agents(
+			std::basic_ostream < CharType, Traits > &output,
+			const CharType separator,
+			const CharType lister) const
+		{
+			writer::write_agents(output, this->_agents, separator, lister);
+		}
+
+		void write_activities(
+			std::basic_ostream < CharType, Traits > &output,
+			const CharType separator,
+			const CharType lister) const
+		{
+			writer::write_activities(output, this->_activities, this->_agents, separator, lister);
+		}
+
+		void write_components(
+			std::basic_ostream < CharType, Traits > &output,
+			const CharType separator,
+			const CharType lister) const
+		{
+			writer::write_components(output, this->_components, separator, lister);
+		}
+
+		void write_affiliations(
+			std::basic_ostream < CharType, Traits > &output,
+			const CharType separator,
+			const CharType lister) const
+		{
+			writer::write_affiliations(output, this->_activities, this->_affiliations, this->_components, separator, lister);
 		}
 
 		void write_weak_affiliations_matrix(
 			std::basic_ostream < CharType, Traits > &output,
-			const CharType separator) const
+			const CharType separator,
+			const CharType lister) const
 		{
 			if (!this->_up_to_date)
 			{
-				throw std::runtime_error("\"processor\" is not aligned.");
+				throw std::runtime_error("\"processor\" is not updated.");
 			}
 
-			writer::write_matrix(output, this->_affiliations_matrices[0], separator);
+			std::vector < string_type > rowLabels{};
+			std::vector < string_type > columnLabels{};
+
+			rowLabels.reserve(this->_activities.descriptions.size());
+			columnLabels.reserve(this->_components.descriptions.size());
+
+			for (const auto &activity : this->_activities.descriptions)
+			{
+				rowLabels.push_back(activity.first + lister + activity.second.name);
+			}
+
+			for (const auto &component : this->_components.descriptions)
+			{
+				columnLabels.push_back(component.first + lister + component.second.name);
+			}
+
+			const auto optionalRowLabels = std::make_optional(std::move(rowLabels));
+			const auto optionalColumnLabels = std::make_optional(std::move(columnLabels));
+
+			writer::write_matrix(output, this->_affiliations_matrices[0], separator, lister, optionalRowLabels, optionalColumnLabels);
 		}
 
 		void write_strong_affiliations_matrix(
 			std::basic_ostream < CharType, Traits > &output,
-			const CharType separator) const
+			const CharType separator,
+			const CharType lister) const
 		{
 			if (!this->_up_to_date)
 			{
-				throw std::runtime_error("\"processor\" is not aligned.");
+				throw std::runtime_error("\"processor\" is not updated.");
 			}
 
-			writer::write_matrix(output, this->_affiliations_matrices[1], separator);
+			std::vector < string_type > rowLabels{};
+			std::vector < string_type > columnLabels{};
+
+			rowLabels.reserve(this->_activities.descriptions.size());
+			columnLabels.reserve(this->_components.descriptions.size());
+
+			for (const auto &activity : this->_activities.descriptions)
+			{
+				rowLabels.push_back(activity.first + lister + activity.second.name);
+			}
+
+			for (const auto &component : this->_components.descriptions)
+			{
+				columnLabels.push_back(component.first + lister + component.second.name);
+			}
+
+			const auto optionalRowLabels = std::make_optional(std::move(rowLabels));
+			const auto optionalColumnLabels = std::make_optional(std::move(columnLabels));
+
+			writer::write_matrix(output, this->_affiliations_matrices[1], separator, lister, optionalRowLabels, optionalColumnLabels);
 		}
 
-		void write_components_matrix(
+		void write_total_affiliations_matrix(
 			std::basic_ostream < CharType, Traits > &output,
-			const CharType separator) const
+			const CharType separator,
+			const CharType lister) const
 		{
 			if (!this->_up_to_date)
 			{
-				throw std::runtime_error("\"processor\" is not aligned.");
+				throw std::runtime_error("\"processor\" is not updated.");
 			}
 
-			writer::write_matrix(output, this->_components_interfaces_matrix, separator);
+			std::vector < string_type > rowLabels{};
+			std::vector < string_type > columnLabels{};
+
+			rowLabels.reserve(this->_activities.descriptions.size());
+			columnLabels.reserve(this->_components.descriptions.size());
+
+			for (const auto &activity : this->_activities.descriptions)
+			{
+				rowLabels.push_back(activity.first + lister + activity.second.name);
+			}
+
+			for (const auto &component : this->_components.descriptions)
+			{
+				columnLabels.push_back(component.first + lister + component.second.name);
+			}
+
+			const auto optionalRowLabels = std::make_optional(std::move(rowLabels));
+			const auto optionalColumnLabels = std::make_optional(std::move(columnLabels));
+
+			writer::write_matrix(output, this->_affiliations_matrices[2], separator, lister, optionalRowLabels, optionalColumnLabels);
 		}
 
 		void write_total_potential_matrix(
 			std::basic_ostream < CharType, Traits > &output,
-			const CharType separator) const
+			const CharType separator,
+			const CharType lister) const
 		{
 			if (!this->_up_to_date)
 			{
-				throw std::runtime_error("\"processor\" is not aligned.");
+				throw std::runtime_error("\"processor\" is not updated.");
 			}
 
-			writer::write_matrix(output, this->_potential_matrices[0], separator);
+			std::vector < string_type > labels{};
+			std::optional < std::vector < string_type > > optionalLabels{};
+
+			if (this->_last_comparison_mode == comparison_mode::component_and_organization)
+			{
+				labels.reserve(this->_components.descriptions.size());
+
+				for (const auto &component : this->_components.descriptions)
+				{
+					labels.push_back(component.first + lister + component.second.name);
+				}
+
+				optionalLabels = std::make_optional(std::move(labels));
+			}
+
+			else
+			{
+				labels.reserve(this->_activities.descriptions.size());
+
+				for (const auto &activity : this->_activities.descriptions)
+				{
+					labels.push_back(activity.first + lister + activity.second.name);
+				}
+
+				optionalLabels = std::make_optional(std::move(labels));
+			}
+
+			writer::write_matrix(output, this->_potential_matrices[0], separator, lister, optionalLabels, optionalLabels);
 		}
 
 		void write_strong_potential_matrix_without_redundancies(
 			std::basic_ostream < CharType, Traits > &output,
-			const CharType separator) const
+			const CharType separator,
+			const CharType lister) const
 		{
 			if (!this->_up_to_date)
 			{
-				throw std::runtime_error("\"processor\" is not aligned.");
+				throw std::runtime_error("\"processor\" is not updated.");
 			}
 
-			writer::write_matrix(output, this->_strong_potential_matrix_without_redundancies, separator);
+			std::vector < string_type > labels{};
+			std::optional < std::vector < string_type > > optionalLabels{};
+
+			if (this->_last_comparison_mode == comparison_mode::component_and_organization)
+			{
+				labels.reserve(this->_components.descriptions.size());
+
+				for (const auto &component : this->_components.descriptions)
+				{
+					labels.push_back(component.first + lister + component.second.name);
+				}
+
+				optionalLabels = std::make_optional(std::move(labels));
+			}
+
+			else
+			{
+				labels.reserve(this->_activities.descriptions.size());
+
+				for (const auto &activity : this->_activities.descriptions)
+				{
+					labels.push_back(activity.first + lister + activity.second.name);
+				}
+
+				optionalLabels = std::make_optional(std::move(labels));
+			}
+
+			writer::write_matrix(output, this->_strong_potential_matrix_without_redundancies, separator, lister, optionalLabels, optionalLabels);
 		}
 
 		void write_strong_potential_matrix_with_redundancies(
 			std::basic_ostream < CharType, Traits > &output,
-			const CharType separator) const
+			const CharType separator,
+			const CharType lister) const
 		{
 			if (!this->_up_to_date)
 			{
-				throw std::runtime_error("\"processor\" is not aligned.");
+				throw std::runtime_error("\"processor\" is not updated.");
 			}
 
-			writer::write_matrix(output, this->_potential_matrices[1], separator);
+			std::vector < string_type > labels{};
+			std::optional < std::vector < string_type > > optionalLabels{};
+
+			if (this->_last_comparison_mode == comparison_mode::component_and_organization)
+			{
+				labels.reserve(this->_components.descriptions.size());
+
+				for (const auto &component : this->_components.descriptions)
+				{
+					labels.push_back(component.first + lister + component.second.name);
+				}
+
+				optionalLabels = std::make_optional(std::move(labels));
+			}
+
+			else
+			{
+				labels.reserve(this->_activities.descriptions.size());
+
+				for (const auto &activity : this->_activities.descriptions)
+				{
+					labels.push_back(activity.first + lister + activity.second.name);
+				}
+
+				optionalLabels = std::make_optional(std::move(labels));
+			}
+
+			writer::write_matrix(output, this->_potential_matrices[1], separator, lister, optionalLabels, optionalLabels);
 		}
 
 		void write_comparative_matrix_without_redundancies(
 			std::basic_ostream < CharType, Traits > &output,
-			const CharType separator) const
+			const CharType separator,
+			const CharType lister) const
 		{
 			if (!this->_up_to_date)
 			{
-				throw std::runtime_error("\"processor\" is not aligned.");
+				throw std::runtime_error("\"processor\" is not updated.");
 			}
 
-			writer::write_matrix(output, this->_comparative_matrix_without_redundancies_step_2, separator);
+			std::vector < string_type > labels{};
+			std::optional < std::vector < string_type > > optionalLabels{};
+
+			if (this->_last_comparison_mode == comparison_mode::component_and_organization)
+			{
+				labels.reserve(this->_components.descriptions.size());
+
+				for (const auto &component : this->_components.descriptions)
+				{
+					labels.push_back(component.first + lister + component.second.name);
+				}
+
+				optionalLabels = std::make_optional(std::move(labels));
+			}
+
+			else
+			{
+				labels.reserve(this->_activities.descriptions.size());
+
+				for (const auto &activity : this->_activities.descriptions)
+				{
+					labels.push_back(activity.first + lister + activity.second.name);
+				}
+
+				optionalLabels = std::make_optional(std::move(labels));
+			}
+
+			writer::write_matrix(output, this->_comparative_matrix_without_redundancies_step_2, separator, lister, optionalLabels, optionalLabels);
 		}
 
 		void write_comparative_matrix_with_redundancies(
 			std::basic_ostream < CharType, Traits > &output,
-			const CharType separator) const
+			const CharType separator,
+			const CharType lister) const
 		{
 			if (!this->_up_to_date)
 			{
-				throw std::runtime_error("\"processor\" is not aligned.");
+				throw std::runtime_error("\"processor\" is not updated.");
 			}
 
-			writer::write_matrix(output, this->_comparative_matrix_with_redundancies_step_2, separator);
+			std::vector < string_type > labels{};
+			std::optional < std::vector < string_type > > optionalLabels{};
+
+			if (this->_last_comparison_mode == comparison_mode::component_and_organization)
+			{
+				labels.reserve(this->_components.descriptions.size());
+
+				for (const auto &component : this->_components.descriptions)
+				{
+					labels.push_back(component.first + lister + component.second.name);
+				}
+
+				optionalLabels = std::make_optional(std::move(labels));
+			}
+
+			else
+			{
+				labels.reserve(this->_activities.descriptions.size());
+
+				for (const auto &activity : this->_activities.descriptions)
+				{
+					labels.push_back(activity.first + lister + activity.second.name);
+				}
+
+				optionalLabels = std::make_optional(std::move(labels));
+			}
+
+			writer::write_matrix(output, this->_comparative_matrix_with_redundancies_step_2, separator, lister, optionalLabels, optionalLabels);
 		}
 	};
 }

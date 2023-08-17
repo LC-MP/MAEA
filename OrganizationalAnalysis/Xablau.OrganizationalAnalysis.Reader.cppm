@@ -4,8 +4,8 @@
 
 // MIT License
 //
-// Copyright (c) 2023 Jean Amaro <jean.amaro@outlook.com.br>
-// Copyright (c) 2023 Lucas Melchiori Pereira <lc.melchiori@gmail.com>
+// Copyright (c) 2023 Jean Amaro <jean.amaro@outlook.com.br>,
+//                    Lucas Melchiori Pereira <lc.melchiori@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -243,7 +243,7 @@ export namespace xablau::organizational_analysis::reader
 							organizational_analysis::agents < CharType, Traits > ::description())).first;
 
 				iterator->second.role = std::move(role);
-				iterator->second.group = group;
+				iterator->second.groups.insert(group);
 			}
 
 			else if (std::regex_search(line, match, groupExpression))
@@ -342,7 +342,7 @@ export namespace xablau::organizational_analysis::reader
 							organizational_analysis::activities < CharType, Traits > ::description())).first;
 
 				iterator->second.name = std::move(name);
-				iterator->second.group = group;
+				iterator->second.groups.insert(group);
 			}
 
 			else if (std::regex_search(line, match, agentInChargeExpression))
@@ -522,7 +522,7 @@ export namespace xablau::organizational_analysis::reader
 							organizational_analysis::components < InterfacesAreReciprocal, CharType, Traits > ::description())).first;
 
 				iterator->second.name = std::move(name);
-				iterator->second.group = group;
+				iterator->second.groups.insert(group);
 			}
 
 			else if (std::regex_search(line, match, interactionExpression))
