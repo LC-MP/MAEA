@@ -70,6 +70,8 @@
 			btn_ExportAll = new Button();
 			btn_Priorities = new Button();
 			lbl_CheckPriorities = new Label();
+			btn_Paralelism = new Button();
+			lbl_CheckParalelism = new Label();
 			SuspendLayout();
 			// 
 			// lbl_Titulo
@@ -144,7 +146,7 @@
 			// 
 			lbl_processStatus.AutoSize = true;
 			lbl_processStatus.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
-			lbl_processStatus.Location = new Point(897, 446);
+			lbl_processStatus.Location = new Point(897, 513);
 			lbl_processStatus.Name = "lbl_processStatus";
 			lbl_processStatus.Size = new Size(50, 20);
 			lbl_processStatus.TabIndex = 9;
@@ -429,7 +431,7 @@
 			// 
 			// btn_errorLog
 			// 
-			btn_errorLog.Location = new Point(897, 469);
+			btn_errorLog.Location = new Point(897, 537);
 			btn_errorLog.Name = "btn_errorLog";
 			btn_errorLog.Size = new Size(215, 29);
 			btn_errorLog.TabIndex = 50;
@@ -501,7 +503,7 @@
 			btn_Priorities.Font = new Font("Segoe UI", 8F, FontStyle.Regular, GraphicsUnit.Point);
 			btn_Priorities.Location = new Point(919, 385);
 			btn_Priorities.Name = "btn_Priorities";
-			btn_Priorities.Size = new Size(249, 29);
+			btn_Priorities.Size = new Size(284, 29);
 			btn_Priorities.TabIndex = 56;
 			btn_Priorities.Text = "Relação de prioridade de atividades";
 			btn_Priorities.UseVisualStyleBackColor = true;
@@ -516,11 +518,33 @@
 			lbl_CheckPriorities.TabIndex = 57;
 			lbl_CheckPriorities.Text = "x";
 			// 
+			// btn_Paralelism
+			// 
+			btn_Paralelism.Font = new Font("Segoe UI", 8F, FontStyle.Regular, GraphicsUnit.Point);
+			btn_Paralelism.Location = new Point(919, 429);
+			btn_Paralelism.Name = "btn_Paralelism";
+			btn_Paralelism.Size = new Size(284, 29);
+			btn_Paralelism.TabIndex = 58;
+			btn_Paralelism.Text = "Relação de paralelismo entre atividades";
+			btn_Paralelism.UseVisualStyleBackColor = true;
+			btn_Paralelism.Click += button1_Click;
+			// 
+			// lbl_CheckParalelism
+			// 
+			lbl_CheckParalelism.AutoSize = true;
+			lbl_CheckParalelism.Location = new Point(897, 433);
+			lbl_CheckParalelism.Name = "lbl_CheckParalelism";
+			lbl_CheckParalelism.Size = new Size(16, 20);
+			lbl_CheckParalelism.TabIndex = 59;
+			lbl_CheckParalelism.Text = "x";
+			// 
 			// Frm_Main
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
 			AutoScaleMode = AutoScaleMode.Font;
 			ClientSize = new Size(1685, 753);
+			Controls.Add(lbl_CheckParalelism);
+			Controls.Add(btn_Paralelism);
 			Controls.Add(lbl_CheckPriorities);
 			Controls.Add(btn_Priorities);
 			Controls.Add(btn_ExportAll);
@@ -614,5 +638,7 @@
 		private Button btn_ExportAll;
 		private Button btn_Priorities;
 		private Label lbl_CheckPriorities;
+		private Button btn_Paralelism;
+		private Label lbl_CheckParalelism;
 	}
 }

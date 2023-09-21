@@ -67,16 +67,15 @@ namespace MSCMD.Forms
 			cb_Periodity.ValueMember = "Key";
 			cb_Periodity.DataSource = Utility.EnumOf<Periodicity2Enum>();
 
-			//cb_Periodicity1.DataSource = Utility.EnumToList<Periodicity1Enum>();
-			//cb_Periodicity2.DataSource = Utility.EnumToList<Periodicity2Enum>();
 			cb_Duration.DisplayMember = "Value";
 			cb_Duration.ValueMember = "Key";
 			cb_Duration.DataSource = Utility.EnumOf<DurationEnum>();
-			//cb_Duration.DataSource = Utility.EnumToList<DurationEnum>();
 
 			cb_Periodicity1.DisplayMember = "Value";
 			cb_Periodicity1.ValueMember = "Key";
 			cb_Periodicity1.DataSource = Utility.EnumOf<Periodicity1Enum>();
+
+			
 
 
 		}
@@ -632,7 +631,7 @@ namespace MSCMD.Forms
 					rtxtb_Competences.Text = null;
 					cb_Duration.Text = null;
 					cb_Periodicity1.Text = null;
-					cb_Periodity.DataSource = null;
+					cb_Periodity.Text = null;
 					dg_activityRelationship.DataSource = null;
 					dg_AgentRelationship.DataSource = null;
 					dg_elementRelationship.DataSource = null;
@@ -1236,6 +1235,11 @@ namespace MSCMD.Forms
 			{
 				MessageBox.Show("Nenhuma atividade selecionada.");
 			}
+		}
+
+		private void cb_Periodity_Leave(object sender, EventArgs e)
+		{
+			SaveDetails();
 		}
 	}
 }

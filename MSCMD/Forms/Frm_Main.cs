@@ -37,6 +37,7 @@ using MSCMD.Repository;
 using MSCMD.Service;
 using MSCMD.ViewModel;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -69,6 +70,7 @@ namespace MSCMD.Forms
 		private List<List<float>> affiliationMatrix;
 		private SortedDictionary<string, ulong>? agentsInChargeForComponentsList;
 		private List<PriorityViewModel> activitiesPriorities;
+		private List<SortedSet<string>> parallelizationList;
 		private PictureBox pictureBox1 = new PictureBox();
 
 		string dir;
@@ -198,6 +200,7 @@ namespace MSCMD.Forms
 			btn_DownloadComponentComparativeMatrix.Enabled = false;
 			btn_DownloadComponentComparativeMatrixWithRedundancy.Enabled = false;
 			btn_Priorities.Enabled = false;
+			btn_Paralelism.Enabled = false;
 
 		}
 
@@ -211,6 +214,7 @@ namespace MSCMD.Forms
 			lbl_checkElementWithoutRedundacy.Text = string.Empty;
 			lbl_checkElementWithRedundacy.Text = string.Empty;
 			lbl_CheckPriorities.Text = string.Empty;
+			lbl_CheckParalelism.Text = string.Empty;
 
 		}
 
@@ -263,6 +267,7 @@ namespace MSCMD.Forms
 				CheckStatus(lbl_checkElementWithoutRedundacy, comparativeComponentMatrix != null && comparativeComponentMatrix.Count > 0, btn_ComponentComparativeMatrixWithoutRedundancies, btn_DownloadComponentComparativeMatrix);
 				CheckStatus(lbl_checkElementWithRedundacy, comparativeComponentMatrixWithRedundancy != null && comparativeComponentMatrixWithRedundancy.Count > 0, btn_ComponentComparativeMatrixWithRedundancies, btn_DownloadComponentComparativeMatrixWithRedundancy);
 				CheckStatus(lbl_CheckPriorities, activitiesPriorities != null && activitiesPriorities.Count > 0, btn_Priorities, btn_Priorities);
+				CheckStatus(lbl_CheckParalelism, parallelizationList != null && parallelizationList.Count > 0, btn_Paralelism, btn_Paralelism);
 
 			}, TaskScheduler.FromCurrentSynchronizationContext());
 
@@ -296,6 +301,7 @@ namespace MSCMD.Forms
 			comparativeComponentMatrixWithRedundancy?.Clear();
 			agentsInChargeForComponentsList?.Clear();
 			activitiesPriorities?.Clear();
+			parallelizationList?.Clear();
 		}
 
 		private void generateMatrixes()
@@ -355,7 +361,7 @@ namespace MSCMD.Forms
 
 			SortedDictionary<string, ulong>? priotities = mscmdService.IdentifyPriority();
 			LoadPriorities(priotities);
-			//mscmdService.IdentifyParallelization();
+			parallelizationList = mscmdService.IdentifyParallelization();
 		}
 
 		private void LoadPriorities(SortedDictionary<string, ulong>? priotities)
@@ -782,6 +788,15 @@ namespace MSCMD.Forms
 				MessageBox.Show("Não há dados para serem exibidos.", "Aviso");
 			}
 
+		}
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			if (parallelizationList != null && parallelizationList.Count > 0)
+			{
+				Frm_Parallelism frm = new Frm_Parallelism(parallelizationList);
+				frm.ShowDialog();
+			}
 		}
 	}
 }
