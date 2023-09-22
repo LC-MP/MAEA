@@ -28,6 +28,13 @@ namespace MSCMD.Forms
 		private SubsystemRepository _subsystemsRepository;
 		private ElementSubsystemRepository _elementsubsystemRepository;
 		private int filterGroupId = 0;
+		private string sortColumnElement = "";
+		private SortOrder? elementSortOrder;
+		private DataGridViewColumnHeaderCell sortColumn;
+
+		private string sortColumGroup = "";
+		private SortOrder? groupSortOrder;
+		private DataGridViewColumnHeaderCell sortColumnGroupHeader;
 
 		private string errorMessageCellClick = "Erro ao acessar detalhes vinculados ao elemento selecionado.";
 		private string saveElementTitle = "Salvar Elementos";
@@ -63,6 +70,13 @@ namespace MSCMD.Forms
 		{
 			var list = _subsystemsRepository.ListAll().ToList();
 			this.subsystemBindingSource.DataSource = list;
+
+			if (sortColumGroup != "")
+			{
+				SortOrder order = (SortOrder)(groupSortOrder != null ? groupSortOrder : SortOrder.Ascending);
+				SortSubsystem(sortColumGroup, order);
+				sortColumnGroupHeader.SortGlyphDirection = order;
+			}
 		}
 
 		public void LoadSubsystemsRelated(int elementId)
@@ -331,36 +345,9 @@ namespace MSCMD.Forms
 				{
 					int idElemento = (int)rowValue;
 
-					//if (idElemento == 0)
-					//{
-					//	string cod = (string)row.Cells[1].Value;
-					//	string nome = (string)row.Cells[2].Value;
-
-					//	if (!string.IsNullOrEmpty(nome))
-					//	{
-					//		Model.Element elem = new Model.Element()
-					//		{
-					//			Code = cod,
-					//			Name = nome
-					//		};
-
-					//		_elementsRepository.AddNew(elem);
-
-					//		Model.Element element = _elementsRepository.FindBy(elem.ElementId);
-					//		refresh_Elements();
-					//		return elem;
-					//	}
-					//	else
-					//	{
-					//		return null;
-					//	}
-
-					//}
-					//else
-					//{
 					Model.Element element = _elementsRepository.FindBy(idElemento);
 					return element;
-					//}
+
 
 				}
 				else
@@ -518,9 +505,17 @@ namespace MSCMD.Forms
 				lbl_ElementsTotal.Text = "Total:" + list.Count.ToString();
 			}
 
+			if (sortColumnElement != "")
+			{
+				SortOrder order = (SortOrder)(elementSortOrder != null ? elementSortOrder : SortOrder.Ascending);
+				SortElement(sortColumnElement, order);
+				sortColumn.SortGlyphDirection = order;
+			}
+
 
 			if (refreshDetails)
 				refresh_ElementDetails();
+
 		}
 
 		public void refresh_ElementDetails()
@@ -540,6 +535,15 @@ namespace MSCMD.Forms
 					LoadSubsystemsRelated(elementId);
 					LoadElementSelectedData();
 					EnableDetailsButtons();
+
+					dg_Organization.ClearSelection();
+					dg_Organization.CurrentCell = null;
+					dg_RelacaoAtividade.ClearSelection();
+					dg_RelacaoAtividade.CurrentCell = null;
+					dg_RelacaoElemento.ClearSelection();
+					dg_RelacaoElemento.CurrentCell = null;
+					dataGridView1.ClearSelection();
+					dataGridView1.CurrentCell = null;
 				}
 				else
 				{
@@ -697,15 +701,46 @@ namespace MSCMD.Forms
 		private void dg_Elementos_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
 		{
 			DataGridView grid = (DataGridView)sender;
-			SortElement(grid.Columns[e.ColumnIndex].DataPropertyName, SortOrder.Ascending);
-			grid.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
+			if (elementSortOrder == null || elementSortOrder == SortOrder.Descending)
+			{
+
+				SortElement(grid.Columns[e.ColumnIndex].DataPropertyName, SortOrder.Ascending);
+				grid.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
+				elementSortOrder = SortOrder.Ascending;
+			}
+			else
+			{
+				SortElement(grid.Columns[e.ColumnIndex].DataPropertyName, SortOrder.Descending);
+				grid.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Descending;
+				elementSortOrder = SortOrder.Descending;
+			}
+			sortColumnElement = grid.Columns[e.ColumnIndex].DataPropertyName;
+			sortColumn = grid.Columns[e.ColumnIndex].HeaderCell;
 		}
 
 		private void dg_Group_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
 		{
+			//DataGridView grid = (DataGridView)sender;
+			//SortSubsystem(grid.Columns[e.ColumnIndex].DataPropertyName, SortOrder.Ascending);
+			//grid.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
+
 			DataGridView grid = (DataGridView)sender;
-			SortSubsystem(grid.Columns[e.ColumnIndex].DataPropertyName, SortOrder.Ascending);
-			grid.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
+			if (groupSortOrder == null || groupSortOrder == SortOrder.Descending)
+			{
+
+				SortSubsystem(grid.Columns[e.ColumnIndex].DataPropertyName, SortOrder.Ascending);
+				grid.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
+				groupSortOrder = SortOrder.Ascending;
+			}
+			else
+			{
+				SortSubsystem(grid.Columns[e.ColumnIndex].DataPropertyName, SortOrder.Descending);
+				grid.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Descending;
+				groupSortOrder = SortOrder.Descending;
+			}
+			sortColumGroup = grid.Columns[e.ColumnIndex].DataPropertyName;
+			sortColumnGroupHeader = grid.Columns[e.ColumnIndex].HeaderCell;
+
 		}
 		private void SortElement(string column, SortOrder sortOrder)
 		{
@@ -746,6 +781,18 @@ namespace MSCMD.Forms
 						else
 						{
 							elementBindingSource.DataSource = list.OrderByDescending(x => x.Name).ToList();
+						}
+						break;
+					}
+				case "ElementId":
+					{
+						if (sortOrder == SortOrder.Ascending)
+						{
+							elementBindingSource.DataSource = list.OrderBy(x => x.ElementId).ToList();
+						}
+						else
+						{
+							elementBindingSource.DataSource = list.OrderByDescending(x => x.ElementId).ToList();
 						}
 						break;
 					}
@@ -1104,6 +1151,24 @@ namespace MSCMD.Forms
 			{
 				MessageBox.Show(errorMessageNotSelected);
 			}
+		}
+
+		private void btn_New_Click(object sender, EventArgs e)
+		{
+			this.BeginInvoke(new Action(() =>
+			{
+				dg_Elementos.CurrentCell = dg_Elementos.Rows[dg_Elementos.NewRowIndex].Cells[2];
+				dg_Elementos.BeginEdit(true);
+			}));
+		}
+
+		private void btn_NewGroup_Click(object sender, EventArgs e)
+		{
+			this.BeginInvoke(new Action(() =>
+			{
+				dg_Group.CurrentCell = dg_Group.Rows[dg_Group.NewRowIndex].Cells[2];
+				dg_Group.BeginEdit(true);
+			}));
 		}
 	}
 }

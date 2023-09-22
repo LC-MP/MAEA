@@ -31,15 +31,6 @@
 			components = new System.ComponentModel.Container();
 			lbl_Titulo = new Label();
 			dg_Elementos = new DataGridView();
-			elementIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-			codeDataGridViewTextBoxColumn7 = new DataGridViewTextBoxColumn();
-			nameDataGridViewTextBoxColumn5 = new DataGridViewTextBoxColumn();
-			typeDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-			externalIdentifierDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-			componentClassDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-			organizationIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-			ocupiedByDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-			surfaceTypeDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
 			elementBindingSource = new BindingSource(components);
 			label2 = new Label();
 			dg_RelacaoElemento = new DataGridView();
@@ -89,9 +80,6 @@
 			btn_DeleteElementoSelecao = new Button();
 			btn_SetOrganization = new Button();
 			dg_Group = new DataGridView();
-			subsystemIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-			codeDataGridViewTextBoxColumn8 = new DataGridViewTextBoxColumn();
-			nameDataGridViewTextBoxColumn6 = new DataGridViewTextBoxColumn();
 			subsystemBindingSource = new BindingSource(components);
 			lbl_SectorFilter = new Label();
 			btn_DelSubsystem = new Button();
@@ -111,6 +99,20 @@
 			nameDataGridViewTextBoxColumn7 = new DataGridViewTextBoxColumn();
 			button1 = new Button();
 			btn_DeleteRelSubsystem = new Button();
+			btn_New = new Button();
+			btn_NewGroup = new Button();
+			subsystemIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+			codeDataGridViewTextBoxColumn8 = new DataGridViewTextBoxColumn();
+			nameDataGridViewTextBoxColumn6 = new DataGridViewTextBoxColumn();
+			elementIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+			codeDataGridViewTextBoxColumn7 = new DataGridViewTextBoxColumn();
+			nameDataGridViewTextBoxColumn5 = new DataGridViewTextBoxColumn();
+			typeDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+			externalIdentifierDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+			componentClassDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+			organizationIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+			ocupiedByDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+			surfaceTypeDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
 			((System.ComponentModel.ISupportInitialize)dg_Elementos).BeginInit();
 			((System.ComponentModel.ISupportInitialize)elementBindingSource).BeginInit();
 			((System.ComponentModel.ISupportInitialize)dg_RelacaoElemento).BeginInit();
@@ -157,85 +159,6 @@
 			dg_Elementos.CellEnter += dg_Elementos_CellEnter;
 			dg_Elementos.CellFormatting += dg_Elementos_CellFormatting;
 			dg_Elementos.ColumnHeaderMouseClick += dg_Elementos_ColumnHeaderMouseClick;
-			// 
-			// elementIdDataGridViewTextBoxColumn
-			// 
-			elementIdDataGridViewTextBoxColumn.DataPropertyName = "ElementId";
-			elementIdDataGridViewTextBoxColumn.HeaderText = "Id";
-			elementIdDataGridViewTextBoxColumn.MinimumWidth = 6;
-			elementIdDataGridViewTextBoxColumn.Name = "elementIdDataGridViewTextBoxColumn";
-			elementIdDataGridViewTextBoxColumn.ReadOnly = true;
-			elementIdDataGridViewTextBoxColumn.Width = 40;
-			// 
-			// codeDataGridViewTextBoxColumn7
-			// 
-			codeDataGridViewTextBoxColumn7.DataPropertyName = "Code";
-			codeDataGridViewTextBoxColumn7.HeaderText = "Código";
-			codeDataGridViewTextBoxColumn7.MinimumWidth = 6;
-			codeDataGridViewTextBoxColumn7.Name = "codeDataGridViewTextBoxColumn7";
-			codeDataGridViewTextBoxColumn7.Width = 80;
-			// 
-			// nameDataGridViewTextBoxColumn5
-			// 
-			nameDataGridViewTextBoxColumn5.DataPropertyName = "Name";
-			nameDataGridViewTextBoxColumn5.HeaderText = "Nome*";
-			nameDataGridViewTextBoxColumn5.MinimumWidth = 6;
-			nameDataGridViewTextBoxColumn5.Name = "nameDataGridViewTextBoxColumn5";
-			nameDataGridViewTextBoxColumn5.Width = 320;
-			// 
-			// typeDataGridViewTextBoxColumn
-			// 
-			typeDataGridViewTextBoxColumn.DataPropertyName = "Type";
-			typeDataGridViewTextBoxColumn.HeaderText = "Type";
-			typeDataGridViewTextBoxColumn.MinimumWidth = 6;
-			typeDataGridViewTextBoxColumn.Name = "typeDataGridViewTextBoxColumn";
-			typeDataGridViewTextBoxColumn.Visible = false;
-			typeDataGridViewTextBoxColumn.Width = 125;
-			// 
-			// externalIdentifierDataGridViewTextBoxColumn
-			// 
-			externalIdentifierDataGridViewTextBoxColumn.DataPropertyName = "ExternalIdentifier";
-			externalIdentifierDataGridViewTextBoxColumn.HeaderText = "ExternalIdentifier";
-			externalIdentifierDataGridViewTextBoxColumn.MinimumWidth = 6;
-			externalIdentifierDataGridViewTextBoxColumn.Name = "externalIdentifierDataGridViewTextBoxColumn";
-			externalIdentifierDataGridViewTextBoxColumn.Visible = false;
-			externalIdentifierDataGridViewTextBoxColumn.Width = 125;
-			// 
-			// componentClassDataGridViewTextBoxColumn
-			// 
-			componentClassDataGridViewTextBoxColumn.DataPropertyName = "ComponentClass";
-			componentClassDataGridViewTextBoxColumn.HeaderText = "ComponentClass";
-			componentClassDataGridViewTextBoxColumn.MinimumWidth = 6;
-			componentClassDataGridViewTextBoxColumn.Name = "componentClassDataGridViewTextBoxColumn";
-			componentClassDataGridViewTextBoxColumn.Visible = false;
-			componentClassDataGridViewTextBoxColumn.Width = 125;
-			// 
-			// organizationIdDataGridViewTextBoxColumn
-			// 
-			organizationIdDataGridViewTextBoxColumn.DataPropertyName = "OrganizationId";
-			organizationIdDataGridViewTextBoxColumn.HeaderText = "OrganizationId";
-			organizationIdDataGridViewTextBoxColumn.MinimumWidth = 6;
-			organizationIdDataGridViewTextBoxColumn.Name = "organizationIdDataGridViewTextBoxColumn";
-			organizationIdDataGridViewTextBoxColumn.Visible = false;
-			organizationIdDataGridViewTextBoxColumn.Width = 125;
-			// 
-			// ocupiedByDataGridViewTextBoxColumn
-			// 
-			ocupiedByDataGridViewTextBoxColumn.DataPropertyName = "OcupiedBy";
-			ocupiedByDataGridViewTextBoxColumn.HeaderText = "OcupiedBy";
-			ocupiedByDataGridViewTextBoxColumn.MinimumWidth = 6;
-			ocupiedByDataGridViewTextBoxColumn.Name = "ocupiedByDataGridViewTextBoxColumn";
-			ocupiedByDataGridViewTextBoxColumn.Visible = false;
-			ocupiedByDataGridViewTextBoxColumn.Width = 125;
-			// 
-			// surfaceTypeDataGridViewTextBoxColumn
-			// 
-			surfaceTypeDataGridViewTextBoxColumn.DataPropertyName = "SurfaceType";
-			surfaceTypeDataGridViewTextBoxColumn.HeaderText = "SurfaceType";
-			surfaceTypeDataGridViewTextBoxColumn.MinimumWidth = 6;
-			surfaceTypeDataGridViewTextBoxColumn.Name = "surfaceTypeDataGridViewTextBoxColumn";
-			surfaceTypeDataGridViewTextBoxColumn.Visible = false;
-			surfaceTypeDataGridViewTextBoxColumn.Width = 125;
 			// 
 			// elementBindingSource
 			// 
@@ -717,7 +640,7 @@
 			// 
 			// btn_SetOrganization
 			// 
-			btn_SetOrganization.Location = new Point(1564, 310);
+			btn_SetOrganization.Location = new Point(1563, 309);
 			btn_SetOrganization.Name = "btn_SetOrganization";
 			btn_SetOrganization.Size = new Size(94, 29);
 			btn_SetOrganization.TabIndex = 24;
@@ -743,31 +666,6 @@
 			dg_Group.CellEndEdit += dg_Group_CellEndEdit;
 			dg_Group.ColumnHeaderMouseClick += dg_Group_ColumnHeaderMouseClick;
 			// 
-			// subsystemIdDataGridViewTextBoxColumn
-			// 
-			subsystemIdDataGridViewTextBoxColumn.DataPropertyName = "SubsystemId";
-			subsystemIdDataGridViewTextBoxColumn.HeaderText = "Id";
-			subsystemIdDataGridViewTextBoxColumn.MinimumWidth = 6;
-			subsystemIdDataGridViewTextBoxColumn.Name = "subsystemIdDataGridViewTextBoxColumn";
-			subsystemIdDataGridViewTextBoxColumn.Visible = false;
-			subsystemIdDataGridViewTextBoxColumn.Width = 50;
-			// 
-			// codeDataGridViewTextBoxColumn8
-			// 
-			codeDataGridViewTextBoxColumn8.DataPropertyName = "Code";
-			codeDataGridViewTextBoxColumn8.HeaderText = "Código";
-			codeDataGridViewTextBoxColumn8.MinimumWidth = 6;
-			codeDataGridViewTextBoxColumn8.Name = "codeDataGridViewTextBoxColumn8";
-			codeDataGridViewTextBoxColumn8.Width = 80;
-			// 
-			// nameDataGridViewTextBoxColumn6
-			// 
-			nameDataGridViewTextBoxColumn6.DataPropertyName = "Name";
-			nameDataGridViewTextBoxColumn6.HeaderText = "Nome*";
-			nameDataGridViewTextBoxColumn6.MinimumWidth = 6;
-			nameDataGridViewTextBoxColumn6.Name = "nameDataGridViewTextBoxColumn6";
-			nameDataGridViewTextBoxColumn6.Width = 360;
-			// 
 			// subsystemBindingSource
 			// 
 			subsystemBindingSource.DataSource = typeof(Model.Subsystem);
@@ -778,7 +676,7 @@
 			lbl_SectorFilter.AutoSize = true;
 			lbl_SectorFilter.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
 			lbl_SectorFilter.Location = new Point(153, 377);
-			lbl_SectorFilter.MaximumSize = new Size(400, 29);
+			lbl_SectorFilter.MaximumSize = new Size(331, 29);
 			lbl_SectorFilter.Name = "lbl_SectorFilter";
 			lbl_SectorFilter.Size = new Size(76, 28);
 			lbl_SectorFilter.TabIndex = 6;
@@ -840,7 +738,6 @@
 			// 
 			// btn_ExportSubsystem
 			// 
-			btn_ExportSubsystem.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
 			btn_ExportSubsystem.Location = new Point(153, 288);
 			btn_ExportSubsystem.Name = "btn_ExportSubsystem";
 			btn_ExportSubsystem.Size = new Size(119, 29);
@@ -945,7 +842,7 @@
 			// 
 			// button1
 			// 
-			button1.Location = new Point(776, 310);
+			button1.Location = new Point(776, 309);
 			button1.Margin = new Padding(3, 4, 3, 4);
 			button1.Name = "button1";
 			button1.Size = new Size(169, 31);
@@ -956,7 +853,7 @@
 			// 
 			// btn_DeleteRelSubsystem
 			// 
-			btn_DeleteRelSubsystem.Location = new Point(947, 310);
+			btn_DeleteRelSubsystem.Location = new Point(947, 309);
 			btn_DeleteRelSubsystem.Margin = new Padding(3, 4, 3, 4);
 			btn_DeleteRelSubsystem.Name = "btn_DeleteRelSubsystem";
 			btn_DeleteRelSubsystem.Size = new Size(173, 31);
@@ -965,12 +862,138 @@
 			btn_DeleteRelSubsystem.UseVisualStyleBackColor = true;
 			btn_DeleteRelSubsystem.Click += btn_DeleteRelSubsystem_Click;
 			// 
+			// btn_New
+			// 
+			btn_New.Location = new Point(495, 377);
+			btn_New.Name = "btn_New";
+			btn_New.Size = new Size(66, 29);
+			btn_New.TabIndex = 69;
+			btn_New.Text = "Novo";
+			btn_New.UseVisualStyleBackColor = true;
+			btn_New.Click += btn_New_Click;
+			// 
+			// btn_NewGroup
+			// 
+			btn_NewGroup.Location = new Point(495, 28);
+			btn_NewGroup.Name = "btn_NewGroup";
+			btn_NewGroup.Size = new Size(66, 29);
+			btn_NewGroup.TabIndex = 70;
+			btn_NewGroup.Text = "Novo";
+			btn_NewGroup.UseVisualStyleBackColor = true;
+			btn_NewGroup.Click += btn_NewGroup_Click;
+			// 
+			// subsystemIdDataGridViewTextBoxColumn
+			// 
+			subsystemIdDataGridViewTextBoxColumn.DataPropertyName = "SubsystemId";
+			subsystemIdDataGridViewTextBoxColumn.HeaderText = "Id";
+			subsystemIdDataGridViewTextBoxColumn.MinimumWidth = 6;
+			subsystemIdDataGridViewTextBoxColumn.Name = "subsystemIdDataGridViewTextBoxColumn";
+			subsystemIdDataGridViewTextBoxColumn.Visible = false;
+			subsystemIdDataGridViewTextBoxColumn.Width = 55;
+			// 
+			// codeDataGridViewTextBoxColumn8
+			// 
+			codeDataGridViewTextBoxColumn8.DataPropertyName = "Code";
+			codeDataGridViewTextBoxColumn8.HeaderText = "Código";
+			codeDataGridViewTextBoxColumn8.MinimumWidth = 6;
+			codeDataGridViewTextBoxColumn8.Name = "codeDataGridViewTextBoxColumn8";
+			codeDataGridViewTextBoxColumn8.Width = 90;
+			// 
+			// nameDataGridViewTextBoxColumn6
+			// 
+			nameDataGridViewTextBoxColumn6.DataPropertyName = "Name";
+			nameDataGridViewTextBoxColumn6.HeaderText = "Nome*";
+			nameDataGridViewTextBoxColumn6.MinimumWidth = 6;
+			nameDataGridViewTextBoxColumn6.Name = "nameDataGridViewTextBoxColumn6";
+			nameDataGridViewTextBoxColumn6.Width = 360;
+			// 
+			// elementIdDataGridViewTextBoxColumn
+			// 
+			elementIdDataGridViewTextBoxColumn.DataPropertyName = "ElementId";
+			elementIdDataGridViewTextBoxColumn.HeaderText = "Id";
+			elementIdDataGridViewTextBoxColumn.MinimumWidth = 6;
+			elementIdDataGridViewTextBoxColumn.Name = "elementIdDataGridViewTextBoxColumn";
+			elementIdDataGridViewTextBoxColumn.ReadOnly = true;
+			elementIdDataGridViewTextBoxColumn.Width = 55;
+			// 
+			// codeDataGridViewTextBoxColumn7
+			// 
+			codeDataGridViewTextBoxColumn7.DataPropertyName = "Code";
+			codeDataGridViewTextBoxColumn7.HeaderText = "Código";
+			codeDataGridViewTextBoxColumn7.MinimumWidth = 6;
+			codeDataGridViewTextBoxColumn7.Name = "codeDataGridViewTextBoxColumn7";
+			codeDataGridViewTextBoxColumn7.Width = 90;
+			// 
+			// nameDataGridViewTextBoxColumn5
+			// 
+			nameDataGridViewTextBoxColumn5.DataPropertyName = "Name";
+			nameDataGridViewTextBoxColumn5.HeaderText = "Nome*";
+			nameDataGridViewTextBoxColumn5.MinimumWidth = 6;
+			nameDataGridViewTextBoxColumn5.Name = "nameDataGridViewTextBoxColumn5";
+			nameDataGridViewTextBoxColumn5.Width = 320;
+			// 
+			// typeDataGridViewTextBoxColumn
+			// 
+			typeDataGridViewTextBoxColumn.DataPropertyName = "Type";
+			typeDataGridViewTextBoxColumn.HeaderText = "Type";
+			typeDataGridViewTextBoxColumn.MinimumWidth = 6;
+			typeDataGridViewTextBoxColumn.Name = "typeDataGridViewTextBoxColumn";
+			typeDataGridViewTextBoxColumn.Visible = false;
+			typeDataGridViewTextBoxColumn.Width = 125;
+			// 
+			// externalIdentifierDataGridViewTextBoxColumn
+			// 
+			externalIdentifierDataGridViewTextBoxColumn.DataPropertyName = "ExternalIdentifier";
+			externalIdentifierDataGridViewTextBoxColumn.HeaderText = "ExternalIdentifier";
+			externalIdentifierDataGridViewTextBoxColumn.MinimumWidth = 6;
+			externalIdentifierDataGridViewTextBoxColumn.Name = "externalIdentifierDataGridViewTextBoxColumn";
+			externalIdentifierDataGridViewTextBoxColumn.Visible = false;
+			externalIdentifierDataGridViewTextBoxColumn.Width = 125;
+			// 
+			// componentClassDataGridViewTextBoxColumn
+			// 
+			componentClassDataGridViewTextBoxColumn.DataPropertyName = "ComponentClass";
+			componentClassDataGridViewTextBoxColumn.HeaderText = "ComponentClass";
+			componentClassDataGridViewTextBoxColumn.MinimumWidth = 6;
+			componentClassDataGridViewTextBoxColumn.Name = "componentClassDataGridViewTextBoxColumn";
+			componentClassDataGridViewTextBoxColumn.Visible = false;
+			componentClassDataGridViewTextBoxColumn.Width = 125;
+			// 
+			// organizationIdDataGridViewTextBoxColumn
+			// 
+			organizationIdDataGridViewTextBoxColumn.DataPropertyName = "OrganizationId";
+			organizationIdDataGridViewTextBoxColumn.HeaderText = "OrganizationId";
+			organizationIdDataGridViewTextBoxColumn.MinimumWidth = 6;
+			organizationIdDataGridViewTextBoxColumn.Name = "organizationIdDataGridViewTextBoxColumn";
+			organizationIdDataGridViewTextBoxColumn.Visible = false;
+			organizationIdDataGridViewTextBoxColumn.Width = 125;
+			// 
+			// ocupiedByDataGridViewTextBoxColumn
+			// 
+			ocupiedByDataGridViewTextBoxColumn.DataPropertyName = "OcupiedBy";
+			ocupiedByDataGridViewTextBoxColumn.HeaderText = "OcupiedBy";
+			ocupiedByDataGridViewTextBoxColumn.MinimumWidth = 6;
+			ocupiedByDataGridViewTextBoxColumn.Name = "ocupiedByDataGridViewTextBoxColumn";
+			ocupiedByDataGridViewTextBoxColumn.Visible = false;
+			ocupiedByDataGridViewTextBoxColumn.Width = 125;
+			// 
+			// surfaceTypeDataGridViewTextBoxColumn
+			// 
+			surfaceTypeDataGridViewTextBoxColumn.DataPropertyName = "SurfaceType";
+			surfaceTypeDataGridViewTextBoxColumn.HeaderText = "SurfaceType";
+			surfaceTypeDataGridViewTextBoxColumn.MinimumWidth = 6;
+			surfaceTypeDataGridViewTextBoxColumn.Name = "surfaceTypeDataGridViewTextBoxColumn";
+			surfaceTypeDataGridViewTextBoxColumn.Visible = false;
+			surfaceTypeDataGridViewTextBoxColumn.Width = 125;
+			// 
 			// Frm_Element
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
 			AutoScaleMode = AutoScaleMode.Font;
 			AutoScroll = true;
 			ClientSize = new Size(1696, 881);
+			Controls.Add(btn_NewGroup);
+			Controls.Add(btn_New);
 			Controls.Add(button1);
 			Controls.Add(btn_DeleteRelSubsystem);
 			Controls.Add(dataGridView1);
@@ -1124,20 +1147,8 @@
 		private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn4;
 		private DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
 		private Button btn_DelSubsystem;
-		private DataGridViewTextBoxColumn subsystemIdDataGridViewTextBoxColumn;
-		private DataGridViewTextBoxColumn codeDataGridViewTextBoxColumn8;
-		private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn6;
 		private Button btn_ImportElementRelationship;
 		private Button btn_ImportElementActivityRelationship;
-		private DataGridViewTextBoxColumn elementIdDataGridViewTextBoxColumn;
-		private DataGridViewTextBoxColumn codeDataGridViewTextBoxColumn7;
-		private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn5;
-		private DataGridViewTextBoxColumn typeDataGridViewTextBoxColumn;
-		private DataGridViewTextBoxColumn externalIdentifierDataGridViewTextBoxColumn;
-		private DataGridViewTextBoxColumn componentClassDataGridViewTextBoxColumn;
-		private DataGridViewTextBoxColumn organizationIdDataGridViewTextBoxColumn;
-		private DataGridViewTextBoxColumn ocupiedByDataGridViewTextBoxColumn;
-		private DataGridViewTextBoxColumn surfaceTypeDataGridViewTextBoxColumn;
 		private Label lbl_ElementsTotal;
 		private Button btn_ImportSectors;
 		private Button btn_ExportSubsystem;
@@ -1158,5 +1169,19 @@
 		private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn7;
 		private Button button1;
 		private Button btn_DeleteRelSubsystem;
+		private Button btn_New;
+		private Button btn_NewGroup;
+		private DataGridViewTextBoxColumn elementIdDataGridViewTextBoxColumn;
+		private DataGridViewTextBoxColumn codeDataGridViewTextBoxColumn7;
+		private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn5;
+		private DataGridViewTextBoxColumn typeDataGridViewTextBoxColumn;
+		private DataGridViewTextBoxColumn externalIdentifierDataGridViewTextBoxColumn;
+		private DataGridViewTextBoxColumn componentClassDataGridViewTextBoxColumn;
+		private DataGridViewTextBoxColumn organizationIdDataGridViewTextBoxColumn;
+		private DataGridViewTextBoxColumn ocupiedByDataGridViewTextBoxColumn;
+		private DataGridViewTextBoxColumn surfaceTypeDataGridViewTextBoxColumn;
+		private DataGridViewTextBoxColumn subsystemIdDataGridViewTextBoxColumn;
+		private DataGridViewTextBoxColumn codeDataGridViewTextBoxColumn8;
+		private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn6;
 	}
 }

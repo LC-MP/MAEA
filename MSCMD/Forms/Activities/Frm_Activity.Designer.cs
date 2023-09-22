@@ -32,14 +32,6 @@
 			lbl_TituloAtividade = new Label();
 			btn_Importarcsv = new Button();
 			dg_Activities = new DataGridView();
-			activityIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-			activityCodeDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-			activityNameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-			activityDescriptionDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-			periodicity1DataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-			periodicity2DataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-			durationDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-			requiredCompetenceDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
 			activityBindingSource = new BindingSource(components);
 			dg_activityRelationship = new DataGridView();
 			relationshipIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
@@ -112,6 +104,16 @@
 			button1 = new Button();
 			button2 = new Button();
 			cb_Periodity = new ComboBox();
+			btn_New = new Button();
+			btn_NewGroup = new Button();
+			activityIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+			activityCodeDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+			activityNameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+			activityDescriptionDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+			periodicity1DataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+			periodicity2DataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+			durationDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+			requiredCompetenceDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
 			((System.ComponentModel.ISupportInitialize)dg_Activities).BeginInit();
 			((System.ComponentModel.ISupportInitialize)activityBindingSource).BeginInit();
 			((System.ComponentModel.ISupportInitialize)dg_activityRelationship).BeginInit();
@@ -169,76 +171,6 @@
 			dg_Activities.CellEnter += dg_Activities_CellEnter;
 			dg_Activities.CellFormatting += dg_Activities_CellFormatting;
 			dg_Activities.ColumnHeaderMouseClick += dg_Activities_ColumnHeaderMouseClick;
-			// 
-			// activityIdDataGridViewTextBoxColumn
-			// 
-			activityIdDataGridViewTextBoxColumn.DataPropertyName = "ActivityId";
-			activityIdDataGridViewTextBoxColumn.HeaderText = "Id";
-			activityIdDataGridViewTextBoxColumn.MinimumWidth = 6;
-			activityIdDataGridViewTextBoxColumn.Name = "activityIdDataGridViewTextBoxColumn";
-			activityIdDataGridViewTextBoxColumn.ReadOnly = true;
-			activityIdDataGridViewTextBoxColumn.Width = 40;
-			// 
-			// activityCodeDataGridViewTextBoxColumn
-			// 
-			activityCodeDataGridViewTextBoxColumn.DataPropertyName = "ActivityCode";
-			activityCodeDataGridViewTextBoxColumn.HeaderText = "Código";
-			activityCodeDataGridViewTextBoxColumn.MinimumWidth = 6;
-			activityCodeDataGridViewTextBoxColumn.Name = "activityCodeDataGridViewTextBoxColumn";
-			activityCodeDataGridViewTextBoxColumn.Width = 80;
-			// 
-			// activityNameDataGridViewTextBoxColumn
-			// 
-			activityNameDataGridViewTextBoxColumn.DataPropertyName = "ActivityName";
-			activityNameDataGridViewTextBoxColumn.HeaderText = "Nome";
-			activityNameDataGridViewTextBoxColumn.MinimumWidth = 6;
-			activityNameDataGridViewTextBoxColumn.Name = "activityNameDataGridViewTextBoxColumn";
-			activityNameDataGridViewTextBoxColumn.Width = 320;
-			// 
-			// activityDescriptionDataGridViewTextBoxColumn
-			// 
-			activityDescriptionDataGridViewTextBoxColumn.DataPropertyName = "ActivityDescription";
-			activityDescriptionDataGridViewTextBoxColumn.HeaderText = "Descrição";
-			activityDescriptionDataGridViewTextBoxColumn.MinimumWidth = 6;
-			activityDescriptionDataGridViewTextBoxColumn.Name = "activityDescriptionDataGridViewTextBoxColumn";
-			activityDescriptionDataGridViewTextBoxColumn.Visible = false;
-			activityDescriptionDataGridViewTextBoxColumn.Width = 125;
-			// 
-			// periodicity1DataGridViewTextBoxColumn
-			// 
-			periodicity1DataGridViewTextBoxColumn.DataPropertyName = "Periodicity1";
-			periodicity1DataGridViewTextBoxColumn.HeaderText = "Periodicity1";
-			periodicity1DataGridViewTextBoxColumn.MinimumWidth = 6;
-			periodicity1DataGridViewTextBoxColumn.Name = "periodicity1DataGridViewTextBoxColumn";
-			periodicity1DataGridViewTextBoxColumn.Visible = false;
-			periodicity1DataGridViewTextBoxColumn.Width = 125;
-			// 
-			// periodicity2DataGridViewTextBoxColumn
-			// 
-			periodicity2DataGridViewTextBoxColumn.DataPropertyName = "Periodicity2";
-			periodicity2DataGridViewTextBoxColumn.HeaderText = "Periodicity2";
-			periodicity2DataGridViewTextBoxColumn.MinimumWidth = 6;
-			periodicity2DataGridViewTextBoxColumn.Name = "periodicity2DataGridViewTextBoxColumn";
-			periodicity2DataGridViewTextBoxColumn.Visible = false;
-			periodicity2DataGridViewTextBoxColumn.Width = 125;
-			// 
-			// durationDataGridViewTextBoxColumn
-			// 
-			durationDataGridViewTextBoxColumn.DataPropertyName = "Duration";
-			durationDataGridViewTextBoxColumn.HeaderText = "Duration";
-			durationDataGridViewTextBoxColumn.MinimumWidth = 6;
-			durationDataGridViewTextBoxColumn.Name = "durationDataGridViewTextBoxColumn";
-			durationDataGridViewTextBoxColumn.Visible = false;
-			durationDataGridViewTextBoxColumn.Width = 125;
-			// 
-			// requiredCompetenceDataGridViewTextBoxColumn
-			// 
-			requiredCompetenceDataGridViewTextBoxColumn.DataPropertyName = "RequiredCompetence";
-			requiredCompetenceDataGridViewTextBoxColumn.HeaderText = "RequiredCompetence";
-			requiredCompetenceDataGridViewTextBoxColumn.MinimumWidth = 6;
-			requiredCompetenceDataGridViewTextBoxColumn.Name = "requiredCompetenceDataGridViewTextBoxColumn";
-			requiredCompetenceDataGridViewTextBoxColumn.Visible = false;
-			requiredCompetenceDataGridViewTextBoxColumn.Width = 125;
 			// 
 			// activityBindingSource
 			// 
@@ -562,7 +494,7 @@
 			codeDataGridViewTextBoxColumn3.HeaderText = "Código";
 			codeDataGridViewTextBoxColumn3.MinimumWidth = 6;
 			codeDataGridViewTextBoxColumn3.Name = "codeDataGridViewTextBoxColumn3";
-			codeDataGridViewTextBoxColumn3.Width = 80;
+			codeDataGridViewTextBoxColumn3.Width = 90;
 			// 
 			// nameDataGridViewTextBoxColumn3
 			// 
@@ -775,7 +707,7 @@
 			lbl_GroupFilter.AutoSize = true;
 			lbl_GroupFilter.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
 			lbl_GroupFilter.Location = new Point(151, 389);
-			lbl_GroupFilter.MaximumSize = new Size(400, 29);
+			lbl_GroupFilter.MaximumSize = new Size(343, 29);
 			lbl_GroupFilter.Name = "lbl_GroupFilter";
 			lbl_GroupFilter.Size = new Size(74, 28);
 			lbl_GroupFilter.TabIndex = 37;
@@ -847,7 +779,6 @@
 			// 
 			// btn_ExportSubprocess
 			// 
-			btn_ExportSubprocess.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
 			btn_ExportSubprocess.Location = new Point(155, 295);
 			btn_ExportSubprocess.Name = "btn_ExportSubprocess";
 			btn_ExportSubprocess.Size = new Size(119, 29);
@@ -970,12 +901,104 @@
 			cb_Periodity.TabIndex = 66;
 			cb_Periodity.Leave += cb_Periodity_Leave;
 			// 
+			// btn_New
+			// 
+			btn_New.Location = new Point(491, 391);
+			btn_New.Name = "btn_New";
+			btn_New.Size = new Size(66, 29);
+			btn_New.TabIndex = 70;
+			btn_New.Text = "Novo";
+			btn_New.UseVisualStyleBackColor = true;
+			btn_New.Click += btn_New_Click;
+			// 
+			// btn_NewGroup
+			// 
+			btn_NewGroup.Location = new Point(490, 20);
+			btn_NewGroup.Name = "btn_NewGroup";
+			btn_NewGroup.Size = new Size(66, 29);
+			btn_NewGroup.TabIndex = 71;
+			btn_NewGroup.Text = "Novo";
+			btn_NewGroup.UseVisualStyleBackColor = true;
+			btn_NewGroup.Click += btn_NewGroup_Click;
+			// 
+			// activityIdDataGridViewTextBoxColumn
+			// 
+			activityIdDataGridViewTextBoxColumn.DataPropertyName = "ActivityId";
+			activityIdDataGridViewTextBoxColumn.HeaderText = "Id";
+			activityIdDataGridViewTextBoxColumn.MinimumWidth = 6;
+			activityIdDataGridViewTextBoxColumn.Name = "activityIdDataGridViewTextBoxColumn";
+			activityIdDataGridViewTextBoxColumn.ReadOnly = true;
+			activityIdDataGridViewTextBoxColumn.Width = 55;
+			// 
+			// activityCodeDataGridViewTextBoxColumn
+			// 
+			activityCodeDataGridViewTextBoxColumn.DataPropertyName = "ActivityCode";
+			activityCodeDataGridViewTextBoxColumn.HeaderText = "Código";
+			activityCodeDataGridViewTextBoxColumn.MinimumWidth = 6;
+			activityCodeDataGridViewTextBoxColumn.Name = "activityCodeDataGridViewTextBoxColumn";
+			activityCodeDataGridViewTextBoxColumn.Width = 90;
+			// 
+			// activityNameDataGridViewTextBoxColumn
+			// 
+			activityNameDataGridViewTextBoxColumn.DataPropertyName = "ActivityName";
+			activityNameDataGridViewTextBoxColumn.HeaderText = "Nome";
+			activityNameDataGridViewTextBoxColumn.MinimumWidth = 6;
+			activityNameDataGridViewTextBoxColumn.Name = "activityNameDataGridViewTextBoxColumn";
+			activityNameDataGridViewTextBoxColumn.Width = 320;
+			// 
+			// activityDescriptionDataGridViewTextBoxColumn
+			// 
+			activityDescriptionDataGridViewTextBoxColumn.DataPropertyName = "ActivityDescription";
+			activityDescriptionDataGridViewTextBoxColumn.HeaderText = "Descrição";
+			activityDescriptionDataGridViewTextBoxColumn.MinimumWidth = 6;
+			activityDescriptionDataGridViewTextBoxColumn.Name = "activityDescriptionDataGridViewTextBoxColumn";
+			activityDescriptionDataGridViewTextBoxColumn.Visible = false;
+			activityDescriptionDataGridViewTextBoxColumn.Width = 125;
+			// 
+			// periodicity1DataGridViewTextBoxColumn
+			// 
+			periodicity1DataGridViewTextBoxColumn.DataPropertyName = "Periodicity1";
+			periodicity1DataGridViewTextBoxColumn.HeaderText = "Periodicity1";
+			periodicity1DataGridViewTextBoxColumn.MinimumWidth = 6;
+			periodicity1DataGridViewTextBoxColumn.Name = "periodicity1DataGridViewTextBoxColumn";
+			periodicity1DataGridViewTextBoxColumn.Visible = false;
+			periodicity1DataGridViewTextBoxColumn.Width = 125;
+			// 
+			// periodicity2DataGridViewTextBoxColumn
+			// 
+			periodicity2DataGridViewTextBoxColumn.DataPropertyName = "Periodicity2";
+			periodicity2DataGridViewTextBoxColumn.HeaderText = "Periodicity2";
+			periodicity2DataGridViewTextBoxColumn.MinimumWidth = 6;
+			periodicity2DataGridViewTextBoxColumn.Name = "periodicity2DataGridViewTextBoxColumn";
+			periodicity2DataGridViewTextBoxColumn.Visible = false;
+			periodicity2DataGridViewTextBoxColumn.Width = 125;
+			// 
+			// durationDataGridViewTextBoxColumn
+			// 
+			durationDataGridViewTextBoxColumn.DataPropertyName = "Duration";
+			durationDataGridViewTextBoxColumn.HeaderText = "Duration";
+			durationDataGridViewTextBoxColumn.MinimumWidth = 6;
+			durationDataGridViewTextBoxColumn.Name = "durationDataGridViewTextBoxColumn";
+			durationDataGridViewTextBoxColumn.Visible = false;
+			durationDataGridViewTextBoxColumn.Width = 125;
+			// 
+			// requiredCompetenceDataGridViewTextBoxColumn
+			// 
+			requiredCompetenceDataGridViewTextBoxColumn.DataPropertyName = "RequiredCompetence";
+			requiredCompetenceDataGridViewTextBoxColumn.HeaderText = "RequiredCompetence";
+			requiredCompetenceDataGridViewTextBoxColumn.MinimumWidth = 6;
+			requiredCompetenceDataGridViewTextBoxColumn.Name = "requiredCompetenceDataGridViewTextBoxColumn";
+			requiredCompetenceDataGridViewTextBoxColumn.Visible = false;
+			requiredCompetenceDataGridViewTextBoxColumn.Width = 125;
+			// 
 			// Frm_Activity
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
 			AutoScaleMode = AutoScaleMode.Font;
 			AutoScroll = true;
 			ClientSize = new Size(1696, 881);
+			Controls.Add(btn_NewGroup);
+			Controls.Add(btn_New);
 			Controls.Add(cb_Periodity);
 			Controls.Add(button2);
 			Controls.Add(button1);
@@ -1102,9 +1125,6 @@
 		private Button btn_ShowAllActivities;
 		private Button btn_DeleteSubprocess;
 		private Label lbl_GroupFilter;
-		private DataGridViewTextBoxColumn subprocessIdDataGridViewTextBoxColumn;
-		private DataGridViewTextBoxColumn codeDataGridViewTextBoxColumn3;
-		private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn3;
 		private DataGridViewTextBoxColumn relationshipIdDataGridViewTextBoxColumn;
 		private DataGridViewTextBoxColumn relationshipDataGridViewTextBoxColumn;
 		private DataGridViewTextBoxColumn codeDataGridViewTextBoxColumn;
@@ -1120,14 +1140,6 @@
 		private Button btn_ImportActivityRel;
 		private Button btn_ImportActivityElementRel;
 		private Button btn_ImportActivityAgent;
-		private DataGridViewTextBoxColumn activityIdDataGridViewTextBoxColumn;
-		private DataGridViewTextBoxColumn activityCodeDataGridViewTextBoxColumn;
-		private DataGridViewTextBoxColumn activityNameDataGridViewTextBoxColumn;
-		private DataGridViewTextBoxColumn activityDescriptionDataGridViewTextBoxColumn;
-		private DataGridViewTextBoxColumn periodicity1DataGridViewTextBoxColumn;
-		private DataGridViewTextBoxColumn periodicity2DataGridViewTextBoxColumn;
-		private DataGridViewTextBoxColumn durationDataGridViewTextBoxColumn;
-		private DataGridViewTextBoxColumn requiredCompetenceDataGridViewTextBoxColumn;
 		private Label lbl_ActivitiesTotal;
 		private Button btn_ImportSectors;
 		private Button btn_ExportActivity;
@@ -1143,5 +1155,18 @@
 		private Button button1;
 		private Button button2;
 		private ComboBox cb_Periodity;
+		private Button btn_New;
+		private Button btn_NewGroup;
+		private DataGridViewTextBoxColumn subprocessIdDataGridViewTextBoxColumn;
+		private DataGridViewTextBoxColumn codeDataGridViewTextBoxColumn3;
+		private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn3;
+		private DataGridViewTextBoxColumn activityIdDataGridViewTextBoxColumn;
+		private DataGridViewTextBoxColumn activityCodeDataGridViewTextBoxColumn;
+		private DataGridViewTextBoxColumn activityNameDataGridViewTextBoxColumn;
+		private DataGridViewTextBoxColumn activityDescriptionDataGridViewTextBoxColumn;
+		private DataGridViewTextBoxColumn periodicity1DataGridViewTextBoxColumn;
+		private DataGridViewTextBoxColumn periodicity2DataGridViewTextBoxColumn;
+		private DataGridViewTextBoxColumn durationDataGridViewTextBoxColumn;
+		private DataGridViewTextBoxColumn requiredCompetenceDataGridViewTextBoxColumn;
 	}
 }

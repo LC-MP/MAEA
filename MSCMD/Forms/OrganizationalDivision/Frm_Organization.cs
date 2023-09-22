@@ -33,6 +33,14 @@ namespace MSCMD
 		private AgentSubordinationRepository _subordinationAgentRepository;
 		private int filterSectorId = 0;
 
+		private string sortColumnAgents = "";
+		private SortOrder? agentSortOrder;
+		private DataGridViewColumnHeaderCell sortColumn;
+
+		private string sortColumGroup = "";
+		private SortOrder? groupSortOrder;
+		private DataGridViewColumnHeaderCell sortColumnGroupHeader;
+
 		public List<Agent> lstAgents = new List<Agent>();
 		public Frm_Organization()
 		{
@@ -540,6 +548,13 @@ namespace MSCMD
 
 			var sectorList = _sectorsRepository.ListAll().ToList();
 			this.organizationBindingSource.DataSource = sectorList;
+
+			if (sortColumGroup != "")
+			{
+				SortOrder order = (SortOrder)(groupSortOrder != null ? groupSortOrder : SortOrder.Ascending);
+				SortSectors(sortColumGroup, order);
+				sortColumnGroupHeader.SortGlyphDirection = order;
+			}
 		}
 		public void refresh_Agents(bool refreshDetails = true)
 		{
@@ -557,6 +572,13 @@ namespace MSCMD
 
 				this.agentBindingSource.DataSource = funcoesList;
 				lbl_AgentsTotal.Text = "Total: " + funcoesList.Count.ToString();
+			}
+
+			if (sortColumnAgents != "")
+			{
+				SortOrder order = (SortOrder)(agentSortOrder != null ? agentSortOrder : SortOrder.Ascending);
+				SortAgent(sortColumnAgents, order);
+				sortColumn.SortGlyphDirection = order;
 			}
 
 			if (refreshDetails == true)
@@ -580,6 +602,15 @@ namespace MSCMD
 					LoadAgentRelated(agent);
 					LoadAgentSelectedDescription(agent);
 					EnableDetailsButtons();
+
+					dg_ActivityRelationship.ClearSelection();
+					dg_ActivityRelationship.CurrentCell = null;
+					dg_ResourceRelationship.ClearSelection();
+					dg_ResourceRelationship.CurrentCell = null;
+					dataGridView2.ClearSelection();
+					dataGridView2.CurrentCell = null;
+					dataGridView3.ClearSelection();
+					dataGridView3.CurrentCell = null;
 				}
 				else
 				{
@@ -837,17 +868,43 @@ namespace MSCMD
 
 		private void dg_Agents_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
 		{
+
 			DataGridView grid = (DataGridView)sender;
-			SortAgent(grid.Columns[e.ColumnIndex].DataPropertyName, SortOrder.Ascending);
-			grid.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
+			if (agentSortOrder == null || agentSortOrder == SortOrder.Descending)
+			{
+				SortAgent(grid.Columns[e.ColumnIndex].DataPropertyName, SortOrder.Ascending);
+				grid.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
+				agentSortOrder = SortOrder.Ascending;
+			}
+			else
+			{
+				SortAgent(grid.Columns[e.ColumnIndex].DataPropertyName, SortOrder.Descending);
+				grid.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Descending;
+				agentSortOrder = SortOrder.Descending;
+			}
+			sortColumnAgents = grid.Columns[e.ColumnIndex].DataPropertyName;
+			sortColumn = grid.Columns[e.ColumnIndex].HeaderCell;
 		}
 
 		private void dg_Sectors_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
 		{
 
+
 			DataGridView grid = (DataGridView)sender;
-			SortSectors(grid.Columns[e.ColumnIndex].DataPropertyName, SortOrder.Ascending);
-			grid.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
+			if (groupSortOrder == null || groupSortOrder == SortOrder.Descending)
+			{
+				SortSectors(grid.Columns[e.ColumnIndex].DataPropertyName, SortOrder.Ascending);
+				grid.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
+				groupSortOrder = SortOrder.Ascending;
+			}
+			else
+			{
+				SortSectors(grid.Columns[e.ColumnIndex].DataPropertyName, SortOrder.Descending);
+				grid.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Descending;
+				groupSortOrder = SortOrder.Descending;
+			}
+			sortColumGroup = grid.Columns[e.ColumnIndex].DataPropertyName;
+			sortColumnGroupHeader = grid.Columns[e.ColumnIndex].HeaderCell;
 		}
 		private void SortAgent(string column, SortOrder sortOrder)
 		{
@@ -886,6 +943,18 @@ namespace MSCMD
 						else
 						{
 							agentBindingSource.DataSource = lstAgents.OrderByDescending(x => x.Name).ToList();
+						}
+						break;
+					}
+				case "AgentId":
+					{
+						if (sortOrder == SortOrder.Ascending)
+						{
+							agentBindingSource.DataSource = lstAgents.OrderBy(x => x.AgentId).ToList();
+						}
+						else
+						{
+							agentBindingSource.DataSource = lstAgents.OrderByDescending(x => x.AgentId).ToList();
 						}
 						break;
 					}
@@ -1093,7 +1162,6 @@ namespace MSCMD
 			Agent agent = GetAgentSelected();
 			if (agent != null)
 			{
-
 				using (var fbd = new FolderBrowserDialog())
 				{
 					DialogResult result = fbd.ShowDialog();
@@ -1102,13 +1170,11 @@ namespace MSCMD
 					{
 						try
 						{
-
 							List<AgentActivityRelationship> relations = _activityRelRepository.GetByAgentId(agent.AgentId).ToList();
 							string fileName = "relacoes_AtividadexFuncao_F" + agent.AgentId + ".csv";
 							string destFile = Path.Combine(fbd.SelectedPath, fileName);
 
 							WriteCustomCSV.RelActivityxFunctionToCSV(relations, destFile);
-
 						}
 						catch (Exception ex)
 						{
@@ -1121,6 +1187,25 @@ namespace MSCMD
 			{
 				MessageBox.Show("Nenhuma função selecionada.", "Aviso");
 			}
+		}
+
+		private void btn_NewGroup_Click(object sender, EventArgs e)
+		{
+			this.BeginInvoke(new Action(() =>
+			{
+				dg_Sectors.CurrentCell = dg_Sectors.Rows[dg_Sectors.NewRowIndex].Cells[2];
+				dg_Sectors.BeginEdit(true);
+			}));
+		}
+
+		private void btn_New_Click(object sender, EventArgs e)
+		{
+			this.BeginInvoke(new Action(() =>
+			{
+				dg_Agents.CurrentCell = dg_Agents.Rows[dg_Agents.NewRowIndex].Cells[2];
+				dg_Agents.BeginEdit(true);
+			}));
+
 		}
 	}
 }

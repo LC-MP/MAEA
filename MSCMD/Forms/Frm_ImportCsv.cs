@@ -274,6 +274,11 @@ namespace MSCMD.Forms
 			}
 		}
 
+		public DataTable ReverseOrder(DataTable dataTable)
+		{
+			return dataTable.AsEnumerable().Reverse().CopyToDataTable();
+		}
+
 		private void btn_Save_Click(object sender, EventArgs e)
 		{
 			if (dgv_Itens.DataSource != null)
@@ -281,6 +286,7 @@ namespace MSCMD.Forms
 				DataTable dtItem = (DataTable)(dgv_Itens.DataSource);
 				if (dtItem.Rows.Count > 0)
 				{
+
 					SaveItens(dtItem);
 				}
 				else
@@ -305,7 +311,7 @@ namespace MSCMD.Forms
 						dt.ImportRow(dtSource.Rows[row.Index]);
 					}
 
-					SaveItens(dt);
+					SaveItens(ReverseOrder(dt));
 				}
 				else
 				{

@@ -27,6 +27,14 @@ namespace MSCMD.Forms
 		private SubprocessActivityRepository _subprocessessActivityRepository;
 		private int filterGroupId = 0;
 
+		private string sortColumnactivity = "";
+		private SortOrder? activitySortOrder;
+		private DataGridViewColumnHeaderCell sortColumn;
+
+		private string sortColumGroup = "";
+		private SortOrder? groupSortOrder;
+		private DataGridViewColumnHeaderCell sortColumnGroupHeader;
+
 		private string saveActivitiesTitle = "Salvar atividades";
 		public Frm_Activity()
 		{
@@ -61,6 +69,8 @@ namespace MSCMD.Forms
 			refresh_Activities();
 		}
 
+
+
 		private void loadDataSources()
 		{
 			cb_Periodity.DisplayMember = "Value";
@@ -75,7 +85,7 @@ namespace MSCMD.Forms
 			cb_Periodicity1.ValueMember = "Key";
 			cb_Periodicity1.DataSource = Utility.EnumOf<Periodicity1Enum>();
 
-			
+
 
 
 		}
@@ -83,6 +93,13 @@ namespace MSCMD.Forms
 		{
 			var list = _subprocessessRepository.ListAll().ToList();
 			this.subprocessBindingSource.DataSource = list;
+
+			if (sortColumGroup != "")
+			{
+				SortOrder order = (SortOrder)(groupSortOrder != null ? groupSortOrder : SortOrder.Ascending);
+				SortSubproccess(sortColumGroup, order);
+				sortColumnGroupHeader.SortGlyphDirection = order;
+			}
 		}
 
 		public void LoadSubprocessRelated(int activityId)
@@ -599,6 +616,13 @@ namespace MSCMD.Forms
 				lbl_ActivitiesTotal.Text = "Total: " + activitiesList.Count.ToString();
 			}
 
+			if (sortColumnactivity != "")
+			{
+				SortOrder order = (SortOrder)(activitySortOrder != null ? activitySortOrder : SortOrder.Ascending);
+				SortActivity(sortColumnactivity, order);
+				sortColumn.SortGlyphDirection = order;
+			}
+
 
 			if (refreshDetails)
 				refresh_ActivityDetails();
@@ -623,6 +647,15 @@ namespace MSCMD.Forms
 
 					LoadActivitySelectedData();
 					EnableDetailsButtons();
+
+					dg_activityRelationship.ClearSelection();
+					dg_activityRelationship.CurrentCell = null;
+					dg_elementRelationship.ClearSelection();
+					dg_elementRelationship.CurrentCell = null;
+					dg_AgentRelationship.ClearSelection();
+					dg_AgentRelationship.CurrentCell = null;
+					dataGridView1.ClearSelection();
+					dataGridView1.CurrentCell = null;
 				}
 				else
 				{
@@ -726,15 +759,41 @@ namespace MSCMD.Forms
 		private void dg_Group_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
 		{
 			DataGridView grid = (DataGridView)sender;
-			SortSubproccess(grid.Columns[e.ColumnIndex].DataPropertyName, SortOrder.Ascending);
-			grid.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
+			if (groupSortOrder == null || groupSortOrder == SortOrder.Descending)
+			{
+				SortSubproccess(grid.Columns[e.ColumnIndex].DataPropertyName, SortOrder.Ascending);
+				grid.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
+				groupSortOrder = SortOrder.Ascending;
+			}
+			else
+			{
+				SortSubproccess(grid.Columns[e.ColumnIndex].DataPropertyName, SortOrder.Descending);
+				grid.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Descending;
+				groupSortOrder = SortOrder.Descending;
+			}
+			sortColumGroup = grid.Columns[e.ColumnIndex].DataPropertyName;
+			sortColumnGroupHeader = grid.Columns[e.ColumnIndex].HeaderCell;
+
 		}
 
 		private void dg_Activities_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
 		{
 			DataGridView grid = (DataGridView)sender;
-			SortActivity(grid.Columns[e.ColumnIndex].DataPropertyName, SortOrder.Ascending);
-			grid.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
+			if (activitySortOrder == null || activitySortOrder == SortOrder.Descending)
+			{
+				SortActivity(grid.Columns[e.ColumnIndex].DataPropertyName, SortOrder.Ascending);
+				grid.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
+				activitySortOrder = SortOrder.Ascending;
+			}
+			else
+			{
+
+				SortActivity(grid.Columns[e.ColumnIndex].DataPropertyName, SortOrder.Descending);
+				grid.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Descending;
+				activitySortOrder = SortOrder.Descending;
+			}
+			sortColumnactivity = grid.Columns[e.ColumnIndex].DataPropertyName;
+			sortColumn = grid.Columns[e.ColumnIndex].HeaderCell;
 		}
 		private void SortActivity(string column, SortOrder sortOrder)
 		{
@@ -775,6 +834,18 @@ namespace MSCMD.Forms
 						else
 						{
 							activityBindingSource.DataSource = list.OrderByDescending(x => x.ActivityName).ToList();
+						}
+						break;
+					}
+				case "ActivityId":
+					{
+						if (sortOrder == SortOrder.Ascending)
+						{
+							activityBindingSource.DataSource = list.OrderBy(x => x.ActivityId).ToList();
+						}
+						else
+						{
+							activityBindingSource.DataSource = list.OrderByDescending(x => x.ActivityId).ToList();
 						}
 						break;
 					}
@@ -1240,6 +1311,25 @@ namespace MSCMD.Forms
 		private void cb_Periodity_Leave(object sender, EventArgs e)
 		{
 			SaveDetails();
+		}
+
+		private void btn_New_Click(object sender, EventArgs e)
+		{
+			this.BeginInvoke(new Action(() =>
+			{
+				dg_Activities.CurrentCell = dg_Activities.Rows[dg_Activities.NewRowIndex].Cells[2];
+				dg_Activities.BeginEdit(true);
+			}));
+		}
+
+		private void btn_NewGroup_Click(object sender, EventArgs e)
+		{
+
+			this.BeginInvoke(new Action(() =>
+			{
+				dg_Group.CurrentCell = dg_Group.Rows[dg_Group.NewRowIndex].Cells[2];
+				dg_Group.BeginEdit(true);
+			}));
 		}
 	}
 }
