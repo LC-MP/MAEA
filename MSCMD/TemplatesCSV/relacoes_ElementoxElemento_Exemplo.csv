@@ -1,0 +1,15 @@
+﻿COD_E;Nome;relação;COD_E_R;;Legenda;
+E-EL1;elevador;1;E1-103;;1;se conecta a
+E-EL2;elevador;1;E1-103;;2;delimita
+E-EL3;elevador;1;E1-103;;3;controla acesso
+E-EL4;elevador;1;E1-105;;4;pavimenta
+E-EL5;elevador;1;E1-105;;5;aciona
+E-EL6;elevador;1;E1-105;;6;contém
+E-EL7;elevador;1;E1-107;;;
+E-EL8;elevador;1;E1-107;;;
+E-EL9;elevador;1;E1-107;;;
+E0-001;edifício da base de manutenção;1;E0-004;;;
+E0-002;edifício do depósito de lixo;1;E1-275;;;
+E0-003;edifício do centro de segurança;1;E1-001;;;
+E0-004;garagem de ambulâncias e máquinas;1;E1-001;;;
+E1-001;área externa;1;E1-005;;;
