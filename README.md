@@ -1,5 +1,5 @@
 ENGLISH:
-This program was developed for postdoctoral research. 
+The 'Mapping Activity-Environment Allocation (MAEA)' program was developed for postdoctoral research. 
 MIT License.
 
 Title: "Mapping and Simulation of the Multidomain Congruence in Pre-Design evaluations: A case of adaptation of health care environments of University Hospital –USP, São Paulo / SP to epidemic control conditions."
@@ -18,11 +18,11 @@ Acknowledgements:
  	
 Data collection in the research case study was approved by the Research Ethics Committee (CEP), CAAE (Certificate of Presentation for Ethical Appreciation) No. 44679021.0.0000.0076.
 
-Access the research GitHub: https://github.com/LC-MP/Mapping-Activity-Environment-Allocation-MAEA
+Access the research GitHub: https://github.com/LC-MP/MAEA
 
 ***
 PORTUGUÊS: 
-Esta programação foi desenvolvida para pesquisa de pós-doutorado. 
+O programa 'Mapeamento da Alocação de Espaço-Atividade (MAEA)' foi desenvolvida para pesquisa de pós-doutorado. 
 Licença MIT.
 
 Título: "Mapeamento e simulação da congruência multidomínios em avaliações pré-projeto: um caso de adaptação de ambientes de assistência à saúde do HU-USP, São Paulo/SP às condições de controle epidêmico".
@@ -41,4 +41,4 @@ Agradecimentos:
  	
 A coleta de dados realizada no estudo de caso da pesquisa foi aprovada pelo Comitê de Ética em Pesquisa (CEP), CAAE (Certificado de Apresentação de Apreciação Ética) no 44679021.0.0000.0076.
 
-Acesse o GitHub da pesquisa: https://github.com/LC-MP/Mapping-Activity-Environment-Allocation-MAEA
+Acesse o GitHub da pesquisa: https://github.com/LC-MP/MAEA
