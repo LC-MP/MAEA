@@ -4,9 +4,9 @@
 
 // MIT License
 //
-// Copyright (c) 2023 Jean Amaro <jean.amaro@outlook.com.br>
-// Copyright (c) 2023 Lucas Melchiori Pereira <lc.melchiori@gmail.com>
-// Copyright (c) 2023 Daniela Cariolin Mazzi <daniela.cmazzi@gmail.com>
+// Copyright (c) 2023 Daniela Cariolin Mazzi <daniela.cmazzi@gmail.com>,
+//                    Jean Amaro <jean.amaro@outlook.com.br>,
+//                    Lucas Melchiori Pereira <lc.melchiori@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
