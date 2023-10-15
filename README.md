@@ -17,6 +17,7 @@ Acknowledgements:
   Special thanks to the HUUSP staff who welcomed and contributed to the research team.
  	
 Data collection in the research case study was approved by the Research Ethics Committee (CEP), CAAE (Certificate of Presentation for Ethical Appreciation) No. 44679021.0.0000.0076.
+
 Access the research GitHub: https://github.com/LC-MP/Mapping-Activity-Environment-Allocation-MAEA
 
 ***
@@ -39,4 +40,5 @@ Agradecimentos:
   Agradecimento especial aos funcionários do HUUSP que recepcionaram a equipe de pesquisadores e colaboram com a pesquisa.
  	
 A coleta de dados realizada no estudo de caso da pesquisa foi aprovada pelo Comitê de Ética em Pesquisa (CEP), CAAE (Certificado de Apresentação de Apreciação Ética) no 44679021.0.0000.0076.
-Acesse o GitHub da pesquisa: https://github.com/LC-MP/PosDoc_MScMD_0.0
+
+Acesse o GitHub da pesquisa: https://github.com/LC-MP/Mapping-Activity-Environment-Allocation-MAEA
