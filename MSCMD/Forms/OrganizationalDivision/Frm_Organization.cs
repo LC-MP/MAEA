@@ -1207,5 +1207,43 @@ namespace MSCMD
 			}));
 
 		}
+
+		private void btn_ImportAgentResouceRelationship_Click(object sender, EventArgs e)
+		{
+			Frm_ImportCsv form = new Frm_ImportCsv(Model.ScreenEnum.AgentResourceRelationship, this);
+			form.ShowDialog();
+		}
+
+		private void btn_ExportAgentResouceRelationship_Click(object sender, EventArgs e)
+		{
+			Agent agent = GetAgentSelected();
+			if (agent != null)
+			{
+				using (var fbd = new FolderBrowserDialog())
+				{
+					DialogResult result = fbd.ShowDialog();
+
+					if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+					{
+						try
+						{
+							List<AgentResourceRelationship> relations = _resourceRelRepository.GetByAgent(agent.AgentId).ToList();
+							string fileName = "relacoes_FuncaoxRecurso_F" + agent.AgentId + ".csv";
+							string destFile = Path.Combine(fbd.SelectedPath, fileName);
+
+							WriteCustomCSV.RelAgentxResourceToCSV(relations, destFile);
+						}
+						catch (Exception ex)
+						{
+							MessageBox.Show(ex.Message, "Aviso");
+						}
+					}
+				}
+			}
+			else
+			{
+				MessageBox.Show("Nenhuma função selecionada.", "Aviso");
+			}
+		}
 	}
 }

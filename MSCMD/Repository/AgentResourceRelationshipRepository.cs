@@ -73,5 +73,29 @@ namespace MSCMD.Repository
 			AgentResourceRelationship relationship = GetById(id);
 			Delete(relationship);
 		}
+
+		public void ImportList(List<AgentResourceRelationship> relationshipList)
+		{
+			foreach (AgentResourceRelationship rel in relationshipList)
+			{
+				AddNew(rel);
+			}
+
+		}
+
+		public bool RelationAlreadyExist(string agentCode, string resourceCode)
+		{
+			var rel = RelacoesPessoaFuncao.Where(f => f.Agent.Code == agentCode && f.Resource.Code == resourceCode).ToList();
+
+			if (rel.Any())
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+
+		}
 	}
 }
