@@ -4,9 +4,9 @@
 
 // MIT License
 //
-// Copyright (c) 2023 Daniela Cariolin Mazzi <daniela.cmazzi@gmail.com>,
-//                    Jean Amaro <jean.amaro@outlook.com.br>,
-//                    Lucas Melchiori Pereira <lc.melchiori@gmail.com>
+// Copyright (c) 2023 Jean Amaro <jean.amaro@outlook.com.br>
+// Copyright (c) 2023 Lucas Melchiori Pereira <lc.melchiori@gmail.com>
+// Copyright (c) 2023 Daniela Cariolin Mazzi <daniela.cmazzi@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -201,6 +201,7 @@ namespace MSCMD.Forms
 			btn_DownloadComponentComparativeMatrixWithRedundancy.Enabled = false;
 			btn_Priorities.Enabled = false;
 			btn_Paralelism.Enabled = false;
+			btn_ExportAllResults.Enabled = false;
 
 		}
 
@@ -258,6 +259,7 @@ namespace MSCMD.Forms
 				lbl_processStatus.Text = "Processamento: " + DateTime.Now.ToString(@"dd\/MM\/yyyy HH:mm");
 				btn_ProcessData.Enabled = true;
 				btn_errorLog.Enabled = true;
+				btn_ExportAllResults.Enabled = true;
 
 				CheckStatus(lbl_checkActivity, activitiesDependenciesMatrix != null && activitiesDependenciesMatrix.Count > 0, btn_ActivitiesDependenciesMatrix, btn_DownloadActivivtyMatrix);
 				CheckStatus(lbl_checkComponents, componentsInterfacesMatrix != null && componentsInterfacesMatrix.Count > 0, btn_ComponentsInterfacesMatrix, btn_DownloadElementMatrix);
@@ -662,8 +664,8 @@ namespace MSCMD.Forms
 				{
 					try
 					{
-						string sourceFile = Path.Combine(dir, fileNameComparativeComponentMatrix);
-						string destFile = Path.Combine(fbd.SelectedPath, fileNameComparativeComponentMatrix);
+						string sourceFile = Path.Combine(dir, fileNameComparativeActivityMatrix);
+						string destFile = Path.Combine(fbd.SelectedPath, fileNameComparativeActivityMatrix);
 
 						File.Copy(sourceFile, destFile);
 
@@ -749,6 +751,60 @@ namespace MSCMD.Forms
 			}
 		}
 
+		private void btn_ExportAllResults_Click(object sender, EventArgs e)
+		{
+
+			using (var fbd = new FolderBrowserDialog())
+			{
+				DialogResult result = fbd.ShowDialog();
+
+				if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+				{
+					try
+					{
+						string sourceFileComparativeComponentMatrix = Path.Combine(dir, fileNameComparativeComponentMatrix);
+						string destFileComparativeComponentMatrix = Path.Combine(fbd.SelectedPath, fileNameComparativeComponentMatrix);
+						File.Copy(sourceFileComparativeComponentMatrix, destFileComparativeComponentMatrix);
+
+						string sourceFileComparativeActivityMatrixWithRedundancy = Path.Combine(dir, fileNameComparativeActivityMatrixWithRedundancy);
+						string destFileComparativeActivityMatrixWithRedundancy = Path.Combine(fbd.SelectedPath, fileNameComparativeActivityMatrixWithRedundancy);
+						File.Copy(sourceFileComparativeActivityMatrixWithRedundancy, destFileComparativeActivityMatrixWithRedundancy);
+
+						string sourceFileComparativeActivityMatrix = Path.Combine(dir, fileNameComparativeActivityMatrix);
+						string destFileComparativeActivityMatrix = Path.Combine(fbd.SelectedPath, fileNameComparativeActivityMatrix);
+						File.Copy(sourceFileComparativeActivityMatrix, destFileComparativeActivityMatrix);
+
+						string sourceFileComparativeComponentMatrixWithRedundancy = Path.Combine(dir, fileNameComparativeComponentMatrixWithRedundancy);
+						string destFileComparativeComponentMatrixWithRedundancy = Path.Combine(fbd.SelectedPath, fileNameComparativeComponentMatrixWithRedundancy);
+						File.Copy(sourceFileComparativeComponentMatrixWithRedundancy, destFileComparativeComponentMatrixWithRedundancy);
+
+						string fileName1 = "Relationship.csv";
+						string destFile1 = Path.Combine(fbd.SelectedPath, fileName1);
+						bool status1 = mscmdService.WriteTotalAffiliationsMatrix(destFile1);
+
+
+						string fileName2 = "ElementMatrix.csv";
+						string destFile2 = Path.Combine(fbd.SelectedPath, fileName2);
+						bool status2 = mscmdService.WriteComponentsMatrix(destFile2);
+
+						string fileName3 = "ActivityMatrix.csv";
+						string destFile3 = Path.Combine(fbd.SelectedPath, fileName3);
+						bool status3 = mscmdService.WriteActivityMatrix(destFile3);
+
+
+						MessageBox.Show("Arquivos salvos na pasta: " + fbd.SelectedPath, "Arquivo baixado com sucesso");
+
+
+					}
+					catch (Exception ex)
+					{
+						MessageBox.Show(ex.Message, "Aviso");
+					}
+				}
+			}
+
+		}
+
 		private void btn_DeleteAll_Click(object sender, EventArgs e)
 		{
 			string dir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
@@ -798,5 +854,64 @@ namespace MSCMD.Forms
 				frm.ShowDialog();
 			}
 		}
+
+		private void btn_SaveTemplates_Click(object sender, EventArgs e)
+		{
+
+			string[] fileNames = {
+				"1.1_divisão.csv",
+				"1.2_funcao.csv",
+				"2.1_processo.csv",
+				"2.2_atividade.csv",
+				"3.1_sistema.csv",
+				"3.2_elemento.csv",
+				"5.1_relacoes_AtividadexFunção.csv",
+				"5.2_relacoes_AtividadexAtividade.csv",
+				"5.3_relacoes_AtividadexElemento.csv",
+				"5.4_relacoes_ElementoxElemento.csv"
+			};
+
+			string folderName = "TemplatesCSV/";
+
+
+			if (fileNames.Count() > 0)
+			{
+				using (var fbd = new FolderBrowserDialog())
+				{
+					DialogResult result = fbd.ShowDialog();
+
+					if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+					{
+						try
+						{
+							string dir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+
+							foreach (string file in fileNames)
+							{
+								string sourceFile = Path.Combine(dir, folderName + file);
+								string destFile = Path.Combine(fbd.SelectedPath, file);
+
+								File.Copy(sourceFile, destFile);
+							}
+
+							MessageBox.Show("Arquivos salvo na pasta: " + fbd.SelectedPath, "Arquivos baixado com sucesso");
+
+						}
+						catch (Exception ex)
+						{
+							MessageBox.Show(ex.Message, "Aviso");
+						}
+					}
+				}
+
+			}
+			else
+			{
+				MessageBox.Show("Nenhum arquivo para baixar.", "Baixar Modelo");
+
+			}
+		}
+
+
 	}
 }

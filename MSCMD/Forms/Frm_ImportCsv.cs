@@ -29,10 +29,12 @@ namespace MSCMD.Forms
 		private ActivityActivityRelationshipRepository _activityRelationRepository;
 		private ActivityElementRelationshipRepository _activityElementRelationRepository;
 		private AgentActivityRelationshipRepository _activityAgentRelationRepository;
+		private AgentResourceRelationshipRepository _agentResourceRelationRepository;
 		private ElementElementRelationshipRepository _elementRelationRepository;
 		private OrganizationRepository _organizationRepository;
 		private SubsystemRepository _subsystemRepository;
 		private SubprocessRepository _subprocessRepository;
+		private HumanResourceRepository _resourceRepository;
 		private Object? filteredGroup = null;
 		public Frm_ImportCsv(ScreenEnum screenEnum, Form frmOrigem, Object? group = null)
 		{
@@ -48,10 +50,12 @@ namespace MSCMD.Forms
 			_activityRelationRepository = new ActivityActivityRelationshipRepository(context);
 			_activityElementRelationRepository = new ActivityElementRelationshipRepository(context);
 			_activityAgentRelationRepository = new AgentActivityRelationshipRepository(context);
+			_agentResourceRelationRepository = new AgentResourceRelationshipRepository(context);
 			_elementRelationRepository = new ElementElementRelationshipRepository(context);
 			_organizationRepository = new OrganizationRepository(context);
 			_subsystemRepository = new SubsystemRepository(context);
 			_subprocessRepository = new SubprocessRepository(context);
+			_resourceRepository = new HumanResourceRepository(context);
 
 			InitializeComponent();
 		}
@@ -115,6 +119,9 @@ namespace MSCMD.Forms
 				case ScreenEnum.AgentActivityRelationship:
 					lbl_Titulo.Text = "Importar relações de atividades e funções";
 					break;
+				case ScreenEnum.AgentResourceRelationship:
+					lbl_Titulo.Text = "Importar relações de funções e recursos";
+					break;
 				default:
 					lbl_Titulo.Text = "Importar CSV";
 					break;
@@ -159,7 +166,8 @@ namespace MSCMD.Forms
 
 							if (_screenEnum == ScreenEnum.ActivityRelationship || _screenEnum == ScreenEnum.ElementRelationship ||
 								_screenEnum == ScreenEnum.ActivityElementRelationship || _screenEnum == ScreenEnum.ActivityAgentRelationship ||
-								_screenEnum == ScreenEnum.ElementActivityRelationship || _screenEnum == ScreenEnum.AgentActivityRelationship)
+								_screenEnum == ScreenEnum.ElementActivityRelationship || _screenEnum == ScreenEnum.AgentActivityRelationship ||
+								_screenEnum == ScreenEnum.AgentResourceRelationship)
 							{
 								ReadRelationshipCSV(dtNew);
 							}
@@ -256,6 +264,18 @@ namespace MSCMD.Forms
 					case ScreenEnum.ActivityAgentRelationship:
 					case ScreenEnum.AgentActivityRelationship:
 						if (Convert.ToString(row.Cells["COD_A"].Value) == "" || row.Cells["COD_A"].Value == null ||
+							Convert.ToString(row.Cells["COD_F"].Value) == "" || row.Cells["COD_F"].Value == null)
+						{
+							row.DefaultCellStyle.BackColor = Color.LightSalmon;
+							inValidItem += 1;
+						}
+						else
+						{
+							ImportedRecord += 1;
+						}
+						break;
+					case ScreenEnum.AgentResourceRelationship:
+						if (Convert.ToString(row.Cells["COD_R"].Value) == "" || row.Cells["COD_R"].Value == null ||
 							Convert.ToString(row.Cells["COD_F"].Value) == "" || row.Cells["COD_F"].Value == null)
 						{
 							row.DefaultCellStyle.BackColor = Color.LightSalmon;
@@ -686,6 +706,9 @@ namespace MSCMD.Forms
 							case ScreenEnum.ActivityAgentRelationship:
 							case ScreenEnum.AgentActivityRelationship:
 								SaveActivityAgentRelationship(dtItem);
+								break;
+							case ScreenEnum.AgentResourceRelationship:
+								SaveAgentResourceRelationship(dtItem);
 								break;
 							default:
 								break;
@@ -1175,6 +1198,89 @@ namespace MSCMD.Forms
 			}
 		}
 
+		private void SaveAgentResourceRelationship(DataTable dt)
+		{
+			List<AgentResourceRelationship> relList = new List<AgentResourceRelationship>();
+			List<string> notFoundCodes = new List<string>();
+			foreach (DataRow dr in dt.Rows)
+			{
+				string codeAgent = Convert.ToString(dr["COD_F"]) ?? "";
+				string codeResource = Convert.ToString(dr["COD_R"]) ?? "";
+				if (codeAgent != "" && codeResource != "")
+				{
+					Agent? agent = getAgentByCode(codeAgent);
+
+					if (agent != null)
+					{
+						HumanResource? resource = getResourceByCode(codeResource);
+
+						if (resource != null)
+						{
+							bool relationshipExist = _agentResourceRelationRepository.RelationAlreadyExist(codeAgent, codeResource);
+
+							//continue if relationship doesnt exist
+							if (!relationshipExist)
+							{
+								AgentResourceRelationship newRel = new AgentResourceRelationship();
+								newRel.ResourceId = resource.PersonId;
+								newRel.AgentId = agent.AgentId;
+								newRel.Relation = RelationEnum.atribuida;
+								relList.Add(newRel);
+
+							}
+						}
+						else
+						{
+							notFoundCodes.Add(codeResource);
+						}
+					}
+					else
+					{
+						notFoundCodes.Add(codeAgent);
+					}
+
+				}
+
+			}
+			if (notFoundCodes.Count > 0)
+			{
+
+				string codes = notFoundCodes.Aggregate((i, j) => i + "," + j).ToString();
+
+				DialogResult dialogResult = MessageBox.Show("Os códigos dos seguintes itens não estão cadastrados no sistema e não serão importados: " + codes + ". Gostaria de continuar a importação?", "Importar CSV", MessageBoxButtons.YesNoCancel);
+
+				if (dialogResult == DialogResult.Yes)
+				{
+					ImportAgentResourceRelatioship(relList);
+				}
+
+			}
+			else
+			{
+				ImportAgentResourceRelatioship(relList);
+			}
+		}
+
+
+		private void ImportAgentResourceRelatioship(List<AgentResourceRelationship> relList)
+		{
+			if (relList.Count > 0)
+			{
+				_agentResourceRelationRepository.ImportList(relList);
+
+				Frm_Organization frm = (Frm_Organization)_frmOrigem;
+				frm.refresh_Agents();
+
+				dgv_Itens.DataSource = new DataTable();
+				lbl_StatusMessage.Text = "Relações importadas com sucesso, Total: " + relList.Count;
+
+			}
+			else
+			{
+				MessageBox.Show("Nenhum item para importar. Verifique se todos os campos foram preenchidos corretamente ou se a relação já foi previamente cadastrada.", "Importar CSV", MessageBoxButtons.OK);
+			}
+		}
+
 		private Activity? getActivityByCode(string code)
 		{
 			if (code != "")
@@ -1215,6 +1321,20 @@ namespace MSCMD.Forms
 			}
 			return null;
 		}
+
+		private HumanResource? getResourceByCode(string code)
+		{
+			if (code != "")
+			{
+				HumanResource? res = _resourceRepository.FindByCode(code);
+				if (res != null)
+				{
+					return res;
+				}
+				return null;
+			}
+			return null;
+		}
 		private void Frm_ImportCsv_FormClosing(object sender, FormClosingEventArgs e)
 		{
 
@@ -1233,8 +1353,8 @@ namespace MSCMD.Forms
 					copyFileName = "1.2_funcao.csv";
 					break;
 				case ScreenEnum.Resource:
-					fileName = "TemplatesCSV/";
-					copyFileName = "";
+					fileName = "TemplatesCSV/4.1_recurso.csv";
+					copyFileName = "4.1_recurso.csv";
 					break;
 				case ScreenEnum.Element:
 					fileName = "TemplatesCSV/3.2_elemento.csv";
@@ -1273,6 +1393,10 @@ namespace MSCMD.Forms
 				case ScreenEnum.AgentActivityRelationship:
 					fileName = "TemplatesCSV/5.1_relacoes_AtividadexFunção.csv";
 					copyFileName = "5.1_relacoes_AtividadexFunção.csv";
+					break;
+				case ScreenEnum.AgentResourceRelationship:
+					fileName = "TemplatesCSV/5.5_relacoes_FuncaoxRecurso.csv";
+					copyFileName = "5.5_relacoes_FuncaoxRecurso.csv";
 					break;
 			}
 

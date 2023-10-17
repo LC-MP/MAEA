@@ -25,13 +25,14 @@ namespace MSCMD.Repository
 		public ElementRepository(MscmdContext context)
 		{
 			_context = context;
+			_context.ChangeTracker.DetectChanges();
 		}
 
 		public IEnumerable<Element> Elements
 		{
 			get
 			{
-				return _context.Elements.Include(e => e.OcupiedBy);
+				return _context.Elements.Include(e => e.OcupiedBy).Include(e => e.Subsystems);
 			}
 		}
 
@@ -68,17 +69,17 @@ namespace MSCMD.Repository
 
 		public IEnumerable<Element> ListAll()
 		{
-			return _context.Elements.AsEnumerable();
+			return _context.Elements.Include(e => e.OcupiedBy).Include(e => e.Subsystems);
 		}
 
 		public Element FindBy(int idElemento)
 		{
-			return _context.Elements.Include(e => e.OcupiedBy).Where(f => f.ElementId == idElemento).First();
+			return Elements.Where(f => f.ElementId == idElemento).First();
 		}
 
 		public Element? FindByCode(string elementCode)
 		{
-			var elements = _context.Elements.Where(f => f.Code == elementCode);
+			var elements = Elements.Where(f => f.Code == elementCode);
 
 			if (elements.Any())
 			{

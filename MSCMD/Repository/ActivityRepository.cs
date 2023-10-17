@@ -1,4 +1,5 @@
-﻿using MSCMD.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using MSCMD.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,7 @@ namespace MSCMD.Repository
 		{
 			get
 			{
-				return _context.Activities;
+				return _context.Activities.Include(a => a.Subprocesses);
 			}
 		}
 
