@@ -51,6 +51,12 @@
 			lbl_Titulo_Funcao = new Label();
 			lbl_detalhe = new Label();
 			dg_Sectors = new DataGridView();
+			sectorIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+			codeDataGridViewTextBoxColumn4 = new DataGridViewTextBoxColumn();
+			sectorNameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+			descriptionDataGridViewTextBoxColumn2 = new DataGridViewTextBoxColumn();
+			superiorInstanceIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+			superiorInstanceDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
 			organizationBindingSource = new BindingSource(components);
 			organizationBindingSource1 = new BindingSource(components);
 			dg_ActivityRelationship = new DataGridView();
@@ -103,12 +109,6 @@
 			btn_New = new Button();
 			btn_ExportAgentResouceRelationship = new Button();
 			btn_ImportAgentResouceRelationship = new Button();
-			sectorIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-			codeDataGridViewTextBoxColumn4 = new DataGridViewTextBoxColumn();
-			sectorNameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-			descriptionDataGridViewTextBoxColumn2 = new DataGridViewTextBoxColumn();
-			superiorInstanceIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-			superiorInstanceDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
 			((System.ComponentModel.ISupportInitialize)dg_Agents).BeginInit();
 			((System.ComponentModel.ISupportInitialize)agentBindingSource).BeginInit();
 			((System.ComponentModel.ISupportInitialize)dg_ResourceRelationship).BeginInit();
@@ -131,7 +131,7 @@
 			lbl_Title.Location = new Point(32, 39);
 			lbl_Title.Name = "lbl_Title";
 			lbl_Title.Size = new Size(256, 32);
-			lbl_Title.TabIndex = 2;
+			lbl_Title.TabIndex = 1;
 			lbl_Title.Text = "Divisão Organizacional";
 			// 
 			// dg_Agents
@@ -150,7 +150,7 @@
 			dg_Agents.RowTemplate.Height = 29;
 			dg_Agents.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 			dg_Agents.Size = new Size(533, 397);
-			dg_Agents.TabIndex = 4;
+			dg_Agents.TabIndex = 13;
 			dg_Agents.CellClick += dataGridViewFuncoes_CellClick;
 			dg_Agents.CellEndEdit += dg_Agents_CellEndEdit;
 			dg_Agents.CellEnter += dg_Agents_CellEnter;
@@ -210,7 +210,7 @@
 			btn_DeleteAgent.Location = new Point(430, 836);
 			btn_DeleteAgent.Name = "btn_DeleteAgent";
 			btn_DeleteAgent.Size = new Size(135, 29);
-			btn_DeleteAgent.TabIndex = 6;
+			btn_DeleteAgent.TabIndex = 17;
 			btn_DeleteAgent.Text = "Deletar seleção";
 			btn_DeleteAgent.UseVisualStyleBackColor = true;
 			btn_DeleteAgent.Click += btn_DeleteAgent_Click;
@@ -233,7 +233,7 @@
 			dg_ResourceRelationship.RowTemplate.Height = 29;
 			dg_ResourceRelationship.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 			dg_ResourceRelationship.Size = new Size(502, 349);
-			dg_ResourceRelationship.TabIndex = 7;
+			dg_ResourceRelationship.TabIndex = 32;
 			// 
 			// relationshipIdDataGridViewTextBoxColumn1
 			// 
@@ -287,7 +287,7 @@
 			lbl_Pessoas.Location = new Point(638, 451);
 			lbl_Pessoas.Name = "lbl_Pessoas";
 			lbl_Pessoas.Size = new Size(140, 20);
-			lbl_Pessoas.TabIndex = 8;
+			lbl_Pessoas.TabIndex = 31;
 			lbl_Pessoas.Text = "Pessoa encarregada";
 			// 
 			// btn_nova_pessoa
@@ -296,7 +296,7 @@
 			btn_nova_pessoa.Location = new Point(830, 831);
 			btn_nova_pessoa.Name = "btn_nova_pessoa";
 			btn_nova_pessoa.Size = new Size(155, 29);
-			btn_nova_pessoa.TabIndex = 9;
+			btn_nova_pessoa.TabIndex = 35;
 			btn_nova_pessoa.Text = "Selecionar vínculos...";
 			btn_nova_pessoa.UseVisualStyleBackColor = true;
 			btn_nova_pessoa.Click += btn_NewResource_Click;
@@ -307,7 +307,7 @@
 			btn_Import.Location = new Point(311, 835);
 			btn_Import.Name = "btn_Import";
 			btn_Import.Size = new Size(113, 29);
-			btn_Import.TabIndex = 10;
+			btn_Import.TabIndex = 16;
 			btn_Import.Text = "Importar .csv";
 			btn_Import.UseVisualStyleBackColor = true;
 			btn_Import.Click += btn_Import_Click;
@@ -319,7 +319,7 @@
 			lbl_Titulo_Funcao.Location = new Point(32, 395);
 			lbl_Titulo_Funcao.Name = "lbl_Titulo_Funcao";
 			lbl_Titulo_Funcao.Size = new Size(107, 32);
-			lbl_Titulo_Funcao.TabIndex = 12;
+			lbl_Titulo_Funcao.TabIndex = 10;
 			lbl_Titulo_Funcao.Text = "Funções:";
 			lbl_Titulo_Funcao.Click += lbl_Titulo_Funcao_Click;
 			// 
@@ -330,7 +330,7 @@
 			lbl_detalhe.Location = new Point(638, 47);
 			lbl_detalhe.Name = "lbl_detalhe";
 			lbl_detalhe.Size = new Size(229, 32);
-			lbl_detalhe.TabIndex = 13;
+			lbl_detalhe.TabIndex = 19;
 			lbl_detalhe.Text = "Detalhes da Função:";
 			// 
 			// dg_Sectors
@@ -348,10 +348,62 @@
 			dg_Sectors.RowTemplate.Height = 25;
 			dg_Sectors.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 			dg_Sectors.Size = new Size(533, 201);
-			dg_Sectors.TabIndex = 14;
+			dg_Sectors.TabIndex = 3;
 			dg_Sectors.CellEndEdit += dg_Sectors_CellEndEdit;
 			dg_Sectors.CellFormatting += dg_Sectors_CellFormatting;
 			dg_Sectors.ColumnHeaderMouseClick += dg_Sectors_ColumnHeaderMouseClick;
+			// 
+			// sectorIdDataGridViewTextBoxColumn
+			// 
+			sectorIdDataGridViewTextBoxColumn.DataPropertyName = "SectorId";
+			sectorIdDataGridViewTextBoxColumn.HeaderText = "Id";
+			sectorIdDataGridViewTextBoxColumn.MinimumWidth = 6;
+			sectorIdDataGridViewTextBoxColumn.Name = "sectorIdDataGridViewTextBoxColumn";
+			sectorIdDataGridViewTextBoxColumn.ReadOnly = true;
+			sectorIdDataGridViewTextBoxColumn.Width = 55;
+			// 
+			// codeDataGridViewTextBoxColumn4
+			// 
+			codeDataGridViewTextBoxColumn4.DataPropertyName = "Code";
+			codeDataGridViewTextBoxColumn4.HeaderText = "Código";
+			codeDataGridViewTextBoxColumn4.MinimumWidth = 6;
+			codeDataGridViewTextBoxColumn4.Name = "codeDataGridViewTextBoxColumn4";
+			codeDataGridViewTextBoxColumn4.Width = 90;
+			// 
+			// sectorNameDataGridViewTextBoxColumn
+			// 
+			sectorNameDataGridViewTextBoxColumn.DataPropertyName = "SectorName";
+			sectorNameDataGridViewTextBoxColumn.HeaderText = "Nome*";
+			sectorNameDataGridViewTextBoxColumn.MinimumWidth = 6;
+			sectorNameDataGridViewTextBoxColumn.Name = "sectorNameDataGridViewTextBoxColumn";
+			sectorNameDataGridViewTextBoxColumn.Width = 360;
+			// 
+			// descriptionDataGridViewTextBoxColumn2
+			// 
+			descriptionDataGridViewTextBoxColumn2.DataPropertyName = "Description";
+			descriptionDataGridViewTextBoxColumn2.HeaderText = "Description";
+			descriptionDataGridViewTextBoxColumn2.MinimumWidth = 6;
+			descriptionDataGridViewTextBoxColumn2.Name = "descriptionDataGridViewTextBoxColumn2";
+			descriptionDataGridViewTextBoxColumn2.Visible = false;
+			descriptionDataGridViewTextBoxColumn2.Width = 125;
+			// 
+			// superiorInstanceIdDataGridViewTextBoxColumn
+			// 
+			superiorInstanceIdDataGridViewTextBoxColumn.DataPropertyName = "SuperiorInstanceId";
+			superiorInstanceIdDataGridViewTextBoxColumn.HeaderText = "SuperiorInstanceId";
+			superiorInstanceIdDataGridViewTextBoxColumn.MinimumWidth = 6;
+			superiorInstanceIdDataGridViewTextBoxColumn.Name = "superiorInstanceIdDataGridViewTextBoxColumn";
+			superiorInstanceIdDataGridViewTextBoxColumn.Visible = false;
+			superiorInstanceIdDataGridViewTextBoxColumn.Width = 125;
+			// 
+			// superiorInstanceDataGridViewTextBoxColumn
+			// 
+			superiorInstanceDataGridViewTextBoxColumn.DataPropertyName = "SuperiorInstance";
+			superiorInstanceDataGridViewTextBoxColumn.HeaderText = "SuperiorInstance";
+			superiorInstanceDataGridViewTextBoxColumn.MinimumWidth = 6;
+			superiorInstanceDataGridViewTextBoxColumn.Name = "superiorInstanceDataGridViewTextBoxColumn";
+			superiorInstanceDataGridViewTextBoxColumn.Visible = false;
+			superiorInstanceDataGridViewTextBoxColumn.Width = 125;
 			// 
 			// organizationBindingSource
 			// 
@@ -379,7 +431,7 @@
 			dg_ActivityRelationship.RowTemplate.Height = 29;
 			dg_ActivityRelationship.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 			dg_ActivityRelationship.Size = new Size(500, 349);
-			dg_ActivityRelationship.TabIndex = 15;
+			dg_ActivityRelationship.TabIndex = 38;
 			// 
 			// relationshipIdDataGridViewTextBoxColumn
 			// 
@@ -429,7 +481,7 @@
 			lbl_Titulo_Atividade.Location = new Point(1166, 451);
 			lbl_Titulo_Atividade.Name = "lbl_Titulo_Atividade";
 			lbl_Titulo_Atividade.Size = new Size(138, 20);
-			lbl_Titulo_Atividade.TabIndex = 16;
+			lbl_Titulo_Atividade.TabIndex = 37;
 			lbl_Titulo_Atividade.Text = "Atividade encubida";
 			// 
 			// btn_FilterAgents
@@ -439,7 +491,7 @@
 			btn_FilterAgents.Margin = new Padding(3, 4, 3, 4);
 			btn_FilterAgents.Name = "btn_FilterAgents";
 			btn_FilterAgents.Size = new Size(230, 31);
-			btn_FilterAgents.TabIndex = 18;
+			btn_FilterAgents.TabIndex = 8;
 			btn_FilterAgents.Text = "Filtrar por divisão selecionada";
 			btn_FilterAgents.UseVisualStyleBackColor = true;
 			btn_FilterAgents.Click += btn_FilterAgents_Click;
@@ -451,7 +503,7 @@
 			btn_ShowAllAgents.Margin = new Padding(3, 4, 3, 4);
 			btn_ShowAllAgents.Name = "btn_ShowAllAgents";
 			btn_ShowAllAgents.Size = new Size(113, 31);
-			btn_ShowAllAgents.TabIndex = 19;
+			btn_ShowAllAgents.TabIndex = 7;
 			btn_ShowAllAgents.Text = "Mostrar todas funções";
 			btn_ShowAllAgents.UseVisualStyleBackColor = true;
 			btn_ShowAllAgents.Click += btn_ShowAllAgents_Click;
@@ -462,7 +514,7 @@
 			lbl_detalhe_desc.Location = new Point(638, 23);
 			lbl_detalhe_desc.Name = "lbl_detalhe_desc";
 			lbl_detalhe_desc.Size = new Size(372, 20);
-			lbl_detalhe_desc.TabIndex = 20;
+			lbl_detalhe_desc.TabIndex = 18;
 			lbl_detalhe_desc.Text = "Selecione uma função na tabela ao lado para detalhar.";
 			// 
 			// lbl_nomeFuncao
@@ -473,7 +525,7 @@
 			lbl_nomeFuncao.MaximumSize = new Size(750, 60);
 			lbl_nomeFuncao.Name = "lbl_nomeFuncao";
 			lbl_nomeFuncao.Size = new Size(79, 28);
-			lbl_nomeFuncao.TabIndex = 21;
+			lbl_nomeFuncao.TabIndex = 19;
 			lbl_nomeFuncao.Text = "Função";
 			// 
 			// btn_Del_Resource
@@ -482,7 +534,7 @@
 			btn_Del_Resource.Location = new Point(989, 831);
 			btn_Del_Resource.Name = "btn_Del_Resource";
 			btn_Del_Resource.Size = new Size(151, 29);
-			btn_Del_Resource.TabIndex = 22;
+			btn_Del_Resource.TabIndex = 36;
 			btn_Del_Resource.Text = "Deletar seleção";
 			btn_Del_Resource.UseVisualStyleBackColor = true;
 			btn_Del_Resource.Click += btn_Del_Resource_Click;
@@ -493,7 +545,7 @@
 			btn_Del_Activity.Location = new Point(1531, 830);
 			btn_Del_Activity.Name = "btn_Del_Activity";
 			btn_Del_Activity.Size = new Size(135, 29);
-			btn_Del_Activity.TabIndex = 23;
+			btn_Del_Activity.TabIndex = 42;
 			btn_Del_Activity.Text = "Deletar seleção";
 			btn_Del_Activity.UseVisualStyleBackColor = true;
 			btn_Del_Activity.Click += btn_Del_Activity_Click;
@@ -512,7 +564,7 @@
 			btn_NewActivity.Location = new Point(1365, 830);
 			btn_NewActivity.Name = "btn_NewActivity";
 			btn_NewActivity.Size = new Size(160, 29);
-			btn_NewActivity.TabIndex = 39;
+			btn_NewActivity.TabIndex = 41;
 			btn_NewActivity.Text = "Selecionar vínculos...";
 			btn_NewActivity.UseVisualStyleBackColor = true;
 			btn_NewActivity.Click += btn_NewActivity_Click;
@@ -522,7 +574,7 @@
 			rtBox_Description.Location = new Point(638, 115);
 			rtBox_Description.Name = "rtBox_Description";
 			rtBox_Description.Size = new Size(766, 49);
-			rtBox_Description.TabIndex = 40;
+			rtBox_Description.TabIndex = 22;
 			rtBox_Description.Text = "";
 			rtBox_Description.Leave += rtBox_Description_Leave;
 			// 
@@ -532,7 +584,7 @@
 			lbl_Description.Location = new Point(638, 92);
 			lbl_Description.Name = "lbl_Description";
 			lbl_Description.Size = new Size(147, 20);
-			lbl_Description.TabIndex = 41;
+			lbl_Description.TabIndex = 21;
 			lbl_Description.Text = "Descrição da função:";
 			// 
 			// lbl_Det1
@@ -541,7 +593,7 @@
 			lbl_Det1.Location = new Point(1166, 180);
 			lbl_Det1.Name = "lbl_Det1";
 			lbl_Det1.Size = new Size(169, 20);
-			lbl_Det1.TabIndex = 42;
+			lbl_Det1.TabIndex = 27;
 			lbl_Det1.Text = "Subordinação funcional:";
 			// 
 			// lbl_Det2
@@ -550,7 +602,7 @@
 			lbl_Det2.Location = new Point(638, 180);
 			lbl_Det2.Name = "lbl_Det2";
 			lbl_Det2.Size = new Size(167, 20);
-			lbl_Det2.TabIndex = 43;
+			lbl_Det2.TabIndex = 23;
 			lbl_Det2.Text = "Lotação organizacional:";
 			lbl_Det2.Click += lbl_Det2_Click;
 			// 
@@ -571,7 +623,7 @@
 			dataGridView2.RowTemplate.Height = 29;
 			dataGridView2.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 			dataGridView2.Size = new Size(500, 204);
-			dataGridView2.TabIndex = 44;
+			dataGridView2.TabIndex = 28;
 			// 
 			// agentIdDataGridViewTextBoxColumn1
 			// 
@@ -632,7 +684,7 @@
 			dataGridView3.RowTemplate.Height = 29;
 			dataGridView3.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 			dataGridView3.Size = new Size(502, 204);
-			dataGridView3.TabIndex = 45;
+			dataGridView3.TabIndex = 24;
 			// 
 			// sectorIdDataGridViewTextBoxColumn1
 			// 
@@ -698,7 +750,7 @@
 			btn_DeleteSector.Margin = new Padding(3, 4, 3, 4);
 			btn_DeleteSector.Name = "btn_DeleteSector";
 			btn_DeleteSector.Size = new Size(135, 31);
-			btn_DeleteSector.TabIndex = 46;
+			btn_DeleteSector.TabIndex = 6;
 			btn_DeleteSector.Text = "Deletar seleção";
 			btn_DeleteSector.UseVisualStyleBackColor = true;
 			btn_DeleteSector.Click += btn_DeleteSector_Click;
@@ -708,7 +760,7 @@
 			btn_ImportSectors.Location = new Point(266, 293);
 			btn_ImportSectors.Name = "btn_ImportSectors";
 			btn_ImportSectors.Size = new Size(158, 29);
-			btn_ImportSectors.TabIndex = 47;
+			btn_ImportSectors.TabIndex = 5;
 			btn_ImportSectors.Text = "Importar .csv";
 			btn_ImportSectors.UseVisualStyleBackColor = true;
 			btn_ImportSectors.Click += btn_ImportSectors_Click;
@@ -718,7 +770,7 @@
 			btn_SubordinationRelEdit.Location = new Point(1365, 413);
 			btn_SubordinationRelEdit.Name = "btn_SubordinationRelEdit";
 			btn_SubordinationRelEdit.Size = new Size(155, 29);
-			btn_SubordinationRelEdit.TabIndex = 48;
+			btn_SubordinationRelEdit.TabIndex = 29;
 			btn_SubordinationRelEdit.Text = "Selecionar vínculos...";
 			btn_SubordinationRelEdit.UseVisualStyleBackColor = true;
 			btn_SubordinationRelEdit.Click += btn_SubordinationRelEdit_Click;
@@ -728,7 +780,7 @@
 			btn_OrganizationRelEdit.Location = new Point(824, 413);
 			btn_OrganizationRelEdit.Name = "btn_OrganizationRelEdit";
 			btn_OrganizationRelEdit.Size = new Size(170, 29);
-			btn_OrganizationRelEdit.TabIndex = 49;
+			btn_OrganizationRelEdit.TabIndex = 25;
 			btn_OrganizationRelEdit.Text = "Selecionar vínculos...";
 			btn_OrganizationRelEdit.UseVisualStyleBackColor = true;
 			btn_OrganizationRelEdit.Click += btn_OrganizationRelEdit_Click;
@@ -739,7 +791,7 @@
 			btn_SaveDescription.Location = new Point(1551, 12);
 			btn_SaveDescription.Name = "btn_SaveDescription";
 			btn_SaveDescription.Size = new Size(133, 31);
-			btn_SaveDescription.TabIndex = 50;
+			btn_SaveDescription.TabIndex = 43;
 			btn_SaveDescription.Text = "Salvar alterações";
 			btn_SaveDescription.UseVisualStyleBackColor = true;
 			btn_SaveDescription.Click += btn_SaveDescription_Click;
@@ -753,7 +805,7 @@
 			lbl_SectorFilter.MaximumSize = new Size(354, 29);
 			lbl_SectorFilter.Name = "lbl_SectorFilter";
 			lbl_SectorFilter.Size = new Size(62, 28);
-			lbl_SectorFilter.TabIndex = 51;
+			lbl_SectorFilter.TabIndex = 11;
 			lbl_SectorFilter.Text = "Todas";
 			// 
 			// btn_ManageSectors
@@ -763,7 +815,7 @@
 			btn_ManageSectors.Margin = new Padding(3, 4, 3, 4);
 			btn_ManageSectors.Name = "btn_ManageSectors";
 			btn_ManageSectors.Size = new Size(177, 31);
-			btn_ManageSectors.TabIndex = 52;
+			btn_ManageSectors.TabIndex = 9;
 			btn_ManageSectors.Text = "Gerenciar Divisões...";
 			btn_ManageSectors.UseVisualStyleBackColor = true;
 			btn_ManageSectors.Click += btn_ManageSectors_Click;
@@ -773,7 +825,7 @@
 			btn_Del_OrgRelationship.Location = new Point(1001, 413);
 			btn_Del_OrgRelationship.Name = "btn_Del_OrgRelationship";
 			btn_Del_OrgRelationship.Size = new Size(139, 29);
-			btn_Del_OrgRelationship.TabIndex = 53;
+			btn_Del_OrgRelationship.TabIndex = 26;
 			btn_Del_OrgRelationship.Text = "Deletar seleção";
 			btn_Del_OrgRelationship.UseVisualStyleBackColor = true;
 			btn_Del_OrgRelationship.Click += btn_Del_OrgRelationship_Click;
@@ -783,7 +835,7 @@
 			btn_Del_Subordination.Location = new Point(1527, 413);
 			btn_Del_Subordination.Name = "btn_Del_Subordination";
 			btn_Del_Subordination.Size = new Size(139, 29);
-			btn_Del_Subordination.TabIndex = 54;
+			btn_Del_Subordination.TabIndex = 30;
 			btn_Del_Subordination.Text = "Deletar seleção";
 			btn_Del_Subordination.UseVisualStyleBackColor = true;
 			btn_Del_Subordination.Click += btn_Del_Subordination_Click;
@@ -794,7 +846,7 @@
 			btn_ImportAgentActivityRelationship.Location = new Point(1273, 830);
 			btn_ImportAgentActivityRelationship.Name = "btn_ImportAgentActivityRelationship";
 			btn_ImportAgentActivityRelationship.Size = new Size(87, 29);
-			btn_ImportAgentActivityRelationship.TabIndex = 55;
+			btn_ImportAgentActivityRelationship.TabIndex = 40;
 			btn_ImportAgentActivityRelationship.Text = "Importar";
 			btn_ImportAgentActivityRelationship.UseVisualStyleBackColor = true;
 			btn_ImportAgentActivityRelationship.Click += btn_ImportAgentActivityRelationship_Click;
@@ -806,7 +858,7 @@
 			lbl_AgentsTotal.Location = new Point(30, 835);
 			lbl_AgentsTotal.Name = "lbl_AgentsTotal";
 			lbl_AgentsTotal.Size = new Size(45, 20);
-			lbl_AgentsTotal.TabIndex = 56;
+			lbl_AgentsTotal.TabIndex = 14;
 			lbl_AgentsTotal.Text = "Total:";
 			// 
 			// btn_ExportAgentCSV
@@ -815,7 +867,7 @@
 			btn_ExportAgentCSV.Location = new Point(186, 835);
 			btn_ExportAgentCSV.Name = "btn_ExportAgentCSV";
 			btn_ExportAgentCSV.Size = new Size(119, 29);
-			btn_ExportAgentCSV.TabIndex = 57;
+			btn_ExportAgentCSV.TabIndex = 15;
 			btn_ExportAgentCSV.Text = "Exportar .csv";
 			btn_ExportAgentCSV.UseVisualStyleBackColor = true;
 			btn_ExportAgentCSV.Click += btn_ExportAgentCSV_Click;
@@ -825,7 +877,7 @@
 			btn_ExportDivision.Location = new Point(142, 293);
 			btn_ExportDivision.Name = "btn_ExportDivision";
 			btn_ExportDivision.Size = new Size(119, 29);
-			btn_ExportDivision.TabIndex = 58;
+			btn_ExportDivision.TabIndex = 4;
 			btn_ExportDivision.Text = "Exportar .csv";
 			btn_ExportDivision.UseVisualStyleBackColor = true;
 			btn_ExportDivision.Click += btn_ExportDivision_Click;
@@ -836,7 +888,7 @@
 			btn_ExportActivityAgent.Location = new Point(1166, 830);
 			btn_ExportActivityAgent.Name = "btn_ExportActivityAgent";
 			btn_ExportActivityAgent.Size = new Size(100, 29);
-			btn_ExportActivityAgent.TabIndex = 59;
+			btn_ExportActivityAgent.TabIndex = 39;
 			btn_ExportActivityAgent.Text = "Exportar";
 			btn_ExportActivityAgent.UseVisualStyleBackColor = true;
 			btn_ExportActivityAgent.Click += btn_ExportActivityAgent_Click;
@@ -846,7 +898,7 @@
 			btn_NewGroup.Location = new Point(498, 44);
 			btn_NewGroup.Name = "btn_NewGroup";
 			btn_NewGroup.Size = new Size(66, 29);
-			btn_NewGroup.TabIndex = 73;
+			btn_NewGroup.TabIndex = 2;
 			btn_NewGroup.Text = "Novo";
 			btn_NewGroup.UseVisualStyleBackColor = true;
 			btn_NewGroup.Click += btn_NewGroup_Click;
@@ -856,7 +908,7 @@
 			btn_New.Location = new Point(498, 400);
 			btn_New.Name = "btn_New";
 			btn_New.Size = new Size(66, 29);
-			btn_New.TabIndex = 72;
+			btn_New.TabIndex = 12;
 			btn_New.Text = "Novo";
 			btn_New.UseVisualStyleBackColor = true;
 			btn_New.Click += btn_New_Click;
@@ -867,7 +919,7 @@
 			btn_ExportAgentResouceRelationship.Location = new Point(638, 831);
 			btn_ExportAgentResouceRelationship.Name = "btn_ExportAgentResouceRelationship";
 			btn_ExportAgentResouceRelationship.Size = new Size(95, 29);
-			btn_ExportAgentResouceRelationship.TabIndex = 75;
+			btn_ExportAgentResouceRelationship.TabIndex = 33;
 			btn_ExportAgentResouceRelationship.Text = "Exportar";
 			btn_ExportAgentResouceRelationship.UseVisualStyleBackColor = true;
 			btn_ExportAgentResouceRelationship.Click += btn_ExportAgentResouceRelationship_Click;
@@ -878,62 +930,10 @@
 			btn_ImportAgentResouceRelationship.Location = new Point(738, 831);
 			btn_ImportAgentResouceRelationship.Name = "btn_ImportAgentResouceRelationship";
 			btn_ImportAgentResouceRelationship.Size = new Size(87, 29);
-			btn_ImportAgentResouceRelationship.TabIndex = 74;
+			btn_ImportAgentResouceRelationship.TabIndex = 34;
 			btn_ImportAgentResouceRelationship.Text = "Importar";
 			btn_ImportAgentResouceRelationship.UseVisualStyleBackColor = true;
 			btn_ImportAgentResouceRelationship.Click += btn_ImportAgentResouceRelationship_Click;
-			// 
-			// sectorIdDataGridViewTextBoxColumn
-			// 
-			sectorIdDataGridViewTextBoxColumn.DataPropertyName = "SectorId";
-			sectorIdDataGridViewTextBoxColumn.HeaderText = "Id";
-			sectorIdDataGridViewTextBoxColumn.MinimumWidth = 6;
-			sectorIdDataGridViewTextBoxColumn.Name = "sectorIdDataGridViewTextBoxColumn";
-			sectorIdDataGridViewTextBoxColumn.ReadOnly = true;
-			sectorIdDataGridViewTextBoxColumn.Width = 55;
-			// 
-			// codeDataGridViewTextBoxColumn4
-			// 
-			codeDataGridViewTextBoxColumn4.DataPropertyName = "Code";
-			codeDataGridViewTextBoxColumn4.HeaderText = "Código";
-			codeDataGridViewTextBoxColumn4.MinimumWidth = 6;
-			codeDataGridViewTextBoxColumn4.Name = "codeDataGridViewTextBoxColumn4";
-			codeDataGridViewTextBoxColumn4.Width = 90;
-			// 
-			// sectorNameDataGridViewTextBoxColumn
-			// 
-			sectorNameDataGridViewTextBoxColumn.DataPropertyName = "SectorName";
-			sectorNameDataGridViewTextBoxColumn.HeaderText = "Nome*";
-			sectorNameDataGridViewTextBoxColumn.MinimumWidth = 6;
-			sectorNameDataGridViewTextBoxColumn.Name = "sectorNameDataGridViewTextBoxColumn";
-			sectorNameDataGridViewTextBoxColumn.Width = 360;
-			// 
-			// descriptionDataGridViewTextBoxColumn2
-			// 
-			descriptionDataGridViewTextBoxColumn2.DataPropertyName = "Description";
-			descriptionDataGridViewTextBoxColumn2.HeaderText = "Description";
-			descriptionDataGridViewTextBoxColumn2.MinimumWidth = 6;
-			descriptionDataGridViewTextBoxColumn2.Name = "descriptionDataGridViewTextBoxColumn2";
-			descriptionDataGridViewTextBoxColumn2.Visible = false;
-			descriptionDataGridViewTextBoxColumn2.Width = 125;
-			// 
-			// superiorInstanceIdDataGridViewTextBoxColumn
-			// 
-			superiorInstanceIdDataGridViewTextBoxColumn.DataPropertyName = "SuperiorInstanceId";
-			superiorInstanceIdDataGridViewTextBoxColumn.HeaderText = "SuperiorInstanceId";
-			superiorInstanceIdDataGridViewTextBoxColumn.MinimumWidth = 6;
-			superiorInstanceIdDataGridViewTextBoxColumn.Name = "superiorInstanceIdDataGridViewTextBoxColumn";
-			superiorInstanceIdDataGridViewTextBoxColumn.Visible = false;
-			superiorInstanceIdDataGridViewTextBoxColumn.Width = 125;
-			// 
-			// superiorInstanceDataGridViewTextBoxColumn
-			// 
-			superiorInstanceDataGridViewTextBoxColumn.DataPropertyName = "SuperiorInstance";
-			superiorInstanceDataGridViewTextBoxColumn.HeaderText = "SuperiorInstance";
-			superiorInstanceDataGridViewTextBoxColumn.MinimumWidth = 6;
-			superiorInstanceDataGridViewTextBoxColumn.Name = "superiorInstanceDataGridViewTextBoxColumn";
-			superiorInstanceDataGridViewTextBoxColumn.Visible = false;
-			superiorInstanceDataGridViewTextBoxColumn.Width = 125;
 			// 
 			// Frm_Organization
 			// 

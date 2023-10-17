@@ -38,7 +38,7 @@ namespace MSCMD.Forms
 		private Object? filteredGroup = null;
 		public Frm_ImportCsv(ScreenEnum screenEnum, Form frmOrigem, Object? group = null, MscmdContext? contextOrg = null)
 		{
-			context = contextOrg?? new MscmdContext();
+			context = contextOrg ?? new MscmdContext();
 			context.ChangeTracker.DetectChanges();
 			_screenEnum = screenEnum;
 			_frmOrigem = frmOrigem;
@@ -372,8 +372,9 @@ namespace MSCMD.Forms
 										{
 											novaFuncao = new Agent();
 										}
-										
-									} else
+
+									}
+									else
 									{
 										novaFuncao = new Agent();
 									}
@@ -716,7 +717,7 @@ namespace MSCMD.Forms
 									{
 										newElement = new Organization();
 									}
-									
+
 									newElement.Code = Convert.ToString(dr["codigo"]) ?? "";
 									newElement.SectorName = Convert.ToString(dr["nome_setor"]) ?? "";
 									newElement.Description = Convert.ToString(dr["descricao_setor"]) ?? "";

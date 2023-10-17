@@ -913,16 +913,16 @@ namespace MSCMD.Forms
 				tw.WriteLine("Nome do Projeto:" + rtxtb_NomeProjeto.Text);
 				tw.WriteLine(lbl_processStatus.Text);
 				tw.WriteLine("Anotações sobre o Projeto:" + rtxtb_DescProjeto.Text);
-	
+
 			}
-		}	
-		
+		}
+
 		private void WriteErrorLogTxt(string path)
 		{
 			using (TextWriter tw = new StreamWriter(path))
 			{
 				tw.WriteLine(mscmdService.errorLog);
-	
+
 			}
 		}
 
@@ -1002,7 +1002,7 @@ namespace MSCMD.Forms
 				{
 					try
 					{
-						
+
 
 						if (activitiesPriorities != null && activitiesPriorities.Count > 0)
 						{

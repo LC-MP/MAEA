@@ -89,6 +89,9 @@
 			btn_DeleteElementoSelecao = new Button();
 			btn_SetOrganization = new Button();
 			dg_Group = new DataGridView();
+			subsystemIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+			codeDataGridViewTextBoxColumn8 = new DataGridViewTextBoxColumn();
+			nameDataGridViewTextBoxColumn6 = new DataGridViewTextBoxColumn();
 			subsystemBindingSource = new BindingSource(components);
 			lbl_SectorFilter = new Label();
 			btn_DelSubsystem = new Button();
@@ -110,9 +113,6 @@
 			btn_DeleteRelSubsystem = new Button();
 			btn_New = new Button();
 			btn_NewGroup = new Button();
-			subsystemIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-			codeDataGridViewTextBoxColumn8 = new DataGridViewTextBoxColumn();
-			nameDataGridViewTextBoxColumn6 = new DataGridViewTextBoxColumn();
 			((System.ComponentModel.ISupportInitialize)dg_Elementos).BeginInit();
 			((System.ComponentModel.ISupportInitialize)elementBindingSource).BeginInit();
 			((System.ComponentModel.ISupportInitialize)dg_RelacaoElemento).BeginInit();
@@ -153,7 +153,7 @@
 			dg_Elementos.RowTemplate.Height = 29;
 			dg_Elementos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 			dg_Elementos.Size = new Size(534, 399);
-			dg_Elementos.TabIndex = 7;
+			dg_Elementos.TabIndex = 11;
 			dg_Elementos.CellClick += dg_Elementos_CellClick;
 			dg_Elementos.CellEndEdit += dg_Elementos_CellEndEdit;
 			dg_Elementos.CellEnter += dg_Elementos_CellEnter;
@@ -250,7 +250,7 @@
 			label2.Location = new Point(25, 373);
 			label2.Name = "label2";
 			label2.Size = new Size(130, 32);
-			label2.TabIndex = 5;
+			label2.TabIndex = 9;
 			label2.Text = "Elementos:";
 			// 
 			// dg_RelacaoElemento
@@ -271,7 +271,7 @@
 			dg_RelacaoElemento.RowTemplate.Height = 25;
 			dg_RelacaoElemento.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 			dg_RelacaoElemento.Size = new Size(512, 336);
-			dg_RelacaoElemento.TabIndex = 26;
+			dg_RelacaoElemento.TabIndex = 34;
 			// 
 			// dataGridViewTextBoxColumn1
 			// 
@@ -332,7 +332,7 @@
 			dg_Organization.RowHeadersWidth = 51;
 			dg_Organization.RowTemplate.Height = 25;
 			dg_Organization.Size = new Size(511, 187);
-			dg_Organization.TabIndex = 23;
+			dg_Organization.TabIndex = 31;
 			// 
 			// dataGridViewTextBoxColumn5
 			// 
@@ -403,7 +403,7 @@
 			lbl_DetElemento.Location = new Point(609, 41);
 			lbl_DetElemento.Name = "lbl_DetElemento";
 			lbl_DetElemento.Size = new Size(255, 32);
-			lbl_DetElemento.TabIndex = 12;
+			lbl_DetElemento.TabIndex = 16;
 			lbl_DetElemento.Text = "Detalhes do Elemento:";
 			// 
 			// lbl_DetElementoDesc
@@ -412,7 +412,7 @@
 			lbl_DetElementoDesc.Location = new Point(609, 17);
 			lbl_DetElementoDesc.Name = "lbl_DetElementoDesc";
 			lbl_DetElementoDesc.Size = new Size(382, 20);
-			lbl_DetElementoDesc.TabIndex = 11;
+			lbl_DetElementoDesc.TabIndex = 16;
 			lbl_DetElementoDesc.Text = "Selecione um elemento na tabela ao lado para detalhar.";
 			// 
 			// lbl_RelElemento
@@ -422,7 +422,7 @@
 			lbl_RelElemento.Margin = new Padding(0);
 			lbl_RelElemento.Name = "lbl_RelElemento";
 			lbl_RelElemento.Size = new Size(211, 20);
-			lbl_RelElemento.TabIndex = 25;
+			lbl_RelElemento.TabIndex = 33;
 			lbl_RelElemento.Text = "Relacionado a outro elemento";
 			// 
 			// lbl_RelAtividade
@@ -431,7 +431,7 @@
 			lbl_RelAtividade.Location = new Point(1147, 450);
 			lbl_RelAtividade.Name = "lbl_RelAtividade";
 			lbl_RelAtividade.Size = new Size(170, 20);
-			lbl_RelAtividade.TabIndex = 29;
+			lbl_RelAtividade.TabIndex = 39;
 			lbl_RelAtividade.Text = "Relacionado a atividade";
 			// 
 			// lbl_RelSetor
@@ -440,7 +440,7 @@
 			lbl_RelSetor.Location = new Point(1147, 181);
 			lbl_RelSetor.Name = "lbl_RelSetor";
 			lbl_RelSetor.Size = new Size(97, 20);
-			lbl_RelSetor.TabIndex = 22;
+			lbl_RelSetor.TabIndex = 30;
 			lbl_RelSetor.Text = "Ocupado por";
 			// 
 			// btn_ShowAllElements
@@ -450,7 +450,7 @@
 			btn_ShowAllElements.Margin = new Padding(3, 4, 3, 4);
 			btn_ShowAllElements.Name = "btn_ShowAllElements";
 			btn_ShowAllElements.Size = new Size(119, 31);
-			btn_ShowAllElements.TabIndex = 4;
+			btn_ShowAllElements.TabIndex = 6;
 			btn_ShowAllElements.Text = "Mostrar todos";
 			btn_ShowAllElements.UseVisualStyleBackColor = true;
 			btn_ShowAllElements.Click += btn_ShowAllElements_Click;
@@ -462,7 +462,7 @@
 			btn_FilterElements.Margin = new Padding(3, 4, 3, 4);
 			btn_FilterElements.Name = "btn_FilterElements";
 			btn_FilterElements.Size = new Size(245, 31);
-			btn_FilterElements.TabIndex = 4;
+			btn_FilterElements.TabIndex = 7;
 			btn_FilterElements.Text = "Filtrar por subsistema selecionado";
 			btn_FilterElements.UseVisualStyleBackColor = true;
 			btn_FilterElements.Click += btn_FilterElements_Click;
@@ -474,7 +474,7 @@
 			btn_ManageSubsystems.Margin = new Padding(3, 4, 3, 4);
 			btn_ManageSubsystems.Name = "btn_ManageSubsystems";
 			btn_ManageSubsystems.Size = new Size(170, 31);
-			btn_ManageSubsystems.TabIndex = 1;
+			btn_ManageSubsystems.TabIndex = 8;
 			btn_ManageSubsystems.Text = "Gerenciar Subsistemas...";
 			btn_ManageSubsystems.UseVisualStyleBackColor = true;
 			btn_ManageSubsystems.Click += btn_ManageSubsystems_Click;
@@ -487,7 +487,7 @@
 			lbl_NomeElemento.MaximumSize = new Size(750, 60);
 			lbl_NomeElemento.Name = "lbl_NomeElemento";
 			lbl_NomeElemento.Size = new Size(101, 28);
-			lbl_NomeElemento.TabIndex = 13;
+			lbl_NomeElemento.TabIndex = 17;
 			lbl_NomeElemento.Text = "Elemento";
 			// 
 			// btn_DesvincElemento
@@ -497,7 +497,7 @@
 			btn_DesvincElemento.Margin = new Padding(3, 4, 3, 4);
 			btn_DesvincElemento.Name = "btn_DesvincElemento";
 			btn_DesvincElemento.Size = new Size(155, 31);
-			btn_DesvincElemento.TabIndex = 28;
+			btn_DesvincElemento.TabIndex = 38;
 			btn_DesvincElemento.Text = "Desvincular seleção";
 			btn_DesvincElemento.UseVisualStyleBackColor = true;
 			btn_DesvincElemento.Click += btn_DesvincElemento_Click;
@@ -509,7 +509,7 @@
 			btn_VincElemento.Margin = new Padding(3, 4, 3, 4);
 			btn_VincElemento.Name = "btn_VincElemento";
 			btn_VincElemento.Size = new Size(168, 31);
-			btn_VincElemento.TabIndex = 27;
+			btn_VincElemento.TabIndex = 37;
 			btn_VincElemento.Text = "Selecionar vínculos...";
 			btn_VincElemento.UseVisualStyleBackColor = true;
 			btn_VincElemento.Click += btn_VincElemento_Click;
@@ -521,7 +521,7 @@
 			btn_VincAtividade.Margin = new Padding(3, 4, 3, 4);
 			btn_VincAtividade.Name = "btn_VincAtividade";
 			btn_VincAtividade.Size = new Size(155, 31);
-			btn_VincAtividade.TabIndex = 31;
+			btn_VincAtividade.TabIndex = 43;
 			btn_VincAtividade.Text = "Selecionar vínculos...";
 			btn_VincAtividade.UseVisualStyleBackColor = true;
 			btn_VincAtividade.Click += btn_VincAtividade_Click;
@@ -533,7 +533,7 @@
 			btn_DesvincAtividade.Margin = new Padding(3, 4, 3, 4);
 			btn_DesvincAtividade.Name = "btn_DesvincAtividade";
 			btn_DesvincAtividade.Size = new Size(154, 31);
-			btn_DesvincAtividade.TabIndex = 32;
+			btn_DesvincAtividade.TabIndex = 44;
 			btn_DesvincAtividade.Text = "Desvincular seleção";
 			btn_DesvincAtividade.UseVisualStyleBackColor = true;
 			btn_DesvincAtividade.Click += btn_DesvincAtividade_Click;
@@ -544,7 +544,7 @@
 			btn_ImportElementos.Location = new Point(278, 819);
 			btn_ImportElementos.Name = "btn_ImportElementos";
 			btn_ImportElementos.Size = new Size(117, 29);
-			btn_ImportElementos.TabIndex = 8;
+			btn_ImportElementos.TabIndex = 14;
 			btn_ImportElementos.Text = "Importar .csv";
 			btn_ImportElementos.UseVisualStyleBackColor = true;
 			btn_ImportElementos.Click += btn_ImportElementos_Click;
@@ -555,7 +555,7 @@
 			rtbox_ExternalId.Margin = new Padding(3, 4, 3, 4);
 			rtbox_ExternalId.Name = "rtbox_ExternalId";
 			rtbox_ExternalId.Size = new Size(247, 59);
-			rtbox_ExternalId.TabIndex = 17;
+			rtbox_ExternalId.TabIndex = 21;
 			rtbox_ExternalId.Text = "";
 			rtbox_ExternalId.Leave += rtbox_ExternalId_Leave;
 			// 
@@ -565,7 +565,7 @@
 			rtbox_Type.Margin = new Padding(3, 4, 3, 4);
 			rtbox_Type.Name = "rtbox_Type";
 			rtbox_Type.Size = new Size(247, 59);
-			rtbox_Type.TabIndex = 21;
+			rtbox_Type.TabIndex = 25;
 			rtbox_Type.Text = "";
 			rtbox_Type.Leave += rtbox_Type_Leave;
 			// 
@@ -575,7 +575,7 @@
 			rtbox_objectClass.Margin = new Padding(3, 4, 3, 4);
 			rtbox_objectClass.Name = "rtbox_objectClass";
 			rtbox_objectClass.Size = new Size(247, 59);
-			rtbox_objectClass.TabIndex = 15;
+			rtbox_objectClass.TabIndex = 19;
 			rtbox_objectClass.Text = "";
 			rtbox_objectClass.Leave += rtbox_objectClass_Leave;
 			// 
@@ -585,7 +585,7 @@
 			rtbox_SType.Margin = new Padding(3, 4, 3, 4);
 			rtbox_SType.Name = "rtbox_SType";
 			rtbox_SType.Size = new Size(247, 59);
-			rtbox_SType.TabIndex = 19;
+			rtbox_SType.TabIndex = 23;
 			rtbox_SType.Text = "";
 			rtbox_SType.Leave += rtbox_SType_Leave;
 			// 
@@ -595,7 +595,7 @@
 			lbl_IdExterno.Location = new Point(882, 85);
 			lbl_IdExterno.Name = "lbl_IdExterno";
 			lbl_IdExterno.Size = new Size(148, 20);
-			lbl_IdExterno.TabIndex = 16;
+			lbl_IdExterno.TabIndex = 20;
 			lbl_IdExterno.Text = "Identificador externo";
 			// 
 			// lbl_TipoElem
@@ -604,7 +604,7 @@
 			lbl_TipoElem.Location = new Point(1411, 85);
 			lbl_TipoElem.Name = "lbl_TipoElem";
 			lbl_TipoElem.Size = new Size(128, 20);
-			lbl_TipoElem.TabIndex = 20;
+			lbl_TipoElem.TabIndex = 24;
 			lbl_TipoElem.Text = "Tipo do Elemento";
 			// 
 			// lbl_ClasseObj
@@ -613,7 +613,7 @@
 			lbl_ClasseObj.Location = new Point(617, 85);
 			lbl_ClasseObj.Name = "lbl_ClasseObj";
 			lbl_ClasseObj.Size = new Size(120, 20);
-			lbl_ClasseObj.TabIndex = 14;
+			lbl_ClasseObj.TabIndex = 18;
 			lbl_ClasseObj.Text = "Classe do objeto";
 			// 
 			// label1
@@ -622,7 +622,7 @@
 			label1.Location = new Point(1147, 85);
 			label1.Name = "label1";
 			label1.Size = new Size(128, 20);
-			label1.TabIndex = 18;
+			label1.TabIndex = 22;
 			label1.Text = "Tipo de superfície";
 			// 
 			// btn_SalvarDetalhes
@@ -632,7 +632,7 @@
 			btn_SalvarDetalhes.Margin = new Padding(3, 4, 3, 4);
 			btn_SalvarDetalhes.Name = "btn_SalvarDetalhes";
 			btn_SalvarDetalhes.Size = new Size(133, 35);
-			btn_SalvarDetalhes.TabIndex = 33;
+			btn_SalvarDetalhes.TabIndex = 45;
 			btn_SalvarDetalhes.Text = "Salvar alterações";
 			btn_SalvarDetalhes.UseVisualStyleBackColor = true;
 			btn_SalvarDetalhes.Click += btn_SalvarDetalhes_Click;
@@ -712,7 +712,7 @@
 			btn_DeleteElementoSelecao.Margin = new Padding(3, 4, 3, 4);
 			btn_DeleteElementoSelecao.Name = "btn_DeleteElementoSelecao";
 			btn_DeleteElementoSelecao.Size = new Size(158, 31);
-			btn_DeleteElementoSelecao.TabIndex = 38;
+			btn_DeleteElementoSelecao.TabIndex = 15;
 			btn_DeleteElementoSelecao.Text = "Deletar seleção";
 			btn_DeleteElementoSelecao.UseVisualStyleBackColor = true;
 			btn_DeleteElementoSelecao.Click += btn_DeleteElementoSelecao_Click;
@@ -722,7 +722,7 @@
 			btn_SetOrganization.Location = new Point(1563, 395);
 			btn_SetOrganization.Name = "btn_SetOrganization";
 			btn_SetOrganization.Size = new Size(94, 29);
-			btn_SetOrganization.TabIndex = 24;
+			btn_SetOrganization.TabIndex = 32;
 			btn_SetOrganization.Text = "Editar";
 			btn_SetOrganization.UseVisualStyleBackColor = true;
 			btn_SetOrganization.Click += btn_SetOrganization_Click;
@@ -746,6 +746,31 @@
 			dg_Group.CellFormatting += dg_Group_CellFormatting;
 			dg_Group.ColumnHeaderMouseClick += dg_Group_ColumnHeaderMouseClick;
 			// 
+			// subsystemIdDataGridViewTextBoxColumn
+			// 
+			subsystemIdDataGridViewTextBoxColumn.DataPropertyName = "SubsystemId";
+			subsystemIdDataGridViewTextBoxColumn.HeaderText = "Id";
+			subsystemIdDataGridViewTextBoxColumn.MinimumWidth = 6;
+			subsystemIdDataGridViewTextBoxColumn.Name = "subsystemIdDataGridViewTextBoxColumn";
+			subsystemIdDataGridViewTextBoxColumn.ReadOnly = true;
+			subsystemIdDataGridViewTextBoxColumn.Width = 55;
+			// 
+			// codeDataGridViewTextBoxColumn8
+			// 
+			codeDataGridViewTextBoxColumn8.DataPropertyName = "Code";
+			codeDataGridViewTextBoxColumn8.HeaderText = "Código";
+			codeDataGridViewTextBoxColumn8.MinimumWidth = 6;
+			codeDataGridViewTextBoxColumn8.Name = "codeDataGridViewTextBoxColumn8";
+			codeDataGridViewTextBoxColumn8.Width = 90;
+			// 
+			// nameDataGridViewTextBoxColumn6
+			// 
+			nameDataGridViewTextBoxColumn6.DataPropertyName = "Name";
+			nameDataGridViewTextBoxColumn6.HeaderText = "Nome*";
+			nameDataGridViewTextBoxColumn6.MinimumWidth = 6;
+			nameDataGridViewTextBoxColumn6.Name = "nameDataGridViewTextBoxColumn6";
+			nameDataGridViewTextBoxColumn6.Width = 360;
+			// 
 			// subsystemBindingSource
 			// 
 			subsystemBindingSource.DataSource = typeof(Model.Subsystem);
@@ -767,7 +792,7 @@
 			btn_DelSubsystem.Location = new Point(408, 288);
 			btn_DelSubsystem.Name = "btn_DelSubsystem";
 			btn_DelSubsystem.Size = new Size(151, 29);
-			btn_DelSubsystem.TabIndex = 39;
+			btn_DelSubsystem.TabIndex = 5;
 			btn_DelSubsystem.Text = "Deletar seleção";
 			btn_DelSubsystem.UseVisualStyleBackColor = true;
 			btn_DelSubsystem.Click += btn_DelSubsystem_Click;
@@ -779,7 +804,7 @@
 			btn_ImportElementRelationship.Margin = new Padding(3, 4, 3, 4);
 			btn_ImportElementRelationship.Name = "btn_ImportElementRelationship";
 			btn_ImportElementRelationship.Size = new Size(90, 31);
-			btn_ImportElementRelationship.TabIndex = 40;
+			btn_ImportElementRelationship.TabIndex = 36;
 			btn_ImportElementRelationship.Text = "Importar vínculos...";
 			btn_ImportElementRelationship.UseVisualStyleBackColor = true;
 			btn_ImportElementRelationship.Click += btn_ImportElementRelationship_Click;
@@ -791,7 +816,7 @@
 			btn_ImportElementActivityRelationship.Margin = new Padding(3, 4, 3, 4);
 			btn_ImportElementActivityRelationship.Name = "btn_ImportElementActivityRelationship";
 			btn_ImportElementActivityRelationship.Size = new Size(86, 31);
-			btn_ImportElementActivityRelationship.TabIndex = 41;
+			btn_ImportElementActivityRelationship.TabIndex = 42;
 			btn_ImportElementActivityRelationship.Text = "Importar vínculos...";
 			btn_ImportElementActivityRelationship.UseVisualStyleBackColor = true;
 			btn_ImportElementActivityRelationship.Click += btn_ImportElementActivityRelationship_Click;
@@ -803,7 +828,7 @@
 			lbl_ElementsTotal.Location = new Point(23, 816);
 			lbl_ElementsTotal.Name = "lbl_ElementsTotal";
 			lbl_ElementsTotal.Size = new Size(45, 20);
-			lbl_ElementsTotal.TabIndex = 42;
+			lbl_ElementsTotal.TabIndex = 12;
 			lbl_ElementsTotal.Text = "Total:";
 			// 
 			// btn_ImportSectors
@@ -811,7 +836,7 @@
 			btn_ImportSectors.Location = new Point(278, 288);
 			btn_ImportSectors.Name = "btn_ImportSectors";
 			btn_ImportSectors.Size = new Size(125, 29);
-			btn_ImportSectors.TabIndex = 48;
+			btn_ImportSectors.TabIndex = 4;
 			btn_ImportSectors.Text = "Importar .csv";
 			btn_ImportSectors.UseVisualStyleBackColor = true;
 			btn_ImportSectors.Click += btn_ImportSectors_Click;
@@ -821,7 +846,7 @@
 			btn_ExportSubsystem.Location = new Point(153, 288);
 			btn_ExportSubsystem.Name = "btn_ExportSubsystem";
 			btn_ExportSubsystem.Size = new Size(119, 29);
-			btn_ExportSubsystem.TabIndex = 60;
+			btn_ExportSubsystem.TabIndex = 3;
 			btn_ExportSubsystem.Text = "Exportar .csv";
 			btn_ExportSubsystem.UseVisualStyleBackColor = true;
 			btn_ExportSubsystem.Click += btn_ExportSubsystem_Click;
@@ -832,7 +857,7 @@
 			btn_ExportElements.Location = new Point(153, 819);
 			btn_ExportElements.Name = "btn_ExportElements";
 			btn_ExportElements.Size = new Size(119, 29);
-			btn_ExportElements.TabIndex = 61;
+			btn_ExportElements.TabIndex = 13;
 			btn_ExportElements.Text = "Exportar .csv";
 			btn_ExportElements.UseVisualStyleBackColor = true;
 			btn_ExportElements.Click += btn_ExportElements_Click;
@@ -843,7 +868,7 @@
 			btn_ExportElementElement.Location = new Point(617, 821);
 			btn_ExportElementElement.Name = "btn_ExportElementElement";
 			btn_ExportElementElement.Size = new Size(81, 29);
-			btn_ExportElementElement.TabIndex = 62;
+			btn_ExportElementElement.TabIndex = 35;
 			btn_ExportElementElement.Text = "Exportar .csv";
 			btn_ExportElementElement.UseVisualStyleBackColor = true;
 			btn_ExportElementElement.Click += btn_ExportElementElement_Click;
@@ -854,7 +879,7 @@
 			btn_ExportElementActivity.Location = new Point(1151, 821);
 			btn_ExportElementActivity.Name = "btn_ExportElementActivity";
 			btn_ExportElementActivity.Size = new Size(94, 29);
-			btn_ExportElementActivity.TabIndex = 63;
+			btn_ExportElementActivity.TabIndex = 41;
 			btn_ExportElementActivity.Text = "Exportar .csv";
 			btn_ExportElementActivity.UseVisualStyleBackColor = true;
 			btn_ExportElementActivity.Click += btn_ExportElementActivity_Click;
@@ -866,7 +891,7 @@
 			label3.Margin = new Padding(0);
 			label3.Name = "label3";
 			label3.Size = new Size(133, 20);
-			label3.TabIndex = 65;
+			label3.TabIndex = 26;
 			label3.Text = "Subsistema / Setor";
 			// 
 			// subsystemBindingSource1
@@ -890,7 +915,7 @@
 			dataGridView1.RowTemplate.Height = 29;
 			dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 			dataGridView1.Size = new Size(501, 187);
-			dataGridView1.TabIndex = 66;
+			dataGridView1.TabIndex = 27;
 			// 
 			// subsystemIdDataGridViewTextBoxColumn1
 			// 
@@ -926,7 +951,7 @@
 			button1.Margin = new Padding(3, 4, 3, 4);
 			button1.Name = "button1";
 			button1.Size = new Size(169, 31);
-			button1.TabIndex = 67;
+			button1.TabIndex = 28;
 			button1.Text = "Selecionar vínculos...";
 			button1.UseVisualStyleBackColor = true;
 			button1.Click += button1_Click;
@@ -937,7 +962,7 @@
 			btn_DeleteRelSubsystem.Margin = new Padding(3, 4, 3, 4);
 			btn_DeleteRelSubsystem.Name = "btn_DeleteRelSubsystem";
 			btn_DeleteRelSubsystem.Size = new Size(173, 31);
-			btn_DeleteRelSubsystem.TabIndex = 68;
+			btn_DeleteRelSubsystem.TabIndex = 29;
 			btn_DeleteRelSubsystem.Text = "Desvincular seleção";
 			btn_DeleteRelSubsystem.UseVisualStyleBackColor = true;
 			btn_DeleteRelSubsystem.Click += btn_DeleteRelSubsystem_Click;
@@ -947,7 +972,7 @@
 			btn_New.Location = new Point(495, 377);
 			btn_New.Name = "btn_New";
 			btn_New.Size = new Size(66, 29);
-			btn_New.TabIndex = 69;
+			btn_New.TabIndex = 10;
 			btn_New.Text = "Novo";
 			btn_New.UseVisualStyleBackColor = true;
 			btn_New.Click += btn_New_Click;
@@ -957,35 +982,10 @@
 			btn_NewGroup.Location = new Point(495, 28);
 			btn_NewGroup.Name = "btn_NewGroup";
 			btn_NewGroup.Size = new Size(66, 29);
-			btn_NewGroup.TabIndex = 70;
+			btn_NewGroup.TabIndex = 1;
 			btn_NewGroup.Text = "Novo";
 			btn_NewGroup.UseVisualStyleBackColor = true;
 			btn_NewGroup.Click += btn_NewGroup_Click;
-			// 
-			// subsystemIdDataGridViewTextBoxColumn
-			// 
-			subsystemIdDataGridViewTextBoxColumn.DataPropertyName = "SubsystemId";
-			subsystemIdDataGridViewTextBoxColumn.HeaderText = "Id";
-			subsystemIdDataGridViewTextBoxColumn.MinimumWidth = 6;
-			subsystemIdDataGridViewTextBoxColumn.Name = "subsystemIdDataGridViewTextBoxColumn";
-			subsystemIdDataGridViewTextBoxColumn.ReadOnly = true;
-			subsystemIdDataGridViewTextBoxColumn.Width = 55;
-			// 
-			// codeDataGridViewTextBoxColumn8
-			// 
-			codeDataGridViewTextBoxColumn8.DataPropertyName = "Code";
-			codeDataGridViewTextBoxColumn8.HeaderText = "Código";
-			codeDataGridViewTextBoxColumn8.MinimumWidth = 6;
-			codeDataGridViewTextBoxColumn8.Name = "codeDataGridViewTextBoxColumn8";
-			codeDataGridViewTextBoxColumn8.Width = 90;
-			// 
-			// nameDataGridViewTextBoxColumn6
-			// 
-			nameDataGridViewTextBoxColumn6.DataPropertyName = "Name";
-			nameDataGridViewTextBoxColumn6.HeaderText = "Nome*";
-			nameDataGridViewTextBoxColumn6.MinimumWidth = 6;
-			nameDataGridViewTextBoxColumn6.Name = "nameDataGridViewTextBoxColumn6";
-			nameDataGridViewTextBoxColumn6.Width = 360;
 			// 
 			// Frm_Element
 			// 

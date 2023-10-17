@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Frm_Main));
 			lbl_Titulo = new Label();
 			rtxtb_DescProjeto = new RichTextBox();
 			lbl_NomeProj = new Label();
@@ -556,7 +557,7 @@
 			// 
 			// btn_ExportAllResults
 			// 
-			btn_ExportAllResults.Location = new Point(1407, 389);
+			btn_ExportAllResults.Location = new Point(1406, 414);
 			btn_ExportAllResults.Name = "btn_ExportAllResults";
 			btn_ExportAllResults.Size = new Size(197, 39);
 			btn_ExportAllResults.TabIndex = 60;
@@ -566,7 +567,7 @@
 			// 
 			// label4
 			// 
-			label4.Location = new Point(1280, 502);
+			label4.Location = new Point(1267, 527);
 			label4.Name = "label4";
 			label4.Size = new Size(345, 54);
 			label4.TabIndex = 61;
@@ -575,7 +576,7 @@
 			// label5
 			// 
 			label5.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
-			label5.Location = new Point(1262, 450);
+			label5.Location = new Point(1267, 475);
 			label5.Name = "label5";
 			label5.Size = new Size(363, 46);
 			label5.TabIndex = 62;
@@ -583,7 +584,7 @@
 			// 
 			// label6
 			// 
-			label6.Location = new Point(1280, 556);
+			label6.Location = new Point(1267, 581);
 			label6.Name = "label6";
 			label6.Size = new Size(345, 54);
 			label6.TabIndex = 63;
@@ -671,6 +672,7 @@
 			Controls.Add(lbl_NomeProj);
 			Controls.Add(rtxtb_DescProjeto);
 			Controls.Add(lbl_Titulo);
+			Icon = (Icon)resources.GetObject("$this.Icon");
 			Name = "Frm_Main";
 			Text = "MScMD - Geral";
 			WindowState = FormWindowState.Maximized;
