@@ -66,7 +66,16 @@ namespace MSCMD.Repository
 
 		public Agent FindBy(int agentId)
 		{
-			return Agents.Where(f => f.AgentId == agentId).First();
+			var agents = Agents.Where(f => f.AgentId == agentId);
+
+			if (agents.Any())
+			{
+				return agents.First();
+			} else
+			{
+				return new Agent();
+			}
+			
 		}
 		public Agent? FindByCode(string code)
 		{
@@ -93,7 +102,7 @@ namespace MSCMD.Repository
 		{
 			foreach (Agent a in agents)
 			{
-				AddNew(a);
+				Save(a);
 			}
 
 		}

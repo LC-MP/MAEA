@@ -97,7 +97,7 @@ namespace MSCMD.Repository
 		{
 			foreach (HumanResource person in people)
 			{
-				AddNew(person);
+				Save(person);
 			}
 
 		}

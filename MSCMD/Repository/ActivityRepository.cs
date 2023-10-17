@@ -102,7 +102,7 @@ namespace MSCMD.Repository
 		{
 			foreach (Activity activ in activities)
 			{
-				AddNew(activ);
+				Save(activ);
 			}
 
 		}

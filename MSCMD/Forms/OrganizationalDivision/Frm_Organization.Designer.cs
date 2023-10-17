@@ -51,12 +51,6 @@
 			lbl_Titulo_Funcao = new Label();
 			lbl_detalhe = new Label();
 			dg_Sectors = new DataGridView();
-			sectorIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-			codeDataGridViewTextBoxColumn4 = new DataGridViewTextBoxColumn();
-			sectorNameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-			descriptionDataGridViewTextBoxColumn2 = new DataGridViewTextBoxColumn();
-			superiorInstanceIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-			superiorInstanceDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
 			organizationBindingSource = new BindingSource(components);
 			organizationBindingSource1 = new BindingSource(components);
 			dg_ActivityRelationship = new DataGridView();
@@ -109,6 +103,12 @@
 			btn_New = new Button();
 			btn_ExportAgentResouceRelationship = new Button();
 			btn_ImportAgentResouceRelationship = new Button();
+			sectorIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+			codeDataGridViewTextBoxColumn4 = new DataGridViewTextBoxColumn();
+			sectorNameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+			descriptionDataGridViewTextBoxColumn2 = new DataGridViewTextBoxColumn();
+			superiorInstanceIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+			superiorInstanceDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
 			((System.ComponentModel.ISupportInitialize)dg_Agents).BeginInit();
 			((System.ComponentModel.ISupportInitialize)agentBindingSource).BeginInit();
 			((System.ComponentModel.ISupportInitialize)dg_ResourceRelationship).BeginInit();
@@ -350,59 +350,8 @@
 			dg_Sectors.Size = new Size(533, 201);
 			dg_Sectors.TabIndex = 14;
 			dg_Sectors.CellEndEdit += dg_Sectors_CellEndEdit;
+			dg_Sectors.CellFormatting += dg_Sectors_CellFormatting;
 			dg_Sectors.ColumnHeaderMouseClick += dg_Sectors_ColumnHeaderMouseClick;
-			// 
-			// sectorIdDataGridViewTextBoxColumn
-			// 
-			sectorIdDataGridViewTextBoxColumn.DataPropertyName = "SectorId";
-			sectorIdDataGridViewTextBoxColumn.HeaderText = "Id";
-			sectorIdDataGridViewTextBoxColumn.MinimumWidth = 6;
-			sectorIdDataGridViewTextBoxColumn.Name = "sectorIdDataGridViewTextBoxColumn";
-			sectorIdDataGridViewTextBoxColumn.Visible = false;
-			sectorIdDataGridViewTextBoxColumn.Width = 50;
-			// 
-			// codeDataGridViewTextBoxColumn4
-			// 
-			codeDataGridViewTextBoxColumn4.DataPropertyName = "Code";
-			codeDataGridViewTextBoxColumn4.HeaderText = "Código";
-			codeDataGridViewTextBoxColumn4.MinimumWidth = 6;
-			codeDataGridViewTextBoxColumn4.Name = "codeDataGridViewTextBoxColumn4";
-			codeDataGridViewTextBoxColumn4.Width = 90;
-			// 
-			// sectorNameDataGridViewTextBoxColumn
-			// 
-			sectorNameDataGridViewTextBoxColumn.DataPropertyName = "SectorName";
-			sectorNameDataGridViewTextBoxColumn.HeaderText = "Nome*";
-			sectorNameDataGridViewTextBoxColumn.MinimumWidth = 6;
-			sectorNameDataGridViewTextBoxColumn.Name = "sectorNameDataGridViewTextBoxColumn";
-			sectorNameDataGridViewTextBoxColumn.Width = 360;
-			// 
-			// descriptionDataGridViewTextBoxColumn2
-			// 
-			descriptionDataGridViewTextBoxColumn2.DataPropertyName = "Description";
-			descriptionDataGridViewTextBoxColumn2.HeaderText = "Description";
-			descriptionDataGridViewTextBoxColumn2.MinimumWidth = 6;
-			descriptionDataGridViewTextBoxColumn2.Name = "descriptionDataGridViewTextBoxColumn2";
-			descriptionDataGridViewTextBoxColumn2.Visible = false;
-			descriptionDataGridViewTextBoxColumn2.Width = 125;
-			// 
-			// superiorInstanceIdDataGridViewTextBoxColumn
-			// 
-			superiorInstanceIdDataGridViewTextBoxColumn.DataPropertyName = "SuperiorInstanceId";
-			superiorInstanceIdDataGridViewTextBoxColumn.HeaderText = "SuperiorInstanceId";
-			superiorInstanceIdDataGridViewTextBoxColumn.MinimumWidth = 6;
-			superiorInstanceIdDataGridViewTextBoxColumn.Name = "superiorInstanceIdDataGridViewTextBoxColumn";
-			superiorInstanceIdDataGridViewTextBoxColumn.Visible = false;
-			superiorInstanceIdDataGridViewTextBoxColumn.Width = 125;
-			// 
-			// superiorInstanceDataGridViewTextBoxColumn
-			// 
-			superiorInstanceDataGridViewTextBoxColumn.DataPropertyName = "SuperiorInstance";
-			superiorInstanceDataGridViewTextBoxColumn.HeaderText = "SuperiorInstance";
-			superiorInstanceDataGridViewTextBoxColumn.MinimumWidth = 6;
-			superiorInstanceDataGridViewTextBoxColumn.Name = "superiorInstanceDataGridViewTextBoxColumn";
-			superiorInstanceDataGridViewTextBoxColumn.Visible = false;
-			superiorInstanceDataGridViewTextBoxColumn.Width = 125;
 			// 
 			// organizationBindingSource
 			// 
@@ -934,6 +883,58 @@
 			btn_ImportAgentResouceRelationship.UseVisualStyleBackColor = true;
 			btn_ImportAgentResouceRelationship.Click += btn_ImportAgentResouceRelationship_Click;
 			// 
+			// sectorIdDataGridViewTextBoxColumn
+			// 
+			sectorIdDataGridViewTextBoxColumn.DataPropertyName = "SectorId";
+			sectorIdDataGridViewTextBoxColumn.HeaderText = "Id";
+			sectorIdDataGridViewTextBoxColumn.MinimumWidth = 6;
+			sectorIdDataGridViewTextBoxColumn.Name = "sectorIdDataGridViewTextBoxColumn";
+			sectorIdDataGridViewTextBoxColumn.ReadOnly = true;
+			sectorIdDataGridViewTextBoxColumn.Width = 55;
+			// 
+			// codeDataGridViewTextBoxColumn4
+			// 
+			codeDataGridViewTextBoxColumn4.DataPropertyName = "Code";
+			codeDataGridViewTextBoxColumn4.HeaderText = "Código";
+			codeDataGridViewTextBoxColumn4.MinimumWidth = 6;
+			codeDataGridViewTextBoxColumn4.Name = "codeDataGridViewTextBoxColumn4";
+			codeDataGridViewTextBoxColumn4.Width = 90;
+			// 
+			// sectorNameDataGridViewTextBoxColumn
+			// 
+			sectorNameDataGridViewTextBoxColumn.DataPropertyName = "SectorName";
+			sectorNameDataGridViewTextBoxColumn.HeaderText = "Nome*";
+			sectorNameDataGridViewTextBoxColumn.MinimumWidth = 6;
+			sectorNameDataGridViewTextBoxColumn.Name = "sectorNameDataGridViewTextBoxColumn";
+			sectorNameDataGridViewTextBoxColumn.Width = 360;
+			// 
+			// descriptionDataGridViewTextBoxColumn2
+			// 
+			descriptionDataGridViewTextBoxColumn2.DataPropertyName = "Description";
+			descriptionDataGridViewTextBoxColumn2.HeaderText = "Description";
+			descriptionDataGridViewTextBoxColumn2.MinimumWidth = 6;
+			descriptionDataGridViewTextBoxColumn2.Name = "descriptionDataGridViewTextBoxColumn2";
+			descriptionDataGridViewTextBoxColumn2.Visible = false;
+			descriptionDataGridViewTextBoxColumn2.Width = 125;
+			// 
+			// superiorInstanceIdDataGridViewTextBoxColumn
+			// 
+			superiorInstanceIdDataGridViewTextBoxColumn.DataPropertyName = "SuperiorInstanceId";
+			superiorInstanceIdDataGridViewTextBoxColumn.HeaderText = "SuperiorInstanceId";
+			superiorInstanceIdDataGridViewTextBoxColumn.MinimumWidth = 6;
+			superiorInstanceIdDataGridViewTextBoxColumn.Name = "superiorInstanceIdDataGridViewTextBoxColumn";
+			superiorInstanceIdDataGridViewTextBoxColumn.Visible = false;
+			superiorInstanceIdDataGridViewTextBoxColumn.Width = 125;
+			// 
+			// superiorInstanceDataGridViewTextBoxColumn
+			// 
+			superiorInstanceDataGridViewTextBoxColumn.DataPropertyName = "SuperiorInstance";
+			superiorInstanceDataGridViewTextBoxColumn.HeaderText = "SuperiorInstance";
+			superiorInstanceDataGridViewTextBoxColumn.MinimumWidth = 6;
+			superiorInstanceDataGridViewTextBoxColumn.Name = "superiorInstanceDataGridViewTextBoxColumn";
+			superiorInstanceDataGridViewTextBoxColumn.Visible = false;
+			superiorInstanceDataGridViewTextBoxColumn.Width = 125;
+			// 
 			// Frm_Organization
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
@@ -1127,13 +1128,13 @@
 		private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
 		private DataGridViewTextBoxColumn descriptionDataGridViewTextBoxColumn;
 		private DataGridViewTextBoxColumn lotacaoFuncional;
+		private Button btn_ExportAgentResouceRelationship;
+		private Button btn_ImportAgentResouceRelationship;
 		private DataGridViewTextBoxColumn sectorIdDataGridViewTextBoxColumn;
 		private DataGridViewTextBoxColumn codeDataGridViewTextBoxColumn4;
 		private DataGridViewTextBoxColumn sectorNameDataGridViewTextBoxColumn;
 		private DataGridViewTextBoxColumn descriptionDataGridViewTextBoxColumn2;
 		private DataGridViewTextBoxColumn superiorInstanceIdDataGridViewTextBoxColumn;
 		private DataGridViewTextBoxColumn superiorInstanceDataGridViewTextBoxColumn;
-		private Button btn_ExportAgentResouceRelationship;
-		private Button btn_ImportAgentResouceRelationship;
 	}
 }

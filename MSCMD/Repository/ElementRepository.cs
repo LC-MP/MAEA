@@ -102,7 +102,7 @@ namespace MSCMD.Repository
 		{
 			foreach (Element el in elementos)
 			{
-				AddNew(el);
+				Save(el);
 			}
 
 		}

@@ -36,9 +36,9 @@ namespace MSCMD.Forms
 		private SubprocessRepository _subprocessRepository;
 		private HumanResourceRepository _resourceRepository;
 		private Object? filteredGroup = null;
-		public Frm_ImportCsv(ScreenEnum screenEnum, Form frmOrigem, Object? group = null)
+		public Frm_ImportCsv(ScreenEnum screenEnum, Form frmOrigem, Object? group = null, MscmdContext? contextOrg = null)
 		{
-			context = new MscmdContext();
+			context = contextOrg?? new MscmdContext();
 			context.ChangeTracker.DetectChanges();
 			_screenEnum = screenEnum;
 			_frmOrigem = frmOrigem;
@@ -199,9 +199,9 @@ namespace MSCMD.Forms
 
 			foreach (DataGridViewRow row in dgv_Itens.Rows)
 			{
-				if (Convert.ToString(row.Cells["codigo"].Value) == "" || row.Cells["codigo"].Value == null)// || Convert.ToString(row.Cells["ItemName"].Value) == "" || row.Cells["ItemName"].Value == null || Convert.ToString(row.Cells["DeptId"].Value) == "" || row.Cells["DeptId"].Value == null || Convert.ToString(row.Cells["Price"].Value) == "" || row.Cells["Price"].Value == null)
+				if (Convert.ToString(row.Cells["codigo"].Value) == "" || row.Cells["codigo"].Value == null)// || Convert.ToString(row.Cells["ItemName"].Value) == "" || row.Cells["ItemName"].Value == null)
 				{
-					row.DefaultCellStyle.BackColor = Color.Red;
+					row.DefaultCellStyle.BackColor = Color.LightSalmon;
 					inValidItem += 1;
 				}
 				else
@@ -360,7 +360,24 @@ namespace MSCMD.Forms
 								OrganizationAgentRepository rep = new OrganizationAgentRepository();
 								foreach (DataRow dr in dtItem.Rows)
 								{
-									Agent novaFuncao = new Agent();
+									Agent novaFuncao;
+
+									if (dr["ID"] != null && (Convert.ToString(dr["ID"])) != "")
+									{
+										try
+										{
+											novaFuncao = _agentRepository.FindBy(Int32.Parse(Convert.ToString(dr["ID"])));
+										}
+										catch
+										{
+											novaFuncao = new Agent();
+										}
+										
+									} else
+									{
+										novaFuncao = new Agent();
+									}
+
 									novaFuncao.Code = Convert.ToString(dr["codigo"]) ?? "";
 									novaFuncao.Name = Convert.ToString(dr["nome_funcao"]) ?? "";
 									novaFuncao.Description = Convert.ToString(dr["descricao_funcao"]) ?? "";
@@ -370,6 +387,7 @@ namespace MSCMD.Forms
 									{
 										string division = Convert.ToString(dr["divisao"]);
 										string[] words = division.Split(',');
+										novaFuncao.Organizations.Clear();
 										foreach (var word in words)
 										{
 											Organization org = _organizationRepository.FindByCode(word);
@@ -378,7 +396,6 @@ namespace MSCMD.Forms
 												novaFuncao.Organizations.Add(org);
 
 											}
-
 
 										}
 
@@ -421,7 +438,25 @@ namespace MSCMD.Forms
 								List<HumanResource> personList = new List<HumanResource>();
 								foreach (DataRow dr in dtItem.Rows)
 								{
-									HumanResource newPerson = new HumanResource();
+									HumanResource newPerson;
+
+									if (dr["ID"] != null && (Convert.ToString(dr["ID"])) != "")
+									{
+										try
+										{
+											newPerson = _resourceRepository.FindBy(Int32.Parse(Convert.ToString(dr["ID"])));
+										}
+										catch
+										{
+											newPerson = new HumanResource();
+										}
+
+									}
+									else
+									{
+										newPerson = new HumanResource();
+									}
+
 									newPerson.Code = Convert.ToString(dr["codigo"]) ?? "";
 									newPerson.Name = Convert.ToString(dr["nome"]) ?? "";
 									newPerson.Competences = Convert.ToString(dr["competencias"]);
@@ -462,7 +497,26 @@ namespace MSCMD.Forms
 								List<Model.Element> elementList = new List<Model.Element>();
 								foreach (DataRow dr in dtItem.Rows)
 								{
-									Model.Element newElement = new Element();
+
+									Model.Element newElement;
+
+									if (dr["ID"] != null && (Convert.ToString(dr["ID"])) != "")
+									{
+										try
+										{
+											newElement = _elementRepository.FindBy(Int32.Parse(Convert.ToString(dr["ID"])));
+										}
+										catch
+										{
+											newElement = new Element();
+										}
+
+									}
+									else
+									{
+										newElement = new Element();
+									}
+
 									newElement.Code = Convert.ToString(dr["codigo"]) ?? "";
 									newElement.Name = Convert.ToString(dr["nome_elemento"]) ?? "";
 									newElement.Type = Convert.ToString(dr["tipo_elemento"]) ?? "";
@@ -474,6 +528,7 @@ namespace MSCMD.Forms
 									{
 										string group = Convert.ToString(dr["subsistema"]);
 										string[] words = group.Split(',');
+										newElement.Subsystems.Clear();
 										foreach (var word in words)
 										{
 											Subsystem system = _subsystemRepository.FindByCode(word);
@@ -525,7 +580,25 @@ namespace MSCMD.Forms
 								List<Activity> activityList = new List<Activity>();
 								foreach (DataRow dr in dtItem.Rows)
 								{
-									Activity newActivity = new Activity();
+									Activity newActivity;
+
+									if (dr["ID"] != null && (Convert.ToString(dr["ID"])) != "")
+									{
+										try
+										{
+											newActivity = _activityRepository.FindBy(Int32.Parse(Convert.ToString(dr["ID"])));
+										}
+										catch
+										{
+											newActivity = new Activity();
+										}
+
+									}
+									else
+									{
+										newActivity = new Activity();
+									}
+
 									newActivity.ActivityCode = Convert.ToString(dr["codigo"]) ?? "";
 									newActivity.ActivityName = Convert.ToString(dr["nome_atividade"]) ?? "";
 									newActivity.ActivityDescription = Convert.ToString(dr["descricao"]) ?? "";
@@ -579,6 +652,7 @@ namespace MSCMD.Forms
 									{
 										string group = Convert.ToString(dr["subprocesso"]);
 										string[] words = group.Split(',');
+										newActivity.Subprocesses.Clear();
 										foreach (var word in words)
 										{
 											Subprocess system = _subprocessRepository.FindByCode(word);
@@ -624,7 +698,25 @@ namespace MSCMD.Forms
 								List<Organization> sectorList = new List<Organization>();
 								foreach (DataRow dr in dtItem.Rows)
 								{
-									Organization newElement = new Organization();
+
+									Organization newElement;
+									if (dr["ID"] != null && (Convert.ToString(dr["ID"])) != "")
+									{
+										try
+										{
+											newElement = _organizationRepository.FindBy(Int32.Parse(Convert.ToString(dr["ID"])));
+										}
+										catch
+										{
+											newElement = new Organization(); ;
+										}
+
+									}
+									else
+									{
+										newElement = new Organization();
+									}
+									
 									newElement.Code = Convert.ToString(dr["codigo"]) ?? "";
 									newElement.SectorName = Convert.ToString(dr["nome_setor"]) ?? "";
 									newElement.Description = Convert.ToString(dr["descricao_setor"]) ?? "";
@@ -649,7 +741,25 @@ namespace MSCMD.Forms
 								List<Subsystem> subsystemList = new List<Subsystem>();
 								foreach (DataRow dr in dtItem.Rows)
 								{
-									Subsystem newElement = new Subsystem();
+									Subsystem newElement;
+
+									if (dr["ID"] != null && (Convert.ToString(dr["ID"])) != "")
+									{
+										try
+										{
+											newElement = _subsystemRepository.FindBy(Int32.Parse(Convert.ToString(dr["ID"])));
+										}
+										catch
+										{
+											newElement = new Subsystem(); ;
+										}
+
+									}
+									else
+									{
+										newElement = new Subsystem();
+									}
+
 									newElement.Code = Convert.ToString(dr["codigo"]) ?? "";
 									newElement.Name = Convert.ToString(dr["nome_sistema"]) ?? "";
 
@@ -673,7 +783,25 @@ namespace MSCMD.Forms
 								List<Subprocess> subprocessList = new List<Subprocess>();
 								foreach (DataRow dr in dtItem.Rows)
 								{
-									Subprocess newElement = new Subprocess();
+									Subprocess newElement;
+
+									if (dr["ID"] != null && (Convert.ToString(dr["ID"])) != "")
+									{
+										try
+										{
+											newElement = _subprocessRepository.FindBy(Int32.Parse(Convert.ToString(dr["ID"])));
+										}
+										catch
+										{
+											newElement = new Subprocess(); ;
+										}
+
+									}
+									else
+									{
+										newElement = new Subprocess();
+									}
+
 									newElement.Code = Convert.ToString(dr["codigo"]) ?? "";
 									newElement.Name = Convert.ToString(dr["nome_processo"]) ?? "";
 									subprocessList.Add(newElement);

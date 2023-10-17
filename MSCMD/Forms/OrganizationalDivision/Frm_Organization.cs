@@ -78,14 +78,15 @@ namespace MSCMD
 			if (filterSectorId != 0)
 			{
 				Organization org = GetSectorSelected();
-				Frm_ImportCsv form = new Frm_ImportCsv(Model.ScreenEnum.Agent, this, org);
-				form.ShowDialog();
+				Frm_ImportCsv form = new Frm_ImportCsv(Model.ScreenEnum.Agent, this, org, context);
+				form.Show();
+
 			}
 			else
 			{
 
-				Frm_ImportCsv form = new Frm_ImportCsv(Model.ScreenEnum.Agent, this);
-				form.ShowDialog();
+				Frm_ImportCsv form = new Frm_ImportCsv(Model.ScreenEnum.Agent, this, null, context);
+				form.Show();
 			}
 
 		}
@@ -807,7 +808,7 @@ namespace MSCMD
 		}
 		private void btn_ImportSectors_Click(object sender, EventArgs e)
 		{
-			Frm_ImportCsv form = new Frm_ImportCsv(Model.ScreenEnum.Organization, this);
+			Frm_ImportCsv form = new Frm_ImportCsv(Model.ScreenEnum.Organization, this, null, context);
 			form.ShowDialog();
 		}
 
@@ -990,6 +991,18 @@ namespace MSCMD
 						else
 						{
 							organizationBindingSource.DataSource = lstOrganization.OrderByDescending(x => x.SectorName).ToList();
+						}
+						break;
+					}
+				case "SectorId":
+					{
+						if (sortOrder == SortOrder.Ascending)
+						{
+							organizationBindingSource.DataSource = lstOrganization.OrderBy(x => x.SectorId).ToList();
+						}
+						else
+						{
+							organizationBindingSource.DataSource = lstOrganization.OrderByDescending(x => x.SectorId).ToList();
 						}
 						break;
 					}
@@ -1244,6 +1257,13 @@ namespace MSCMD
 			{
 				MessageBox.Show("Nenhuma função selecionada.", "Aviso");
 			}
+		}
+
+		private void dg_Sectors_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+		{
+			if (e.ColumnIndex == 0)
+				if (dg_Sectors[e.ColumnIndex, e.RowIndex].ReadOnly)
+					e.CellStyle.BackColor = Color.LightGray;
 		}
 	}
 }

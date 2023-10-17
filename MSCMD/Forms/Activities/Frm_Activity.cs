@@ -128,12 +128,12 @@ namespace MSCMD.Forms
 			if (filterGroupId != 0)
 			{
 				Subprocess group = GetSubprocessSelected();
-				Frm_ImportCsv form = new Frm_ImportCsv(Model.ScreenEnum.Activity, this, group);
+				Frm_ImportCsv form = new Frm_ImportCsv(Model.ScreenEnum.Activity, this, group, context);
 				form.ShowDialog();
 			}
 			else
 			{
-				Frm_ImportCsv form = new Frm_ImportCsv(Model.ScreenEnum.Activity, this);
+				Frm_ImportCsv form = new Frm_ImportCsv(Model.ScreenEnum.Activity, this, null, context);
 				form.ShowDialog();
 			}
 
@@ -885,6 +885,18 @@ namespace MSCMD.Forms
 						}
 						break;
 					}
+				case "SubprocessId":
+					{
+						if (sortOrder == SortOrder.Ascending)
+						{
+							subprocessBindingSource.DataSource = list.OrderBy(x => x.SubprocessId).ToList();
+						}
+						else
+						{
+							subprocessBindingSource.DataSource = list.OrderByDescending(x => x.SubprocessId).ToList();
+						}
+						break;
+					}
 
 			}
 
@@ -1093,7 +1105,7 @@ namespace MSCMD.Forms
 		private void btn_ImportSectors_Click(object sender, EventArgs e)
 		{
 
-			Frm_ImportCsv form = new Frm_ImportCsv(ScreenEnum.Subprocess, this);
+			Frm_ImportCsv form = new Frm_ImportCsv(ScreenEnum.Subprocess, this, null, context);
 			form.ShowDialog();
 
 		}
@@ -1330,6 +1342,13 @@ namespace MSCMD.Forms
 				dg_Group.CurrentCell = dg_Group.Rows[dg_Group.NewRowIndex].Cells[2];
 				dg_Group.BeginEdit(true);
 			}));
+		}
+
+		private void dg_Group_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+		{
+			if (e.ColumnIndex == 0)
+				if (dg_Group[e.ColumnIndex, e.RowIndex].ReadOnly)
+					e.CellStyle.BackColor = Color.LightGray;
 		}
 	}
 }

@@ -89,9 +89,6 @@
 			btn_DeleteElementoSelecao = new Button();
 			btn_SetOrganization = new Button();
 			dg_Group = new DataGridView();
-			subsystemIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-			codeDataGridViewTextBoxColumn8 = new DataGridViewTextBoxColumn();
-			nameDataGridViewTextBoxColumn6 = new DataGridViewTextBoxColumn();
 			subsystemBindingSource = new BindingSource(components);
 			lbl_SectorFilter = new Label();
 			btn_DelSubsystem = new Button();
@@ -113,6 +110,9 @@
 			btn_DeleteRelSubsystem = new Button();
 			btn_New = new Button();
 			btn_NewGroup = new Button();
+			subsystemIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+			codeDataGridViewTextBoxColumn8 = new DataGridViewTextBoxColumn();
+			nameDataGridViewTextBoxColumn6 = new DataGridViewTextBoxColumn();
 			((System.ComponentModel.ISupportInitialize)dg_Elementos).BeginInit();
 			((System.ComponentModel.ISupportInitialize)elementBindingSource).BeginInit();
 			((System.ComponentModel.ISupportInitialize)dg_RelacaoElemento).BeginInit();
@@ -743,32 +743,8 @@
 			dg_Group.Size = new Size(534, 219);
 			dg_Group.TabIndex = 2;
 			dg_Group.CellEndEdit += dg_Group_CellEndEdit;
+			dg_Group.CellFormatting += dg_Group_CellFormatting;
 			dg_Group.ColumnHeaderMouseClick += dg_Group_ColumnHeaderMouseClick;
-			// 
-			// subsystemIdDataGridViewTextBoxColumn
-			// 
-			subsystemIdDataGridViewTextBoxColumn.DataPropertyName = "SubsystemId";
-			subsystemIdDataGridViewTextBoxColumn.HeaderText = "Id";
-			subsystemIdDataGridViewTextBoxColumn.MinimumWidth = 6;
-			subsystemIdDataGridViewTextBoxColumn.Name = "subsystemIdDataGridViewTextBoxColumn";
-			subsystemIdDataGridViewTextBoxColumn.Visible = false;
-			subsystemIdDataGridViewTextBoxColumn.Width = 55;
-			// 
-			// codeDataGridViewTextBoxColumn8
-			// 
-			codeDataGridViewTextBoxColumn8.DataPropertyName = "Code";
-			codeDataGridViewTextBoxColumn8.HeaderText = "Código";
-			codeDataGridViewTextBoxColumn8.MinimumWidth = 6;
-			codeDataGridViewTextBoxColumn8.Name = "codeDataGridViewTextBoxColumn8";
-			codeDataGridViewTextBoxColumn8.Width = 90;
-			// 
-			// nameDataGridViewTextBoxColumn6
-			// 
-			nameDataGridViewTextBoxColumn6.DataPropertyName = "Name";
-			nameDataGridViewTextBoxColumn6.HeaderText = "Nome*";
-			nameDataGridViewTextBoxColumn6.MinimumWidth = 6;
-			nameDataGridViewTextBoxColumn6.Name = "nameDataGridViewTextBoxColumn6";
-			nameDataGridViewTextBoxColumn6.Width = 360;
 			// 
 			// subsystemBindingSource
 			// 
@@ -985,6 +961,31 @@
 			btn_NewGroup.Text = "Novo";
 			btn_NewGroup.UseVisualStyleBackColor = true;
 			btn_NewGroup.Click += btn_NewGroup_Click;
+			// 
+			// subsystemIdDataGridViewTextBoxColumn
+			// 
+			subsystemIdDataGridViewTextBoxColumn.DataPropertyName = "SubsystemId";
+			subsystemIdDataGridViewTextBoxColumn.HeaderText = "Id";
+			subsystemIdDataGridViewTextBoxColumn.MinimumWidth = 6;
+			subsystemIdDataGridViewTextBoxColumn.Name = "subsystemIdDataGridViewTextBoxColumn";
+			subsystemIdDataGridViewTextBoxColumn.ReadOnly = true;
+			subsystemIdDataGridViewTextBoxColumn.Width = 55;
+			// 
+			// codeDataGridViewTextBoxColumn8
+			// 
+			codeDataGridViewTextBoxColumn8.DataPropertyName = "Code";
+			codeDataGridViewTextBoxColumn8.HeaderText = "Código";
+			codeDataGridViewTextBoxColumn8.MinimumWidth = 6;
+			codeDataGridViewTextBoxColumn8.Name = "codeDataGridViewTextBoxColumn8";
+			codeDataGridViewTextBoxColumn8.Width = 90;
+			// 
+			// nameDataGridViewTextBoxColumn6
+			// 
+			nameDataGridViewTextBoxColumn6.DataPropertyName = "Name";
+			nameDataGridViewTextBoxColumn6.HeaderText = "Nome*";
+			nameDataGridViewTextBoxColumn6.MinimumWidth = 6;
+			nameDataGridViewTextBoxColumn6.Name = "nameDataGridViewTextBoxColumn6";
+			nameDataGridViewTextBoxColumn6.Width = 360;
 			// 
 			// Frm_Element
 			// 

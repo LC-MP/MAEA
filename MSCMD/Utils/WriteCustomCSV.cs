@@ -57,11 +57,11 @@ namespace MSCMD.Utils
 		{
 			StreamWriter sw = new StreamWriter(strFilePath, false, Encoding.UTF8);
 			//header  
-			sw.Write("codigo;nome_funcao;descricao_funcao;divisao");
+			sw.Write("ID;codigo;nome_funcao;descricao_funcao;divisao");
 			sw.Write(sw.NewLine);
 			foreach (var agent in list)
 			{
-				sw.Write(agent.Code + ";" + agent.Name + ";" + agent.Description);
+				sw.Write(agent.AgentId + ";" + agent.Code + ";" + agent.Name + ";" + agent.Description);
 
 				if(agent.Organizations.Count > 0)
 				{
@@ -87,11 +87,11 @@ namespace MSCMD.Utils
 		{
 			StreamWriter sw = new StreamWriter(strFilePath, false, Encoding.UTF8);
 
-			sw.Write("codigo;nome_atividade;descricao;competencia;periodicidade1;periodicidade2;subprocesso");
+			sw.Write("ID;codigo;nome_atividade;descricao;competencia;periodicidade1;periodicidade2;subprocesso");
 			sw.Write(sw.NewLine);
 			foreach (var item in list)
 			{
-				sw.Write(item.ActivityCode + ";" + item.ActivityName + ";" + item.ActivityDescription + ";" + item.RequiredCompetence
+				sw.Write(item.ActivityId + ";" + item.ActivityCode + ";" + item.ActivityName + ";" + item.ActivityDescription + ";" + item.RequiredCompetence
 					+ ";" + (item.Periodicity1 != null ? Utility.GetEnumDescription(item.Periodicity1) : "") + ";" + (item.Periodicity2 != null ? Utility.GetEnumDescription(item.Periodicity2) : ""));
 			
 				if (item.Subprocesses.Count > 0)
@@ -119,11 +119,11 @@ namespace MSCMD.Utils
 		{
 			StreamWriter sw = new StreamWriter(strFilePath, false, Encoding.UTF8);
 
-			sw.Write("codigo;nome_elemento;tipo_elemento;identificador_externo;classe;tipo_superficie;subsistema");
+			sw.Write("ID;codigo;nome_elemento;tipo_elemento;identificador_externo;classe;tipo_superficie;subsistema");
 			sw.Write(sw.NewLine);
 			foreach (var item in list)
 			{
-				sw.Write(item.Code + ";" + item.Name + ";" + item.Type + ";" + item.ExternalIdentifier
+				sw.Write(item.ElementId + ";" + item.Code + ";" + item.Name + ";" + item.Type + ";" + item.ExternalIdentifier
 					+ ";" + item.ComponentClass + ";" + item.SurfaceType);
 			
 
@@ -151,11 +151,11 @@ namespace MSCMD.Utils
 		{
 			StreamWriter sw = new StreamWriter(strFilePath, false, Encoding.UTF8);
 
-			sw.Write("codigo;nome_setor;descricao_setor");
+			sw.Write("ID;codigo;nome_setor;descricao_setor");
 			sw.Write(sw.NewLine);
 			foreach (var item in list)
 			{
-				sw.Write(item.Code + ";" + item.SectorName + ";" + item.Description);
+				sw.Write(item.SectorId + ";" + item.Code + ";" + item.SectorName + ";" + item.Description);
 				sw.Write(sw.NewLine);
 			}
 			sw.Close();
@@ -164,11 +164,11 @@ namespace MSCMD.Utils
 		{
 			StreamWriter sw = new StreamWriter(strFilePath, false, Encoding.UTF8);
 
-			sw.Write("codigo;nome_processo");
+			sw.Write("ID;codigo;nome_processo");
 			sw.Write(sw.NewLine);
 			foreach (var item in list)
 			{
-				sw.Write(item.Code + ";" + item.Name);
+				sw.Write(item.SubprocessId + ";" + item.Code + ";" + item.Name);
 				sw.Write(sw.NewLine);
 			}
 			sw.Close();
@@ -177,11 +177,11 @@ namespace MSCMD.Utils
 		{
 			StreamWriter sw = new StreamWriter(strFilePath, false, Encoding.UTF8);
 
-			sw.Write("codigo;nome;competencias;contato;registro;tipo_pessoa");
+			sw.Write("ID;codigo;nome;competencias;contato;registro;tipo_pessoa");
 			sw.Write(sw.NewLine);
 			foreach (var item in list)
 			{
-				sw.Write(item.Code + ";" + item.Name + ";" + item.Competences + ";" + item.Contact + ";" + item.Registry + ";" + item.Type);
+				sw.Write(item.PersonId + ";" + item.Code + ";" + item.Name + ";" + item.Competences + ";" + item.Contact + ";" + item.Registry + ";" + item.Type);
 				sw.Write(sw.NewLine);
 			}
 			sw.Close();
@@ -191,11 +191,11 @@ namespace MSCMD.Utils
 		{
 			StreamWriter sw = new StreamWriter(strFilePath, false, Encoding.UTF8);
 
-			sw.Write("codigo;nome_sistema");
+			sw.Write("ID;codigo;nome_sistema");
 			sw.Write(sw.NewLine);
 			foreach (var item in list)
 			{
-				sw.Write(item.Code + ";" + item.Name);
+				sw.Write(item.SubsystemId + ";" + item.Code + ";" + item.Name);
 				sw.Write(sw.NewLine);
 			}
 			sw.Close();
