@@ -31,6 +31,7 @@
 // FAPESP process number: 2020/15909-8
 
 using HarfBuzzSharp;
+using LiveChartsCore.SkiaSharpView.Painting;
 using MSCMD.Forms.DataVisualization;
 using MSCMD.Model;
 using MSCMD.Repository;
@@ -201,6 +202,8 @@ namespace MSCMD.Forms
 			btn_DownloadComponentComparativeMatrixWithRedundancy.Enabled = false;
 			btn_Priorities.Enabled = false;
 			btn_Paralelism.Enabled = false;
+			btn_DownloadPriorities.Enabled = false;
+			btn_DownloadParalelism.Enabled = false;
 			btn_ExportAllResults.Enabled = false;
 
 		}
@@ -268,8 +271,8 @@ namespace MSCMD.Forms
 				CheckStatus(lbl_checkActivityWithRedundacy, comparativeActivityMatrixWithRedundancy != null && comparativeActivityMatrixWithRedundancy.Count > 0, btn_ComparativeMatrixWithRedundancies, btn_DownloadActivityComparativeMatrixWithRedundancy);
 				CheckStatus(lbl_checkElementWithoutRedundacy, comparativeComponentMatrix != null && comparativeComponentMatrix.Count > 0, btn_ComponentComparativeMatrixWithoutRedundancies, btn_DownloadComponentComparativeMatrix);
 				CheckStatus(lbl_checkElementWithRedundacy, comparativeComponentMatrixWithRedundancy != null && comparativeComponentMatrixWithRedundancy.Count > 0, btn_ComponentComparativeMatrixWithRedundancies, btn_DownloadComponentComparativeMatrixWithRedundancy);
-				CheckStatus(lbl_CheckPriorities, activitiesPriorities != null && activitiesPriorities.Count > 0, btn_Priorities, btn_Priorities);
-				CheckStatus(lbl_CheckParalelism, parallelizationList != null && parallelizationList.Count > 0, btn_Paralelism, btn_Paralelism);
+				CheckStatus(lbl_CheckPriorities, activitiesPriorities != null && activitiesPriorities.Count > 0, btn_Priorities, btn_DownloadPriorities);
+				CheckStatus(lbl_CheckParalelism, parallelizationList != null && parallelizationList.Count > 0, btn_Paralelism, btn_DownloadParalelism);
 
 			}, TaskScheduler.FromCurrentSynchronizationContext());
 
@@ -762,22 +765,31 @@ namespace MSCMD.Forms
 				{
 					try
 					{
-						string sourceFileComparativeComponentMatrix = Path.Combine(dir, fileNameComparativeComponentMatrix);
-						string destFileComparativeComponentMatrix = Path.Combine(fbd.SelectedPath, fileNameComparativeComponentMatrix);
-						File.Copy(sourceFileComparativeComponentMatrix, destFileComparativeComponentMatrix);
+						if (btn_DownloadComponentComparativeMatrix.Enabled)
+						{
+							string sourceFileComparativeComponentMatrix = Path.Combine(dir, fileNameComparativeComponentMatrix);
+							string destFileComparativeComponentMatrix = Path.Combine(fbd.SelectedPath, fileNameComparativeComponentMatrix);
+							File.Copy(sourceFileComparativeComponentMatrix, destFileComparativeComponentMatrix);
+						}
 
-						string sourceFileComparativeActivityMatrixWithRedundancy = Path.Combine(dir, fileNameComparativeActivityMatrixWithRedundancy);
-						string destFileComparativeActivityMatrixWithRedundancy = Path.Combine(fbd.SelectedPath, fileNameComparativeActivityMatrixWithRedundancy);
-						File.Copy(sourceFileComparativeActivityMatrixWithRedundancy, destFileComparativeActivityMatrixWithRedundancy);
-
-						string sourceFileComparativeActivityMatrix = Path.Combine(dir, fileNameComparativeActivityMatrix);
-						string destFileComparativeActivityMatrix = Path.Combine(fbd.SelectedPath, fileNameComparativeActivityMatrix);
-						File.Copy(sourceFileComparativeActivityMatrix, destFileComparativeActivityMatrix);
-
-						string sourceFileComparativeComponentMatrixWithRedundancy = Path.Combine(dir, fileNameComparativeComponentMatrixWithRedundancy);
-						string destFileComparativeComponentMatrixWithRedundancy = Path.Combine(fbd.SelectedPath, fileNameComparativeComponentMatrixWithRedundancy);
-						File.Copy(sourceFileComparativeComponentMatrixWithRedundancy, destFileComparativeComponentMatrixWithRedundancy);
-
+						if (btn_DownloadActivityComparativeMatrixWithRedundancy.Enabled)
+						{
+							string sourceFileComparativeActivityMatrixWithRedundancy = Path.Combine(dir, fileNameComparativeActivityMatrixWithRedundancy);
+							string destFileComparativeActivityMatrixWithRedundancy = Path.Combine(fbd.SelectedPath, fileNameComparativeActivityMatrixWithRedundancy);
+							File.Copy(sourceFileComparativeActivityMatrixWithRedundancy, destFileComparativeActivityMatrixWithRedundancy);
+						}
+						if (btn_DownloadActivityComparativeMatrix.Enabled)
+						{
+							string sourceFileComparativeActivityMatrix = Path.Combine(dir, fileNameComparativeActivityMatrix);
+							string destFileComparativeActivityMatrix = Path.Combine(fbd.SelectedPath, fileNameComparativeActivityMatrix);
+							File.Copy(sourceFileComparativeActivityMatrix, destFileComparativeActivityMatrix);
+						}
+						if (btn_DownloadComponentComparativeMatrixWithRedundancy.Enabled)
+						{
+							string sourceFileComparativeComponentMatrixWithRedundancy = Path.Combine(dir, fileNameComparativeComponentMatrixWithRedundancy);
+							string destFileComparativeComponentMatrixWithRedundancy = Path.Combine(fbd.SelectedPath, fileNameComparativeComponentMatrixWithRedundancy);
+							File.Copy(sourceFileComparativeComponentMatrixWithRedundancy, destFileComparativeComponentMatrixWithRedundancy);
+						}
 						string fileName1 = "Relationship.csv";
 						string destFile1 = Path.Combine(fbd.SelectedPath, fileName1);
 						bool status1 = mscmdService.WriteTotalAffiliationsMatrix(destFile1);
@@ -791,6 +803,23 @@ namespace MSCMD.Forms
 						string destFile3 = Path.Combine(fbd.SelectedPath, fileName3);
 						bool status3 = mscmdService.WriteActivityMatrix(destFile3);
 
+						if (parallelizationList != null && parallelizationList.Count > 0)
+						{
+							string destPralelism = Path.Combine(fbd.SelectedPath, "Paralelismo_atividades.txt");
+							WriteParalelizationTxt(parallelizationList, destPralelism);
+						}
+
+						if (activitiesPriorities != null && activitiesPriorities.Count > 0)
+						{
+							string destPriority = Path.Combine(fbd.SelectedPath, "Prioridade_atividades.txt");
+							WritePrioritiesTxt(activitiesPriorities, destPriority);
+						}
+
+						string destProcessData = Path.Combine(fbd.SelectedPath, "Dados_processamento.txt");
+						WriteProcessTxt(destProcessData);
+
+						string destErrorsData = Path.Combine(fbd.SelectedPath, "Relatorio_de_erro.txt");
+						WriteErrorLogTxt(destErrorsData);
 
 						MessageBox.Show("Arquivos salvos na pasta: " + fbd.SelectedPath, "Arquivo baixado com sucesso");
 
@@ -844,6 +873,57 @@ namespace MSCMD.Forms
 				MessageBox.Show("Não há dados para serem exibidos.", "Aviso");
 			}
 
+		}
+
+		private void WritePrioritiesTxt(List<PriorityViewModel> activitiesPriorities, string path)
+		{
+			using (TextWriter tw = new StreamWriter(path))
+			{
+				foreach (PriorityViewModel p in activitiesPriorities)
+				{
+					tw.WriteLine(p.ToString());
+				}
+				tw.Close();
+			}
+		}
+		private void WriteParalelizationTxt(List<SortedSet<string>> parallelizationList, string path)
+		{
+			using (TextWriter tw = new StreamWriter(path))
+			{
+				string parallelizations = "";
+				foreach (var item in parallelizationList)
+				{
+					foreach (var item2 in item)
+					{
+						parallelizations += item2.ToString() + ", ";
+
+					}
+					parallelizations += "\r\n";
+
+					tw.WriteLine(parallelizations);
+				}
+
+			}
+		}
+
+		private void WriteProcessTxt(string path)
+		{
+			using (TextWriter tw = new StreamWriter(path))
+			{
+				tw.WriteLine("Nome do Projeto:" + rtxtb_NomeProjeto.Text);
+				tw.WriteLine(lbl_processStatus.Text);
+				tw.WriteLine("Anotações sobre o Projeto:" + rtxtb_DescProjeto.Text);
+	
+			}
+		}	
+		
+		private void WriteErrorLogTxt(string path)
+		{
+			using (TextWriter tw = new StreamWriter(path))
+			{
+				tw.WriteLine(mscmdService.errorLog);
+	
+			}
 		}
 
 		private void button1_Click(object sender, EventArgs e)
@@ -912,6 +992,56 @@ namespace MSCMD.Forms
 			}
 		}
 
+		private void btn_DownloadPriorities_Click(object sender, EventArgs e)
+		{
+			using (var fbd = new FolderBrowserDialog())
+			{
+				DialogResult result = fbd.ShowDialog();
 
+				if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+				{
+					try
+					{
+						
+
+						if (activitiesPriorities != null && activitiesPriorities.Count > 0)
+						{
+							string destPriority = Path.Combine(fbd.SelectedPath, "Prioridade_atividades.txt");
+							WritePrioritiesTxt(activitiesPriorities, destPriority);
+						}
+
+					}
+					catch (Exception ex)
+					{
+						MessageBox.Show(ex.Message, "Aviso");
+					}
+				}
+			}
+		}
+
+		private void btn_DownloadParalelism_Click(object sender, EventArgs e)
+		{
+			using (var fbd = new FolderBrowserDialog())
+			{
+				DialogResult result = fbd.ShowDialog();
+
+				if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+				{
+					try
+					{
+						if (parallelizationList != null && parallelizationList.Count > 0)
+						{
+							string destPralelism = Path.Combine(fbd.SelectedPath, "Paralelismo_atividades.txt");
+							WriteParalelizationTxt(parallelizationList, destPralelism);
+						}
+
+					}
+					catch (Exception ex)
+					{
+						MessageBox.Show(ex.Message, "Aviso");
+					}
+				}
+			}
+		}
 	}
 }

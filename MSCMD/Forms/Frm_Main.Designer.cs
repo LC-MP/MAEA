@@ -77,6 +77,8 @@
 			label4 = new Label();
 			label5 = new Label();
 			label6 = new Label();
+			btn_DownloadParalelism = new Button();
+			btn_DownloadPriorities = new Button();
 			SuspendLayout();
 			// 
 			// lbl_Titulo
@@ -507,7 +509,7 @@
 			btn_Priorities.Font = new Font("Segoe UI", 8F, FontStyle.Regular, GraphicsUnit.Point);
 			btn_Priorities.Location = new Point(919, 385);
 			btn_Priorities.Name = "btn_Priorities";
-			btn_Priorities.Size = new Size(284, 29);
+			btn_Priorities.Size = new Size(267, 29);
 			btn_Priorities.TabIndex = 20;
 			btn_Priorities.Text = "Relação de prioridade de atividades";
 			btn_Priorities.UseVisualStyleBackColor = true;
@@ -527,7 +529,7 @@
 			btn_Paralelism.Font = new Font("Segoe UI", 8F, FontStyle.Regular, GraphicsUnit.Point);
 			btn_Paralelism.Location = new Point(919, 429);
 			btn_Paralelism.Name = "btn_Paralelism";
-			btn_Paralelism.Size = new Size(284, 29);
+			btn_Paralelism.Size = new Size(267, 29);
 			btn_Paralelism.TabIndex = 21;
 			btn_Paralelism.Text = "Relação de paralelismo entre atividades";
 			btn_Paralelism.UseVisualStyleBackColor = true;
@@ -558,7 +560,7 @@
 			btn_ExportAllResults.Name = "btn_ExportAllResults";
 			btn_ExportAllResults.Size = new Size(197, 39);
 			btn_ExportAllResults.TabIndex = 60;
-			btn_ExportAllResults.Text = "Salvar todas as matrizes";
+			btn_ExportAllResults.Text = "Salvar todos os resultados";
 			btn_ExportAllResults.UseVisualStyleBackColor = true;
 			btn_ExportAllResults.Click += btn_ExportAllResults_Click;
 			// 
@@ -585,13 +587,41 @@
 			label6.Name = "label6";
 			label6.Size = new Size(345, 54);
 			label6.TabIndex = 63;
-			label6.Text = "- clicar em [salvar todas as matrizes] ";
+			label6.Text = "- clicar em [salvar todos os resultados] ";
+			// 
+			// btn_DownloadParalelism
+			// 
+			btn_DownloadParalelism.BackgroundImage = Properties.Resources.download_icon_black;
+			btn_DownloadParalelism.BackgroundImageLayout = ImageLayout.Center;
+			btn_DownloadParalelism.Location = new Point(1188, 427);
+			btn_DownloadParalelism.Margin = new Padding(3, 4, 3, 4);
+			btn_DownloadParalelism.Name = "btn_DownloadParalelism";
+			btn_DownloadParalelism.Size = new Size(35, 31);
+			btn_DownloadParalelism.TabIndex = 64;
+			btn_DownloadParalelism.Text = "\r\n";
+			btn_DownloadParalelism.UseVisualStyleBackColor = true;
+			btn_DownloadParalelism.Click += btn_DownloadParalelism_Click;
+			// 
+			// btn_DownloadPriorities
+			// 
+			btn_DownloadPriorities.BackgroundImage = Properties.Resources.download_icon_black;
+			btn_DownloadPriorities.BackgroundImageLayout = ImageLayout.Center;
+			btn_DownloadPriorities.Location = new Point(1188, 385);
+			btn_DownloadPriorities.Margin = new Padding(3, 4, 3, 4);
+			btn_DownloadPriorities.Name = "btn_DownloadPriorities";
+			btn_DownloadPriorities.Size = new Size(35, 31);
+			btn_DownloadPriorities.TabIndex = 65;
+			btn_DownloadPriorities.Text = "\r\n";
+			btn_DownloadPriorities.UseVisualStyleBackColor = true;
+			btn_DownloadPriorities.Click += btn_DownloadPriorities_Click;
 			// 
 			// Frm_Main
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
 			AutoScaleMode = AutoScaleMode.Font;
 			ClientSize = new Size(1685, 753);
+			Controls.Add(btn_DownloadPriorities);
+			Controls.Add(btn_DownloadParalelism);
 			Controls.Add(label6);
 			Controls.Add(label5);
 			Controls.Add(label4);
@@ -699,5 +729,7 @@
 		private Label label4;
 		private Label label5;
 		private Label label6;
+		private Button btn_DownloadParalelism;
+		private Button btn_DownloadPriorities;
 	}
 }
