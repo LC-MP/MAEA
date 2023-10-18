@@ -20,7 +20,8 @@ namespace MSCMD.Model
 		ActivityElementRelationship,
 		ElementActivityRelationship,
 		ActivityAgentRelationship,
-		AgentActivityRelationship
+		AgentActivityRelationship,
+		AgentResourceRelationship
 
 	}
 }

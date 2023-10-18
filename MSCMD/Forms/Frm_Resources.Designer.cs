@@ -72,7 +72,7 @@
 			dg_HumanResource.RowTemplate.Height = 29;
 			dg_HumanResource.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 			dg_HumanResource.Size = new Size(1625, 758);
-			dg_HumanResource.TabIndex = 2;
+			dg_HumanResource.TabIndex = 3;
 			dg_HumanResource.DataError += dg_HumanResource_DataError;
 			dg_HumanResource.Leave += dg_HumanResource_Leave;
 			// 
@@ -145,7 +145,7 @@
 			btn_Delete.Location = new Point(1457, 830);
 			btn_Delete.Name = "btn_Delete";
 			btn_Delete.Size = new Size(192, 29);
-			btn_Delete.TabIndex = 5;
+			btn_Delete.TabIndex = 6;
 			btn_Delete.Text = "Deletar itens selecionados";
 			btn_Delete.UseVisualStyleBackColor = true;
 			btn_Delete.Click += btn_Delete_Click;
@@ -156,7 +156,7 @@
 			btn_Save.Location = new Point(1518, 12);
 			btn_Save.Name = "btn_Save";
 			btn_Save.Size = new Size(166, 29);
-			btn_Save.TabIndex = 6;
+			btn_Save.TabIndex = 2;
 			btn_Save.Text = "Salvar alterações";
 			btn_Save.UseVisualStyleBackColor = true;
 			btn_Save.Click += btn_Save_Click;
@@ -168,7 +168,7 @@
 			btn_ImportPessoas.Margin = new Padding(3, 4, 3, 4);
 			btn_ImportPessoas.Name = "btn_ImportPessoas";
 			btn_ImportPessoas.Size = new Size(147, 31);
-			btn_ImportPessoas.TabIndex = 7;
+			btn_ImportPessoas.TabIndex = 5;
 			btn_ImportPessoas.Text = "Importar .csv";
 			btn_ImportPessoas.UseVisualStyleBackColor = true;
 			btn_ImportPessoas.Click += btn_ImportPessoas_Click;
@@ -180,7 +180,7 @@
 			btn_ExportCsv.Margin = new Padding(3, 4, 3, 4);
 			btn_ExportCsv.Name = "btn_ExportCsv";
 			btn_ExportCsv.Size = new Size(147, 31);
-			btn_ExportCsv.TabIndex = 8;
+			btn_ExportCsv.TabIndex = 4;
 			btn_ExportCsv.Text = "Exportar .csv";
 			btn_ExportCsv.UseVisualStyleBackColor = true;
 			btn_ExportCsv.Click += btn_ExportCsv_Click;

@@ -4,9 +4,9 @@
 
 // MIT License
 //
-// Copyright (c) 2023 Daniela Cariolin Mazzi <daniela.cmazzi@gmail.com>,
-//                    Jean Amaro <jean.amaro@outlook.com.br>,
-//                    Lucas Melchiori Pereira <lc.melchiori@gmail.com>
+// Copyright (c) 2023 Jean Amaro <jean.amaro@outlook.com.br>
+// Copyright (c) 2023 Lucas Melchiori Pereira <lc.melchiori@gmail.com>
+// Copyright (c) 2023 Daniela Cariolin Mazzi <daniela.cmazzi@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -31,6 +31,7 @@
 // FAPESP process number: 2020/15909-8
 
 using HarfBuzzSharp;
+using LiveChartsCore.SkiaSharpView.Painting;
 using MSCMD.Forms.DataVisualization;
 using MSCMD.Model;
 using MSCMD.Repository;
@@ -201,6 +202,9 @@ namespace MSCMD.Forms
 			btn_DownloadComponentComparativeMatrixWithRedundancy.Enabled = false;
 			btn_Priorities.Enabled = false;
 			btn_Paralelism.Enabled = false;
+			btn_DownloadPriorities.Enabled = false;
+			btn_DownloadParalelism.Enabled = false;
+			btn_ExportAllResults.Enabled = false;
 
 		}
 
@@ -258,6 +262,7 @@ namespace MSCMD.Forms
 				lbl_processStatus.Text = "Processamento: " + DateTime.Now.ToString(@"dd\/MM\/yyyy HH:mm");
 				btn_ProcessData.Enabled = true;
 				btn_errorLog.Enabled = true;
+				btn_ExportAllResults.Enabled = true;
 
 				CheckStatus(lbl_checkActivity, activitiesDependenciesMatrix != null && activitiesDependenciesMatrix.Count > 0, btn_ActivitiesDependenciesMatrix, btn_DownloadActivivtyMatrix);
 				CheckStatus(lbl_checkComponents, componentsInterfacesMatrix != null && componentsInterfacesMatrix.Count > 0, btn_ComponentsInterfacesMatrix, btn_DownloadElementMatrix);
@@ -266,8 +271,8 @@ namespace MSCMD.Forms
 				CheckStatus(lbl_checkActivityWithRedundacy, comparativeActivityMatrixWithRedundancy != null && comparativeActivityMatrixWithRedundancy.Count > 0, btn_ComparativeMatrixWithRedundancies, btn_DownloadActivityComparativeMatrixWithRedundancy);
 				CheckStatus(lbl_checkElementWithoutRedundacy, comparativeComponentMatrix != null && comparativeComponentMatrix.Count > 0, btn_ComponentComparativeMatrixWithoutRedundancies, btn_DownloadComponentComparativeMatrix);
 				CheckStatus(lbl_checkElementWithRedundacy, comparativeComponentMatrixWithRedundancy != null && comparativeComponentMatrixWithRedundancy.Count > 0, btn_ComponentComparativeMatrixWithRedundancies, btn_DownloadComponentComparativeMatrixWithRedundancy);
-				CheckStatus(lbl_CheckPriorities, activitiesPriorities != null && activitiesPriorities.Count > 0, btn_Priorities, btn_Priorities);
-				CheckStatus(lbl_CheckParalelism, parallelizationList != null && parallelizationList.Count > 0, btn_Paralelism, btn_Paralelism);
+				CheckStatus(lbl_CheckPriorities, activitiesPriorities != null && activitiesPriorities.Count > 0, btn_Priorities, btn_DownloadPriorities);
+				CheckStatus(lbl_CheckParalelism, parallelizationList != null && parallelizationList.Count > 0, btn_Paralelism, btn_DownloadParalelism);
 
 			}, TaskScheduler.FromCurrentSynchronizationContext());
 
@@ -662,8 +667,8 @@ namespace MSCMD.Forms
 				{
 					try
 					{
-						string sourceFile = Path.Combine(dir, fileNameComparativeComponentMatrix);
-						string destFile = Path.Combine(fbd.SelectedPath, fileNameComparativeComponentMatrix);
+						string sourceFile = Path.Combine(dir, fileNameComparativeActivityMatrix);
+						string destFile = Path.Combine(fbd.SelectedPath, fileNameComparativeActivityMatrix);
 
 						File.Copy(sourceFile, destFile);
 
@@ -749,6 +754,86 @@ namespace MSCMD.Forms
 			}
 		}
 
+		private void btn_ExportAllResults_Click(object sender, EventArgs e)
+		{
+
+			using (var fbd = new FolderBrowserDialog())
+			{
+				DialogResult result = fbd.ShowDialog();
+
+				if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+				{
+					try
+					{
+						if (btn_DownloadComponentComparativeMatrix.Enabled)
+						{
+							string sourceFileComparativeComponentMatrix = Path.Combine(dir, fileNameComparativeComponentMatrix);
+							string destFileComparativeComponentMatrix = Path.Combine(fbd.SelectedPath, fileNameComparativeComponentMatrix);
+							File.Copy(sourceFileComparativeComponentMatrix, destFileComparativeComponentMatrix);
+						}
+
+						if (btn_DownloadActivityComparativeMatrixWithRedundancy.Enabled)
+						{
+							string sourceFileComparativeActivityMatrixWithRedundancy = Path.Combine(dir, fileNameComparativeActivityMatrixWithRedundancy);
+							string destFileComparativeActivityMatrixWithRedundancy = Path.Combine(fbd.SelectedPath, fileNameComparativeActivityMatrixWithRedundancy);
+							File.Copy(sourceFileComparativeActivityMatrixWithRedundancy, destFileComparativeActivityMatrixWithRedundancy);
+						}
+						if (btn_DownloadActivityComparativeMatrix.Enabled)
+						{
+							string sourceFileComparativeActivityMatrix = Path.Combine(dir, fileNameComparativeActivityMatrix);
+							string destFileComparativeActivityMatrix = Path.Combine(fbd.SelectedPath, fileNameComparativeActivityMatrix);
+							File.Copy(sourceFileComparativeActivityMatrix, destFileComparativeActivityMatrix);
+						}
+						if (btn_DownloadComponentComparativeMatrixWithRedundancy.Enabled)
+						{
+							string sourceFileComparativeComponentMatrixWithRedundancy = Path.Combine(dir, fileNameComparativeComponentMatrixWithRedundancy);
+							string destFileComparativeComponentMatrixWithRedundancy = Path.Combine(fbd.SelectedPath, fileNameComparativeComponentMatrixWithRedundancy);
+							File.Copy(sourceFileComparativeComponentMatrixWithRedundancy, destFileComparativeComponentMatrixWithRedundancy);
+						}
+						string fileName1 = "Relationship.csv";
+						string destFile1 = Path.Combine(fbd.SelectedPath, fileName1);
+						bool status1 = mscmdService.WriteTotalAffiliationsMatrix(destFile1);
+
+
+						string fileName2 = "ElementMatrix.csv";
+						string destFile2 = Path.Combine(fbd.SelectedPath, fileName2);
+						bool status2 = mscmdService.WriteComponentsMatrix(destFile2);
+
+						string fileName3 = "ActivityMatrix.csv";
+						string destFile3 = Path.Combine(fbd.SelectedPath, fileName3);
+						bool status3 = mscmdService.WriteActivityMatrix(destFile3);
+
+						if (parallelizationList != null && parallelizationList.Count > 0)
+						{
+							string destPralelism = Path.Combine(fbd.SelectedPath, "Paralelismo_atividades.txt");
+							WriteParalelizationTxt(parallelizationList, destPralelism);
+						}
+
+						if (activitiesPriorities != null && activitiesPriorities.Count > 0)
+						{
+							string destPriority = Path.Combine(fbd.SelectedPath, "Prioridade_atividades.txt");
+							WritePrioritiesTxt(activitiesPriorities, destPriority);
+						}
+
+						string destProcessData = Path.Combine(fbd.SelectedPath, "Dados_processamento.txt");
+						WriteProcessTxt(destProcessData);
+
+						string destErrorsData = Path.Combine(fbd.SelectedPath, "Relatorio_de_erro.txt");
+						WriteErrorLogTxt(destErrorsData);
+
+						MessageBox.Show("Arquivos salvos na pasta: " + fbd.SelectedPath, "Arquivo baixado com sucesso");
+
+
+					}
+					catch (Exception ex)
+					{
+						MessageBox.Show(ex.Message, "Aviso");
+					}
+				}
+			}
+
+		}
+
 		private void btn_DeleteAll_Click(object sender, EventArgs e)
 		{
 			string dir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
@@ -790,12 +875,172 @@ namespace MSCMD.Forms
 
 		}
 
+		private void WritePrioritiesTxt(List<PriorityViewModel> activitiesPriorities, string path)
+		{
+			using (TextWriter tw = new StreamWriter(path))
+			{
+				foreach (PriorityViewModel p in activitiesPriorities)
+				{
+					tw.WriteLine(p.ToString());
+				}
+				tw.Close();
+			}
+		}
+		private void WriteParalelizationTxt(List<SortedSet<string>> parallelizationList, string path)
+		{
+			using (TextWriter tw = new StreamWriter(path))
+			{
+				string parallelizations = "";
+				foreach (var item in parallelizationList)
+				{
+					foreach (var item2 in item)
+					{
+						parallelizations += item2.ToString() + ", ";
+
+					}
+					parallelizations += "\r\n";
+
+					tw.WriteLine(parallelizations);
+				}
+
+			}
+		}
+
+		private void WriteProcessTxt(string path)
+		{
+			using (TextWriter tw = new StreamWriter(path))
+			{
+				tw.WriteLine("Nome do Projeto:" + rtxtb_NomeProjeto.Text);
+				tw.WriteLine(lbl_processStatus.Text);
+				tw.WriteLine("Anotações sobre o Projeto:" + rtxtb_DescProjeto.Text);
+
+			}
+		}
+
+		private void WriteErrorLogTxt(string path)
+		{
+			using (TextWriter tw = new StreamWriter(path))
+			{
+				tw.WriteLine(mscmdService.errorLog);
+
+			}
+		}
+
 		private void button1_Click(object sender, EventArgs e)
 		{
 			if (parallelizationList != null && parallelizationList.Count > 0)
 			{
 				Frm_Parallelism frm = new Frm_Parallelism(parallelizationList);
 				frm.ShowDialog();
+			}
+		}
+
+		private void btn_SaveTemplates_Click(object sender, EventArgs e)
+		{
+
+			string[] fileNames = {
+				"1.1_divisão.csv",
+				"1.2_funcao.csv",
+				"2.1_processo.csv",
+				"2.2_atividade.csv",
+				"3.1_sistema.csv",
+				"3.2_elemento.csv",
+				"5.1_relacoes_AtividadexFunção.csv",
+				"5.2_relacoes_AtividadexAtividade.csv",
+				"5.3_relacoes_AtividadexElemento.csv",
+				"5.4_relacoes_ElementoxElemento.csv"
+			};
+
+			string folderName = "TemplatesCSV/";
+
+
+			if (fileNames.Count() > 0)
+			{
+				using (var fbd = new FolderBrowserDialog())
+				{
+					DialogResult result = fbd.ShowDialog();
+
+					if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+					{
+						try
+						{
+							string dir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+
+							foreach (string file in fileNames)
+							{
+								string sourceFile = Path.Combine(dir, folderName + file);
+								string destFile = Path.Combine(fbd.SelectedPath, file);
+
+								File.Copy(sourceFile, destFile);
+							}
+
+							MessageBox.Show("Arquivos salvo na pasta: " + fbd.SelectedPath, "Arquivos baixado com sucesso");
+
+						}
+						catch (Exception ex)
+						{
+							MessageBox.Show(ex.Message, "Aviso");
+						}
+					}
+				}
+
+			}
+			else
+			{
+				MessageBox.Show("Nenhum arquivo para baixar.", "Baixar Modelo");
+
+			}
+		}
+
+		private void btn_DownloadPriorities_Click(object sender, EventArgs e)
+		{
+			using (var fbd = new FolderBrowserDialog())
+			{
+				DialogResult result = fbd.ShowDialog();
+
+				if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+				{
+					try
+					{
+
+
+						if (activitiesPriorities != null && activitiesPriorities.Count > 0)
+						{
+							string destPriority = Path.Combine(fbd.SelectedPath, "Prioridade_atividades.txt");
+							WritePrioritiesTxt(activitiesPriorities, destPriority);
+						}
+
+					}
+					catch (Exception ex)
+					{
+						MessageBox.Show(ex.Message, "Aviso");
+					}
+				}
+			}
+		}
+
+		private void btn_DownloadParalelism_Click(object sender, EventArgs e)
+		{
+			using (var fbd = new FolderBrowserDialog())
+			{
+				DialogResult result = fbd.ShowDialog();
+
+				if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+				{
+					try
+					{
+						if (parallelizationList != null && parallelizationList.Count > 0)
+						{
+							string destPralelism = Path.Combine(fbd.SelectedPath, "Paralelismo_atividades.txt");
+							WriteParalelizationTxt(parallelizationList, destPralelism);
+						}
+
+					}
+					catch (Exception ex)
+					{
+						MessageBox.Show(ex.Message, "Aviso");
+					}
+				}
 			}
 		}
 	}

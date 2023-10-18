@@ -97,7 +97,7 @@ namespace MSCMD.Repository
 		{
 			foreach (Subsystem sub in subsystem)
 			{
-				AddNew(sub);
+				Save(sub);
 			}
 
 		}

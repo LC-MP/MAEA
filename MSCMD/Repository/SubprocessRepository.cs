@@ -94,7 +94,7 @@ namespace MSCMD.Repository
 		{
 			foreach (Subprocess sub in subprocess)
 			{
-				AddNew(sub);
+				Save(sub);
 			}
 
 		}

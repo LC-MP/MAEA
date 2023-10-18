@@ -7,6 +7,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <Platforms>AnyCPU;x64</Platforms>
+    <ApplicationIcon>Resources\analytics_icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,13 +26,18 @@
     <None Remove="TemplatesCSV\2.2_atividade.csv" />
     <None Remove="TemplatesCSV\3.1_sistema.csv" />
     <None Remove="TemplatesCSV\3.2_elemento.csv" />
+    <None Remove="TemplatesCSV\4.1_recurso.csv" />
     <None Remove="TemplatesCSV\5.1_relacoes_AtividadexFunção.csv" />
     <None Remove="TemplatesCSV\5.2_relacoes_AtividadexAtividade.csv" />
     <None Remove="TemplatesCSV\5.3_relacoes_AtividadexElemento.csv" />
     <None Remove="TemplatesCSV\5.4_relacoes_ElementoxElemento.csv" />
+    <None Remove="TemplatesCSV\5.5_relacoes_FuncaoxRecurso.csv" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Resources\analytics_icon.ico">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
     <Content Include="TemplatesCSV\1.1_divisão.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -50,6 +56,9 @@
     <Content Include="TemplatesCSV\3.2_elemento.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="TemplatesCSV\4.1_recurso.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="TemplatesCSV\5.1_relacoes_AtividadexFunção.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -60,6 +69,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="TemplatesCSV\5.4_relacoes_ElementoxElemento.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TemplatesCSV\5.5_relacoes_FuncaoxRecurso.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

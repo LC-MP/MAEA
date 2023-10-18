@@ -15,6 +15,7 @@ namespace MSCMD.Repository
 		void Save(HumanResource person);
 		IEnumerable<HumanResource> ListAll();
 		HumanResource FindBy(int personId);
+		HumanResource? FindByCode(string code);
 		void Delete(HumanResource person);
 	}
 
@@ -71,6 +72,21 @@ namespace MSCMD.Repository
 			return _context.HumanResources.First(f => f.PersonId == personId);
 		}
 
+		public HumanResource? FindByCode(string code)
+		{
+			var resource = _context.HumanResources.Where(f => f.Code == code);
+
+			if (resource.Any())
+			{
+				return resource.FirstOrDefault();
+			}
+			else
+			{
+				return null;
+			}
+
+		}
+
 		public void Delete(HumanResource person)
 		{
 			_context.HumanResources.Remove(person);
@@ -81,7 +97,7 @@ namespace MSCMD.Repository
 		{
 			foreach (HumanResource person in people)
 			{
-				AddNew(person);
+				Save(person);
 			}
 
 		}

@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Frm_Main));
 			lbl_Titulo = new Label();
 			rtxtb_DescProjeto = new RichTextBox();
 			lbl_NomeProj = new Label();
@@ -72,6 +73,13 @@
 			lbl_CheckPriorities = new Label();
 			btn_Paralelism = new Button();
 			lbl_CheckParalelism = new Label();
+			btn_SaveTemplates = new Button();
+			btn_ExportAllResults = new Button();
+			label4 = new Label();
+			label5 = new Label();
+			label6 = new Label();
+			btn_DownloadParalelism = new Button();
+			btn_DownloadPriorities = new Button();
 			SuspendLayout();
 			// 
 			// lbl_Titulo
@@ -90,7 +98,7 @@
 			rtxtb_DescProjeto.Margin = new Padding(3, 4, 3, 4);
 			rtxtb_DescProjeto.Name = "rtxtb_DescProjeto";
 			rtxtb_DescProjeto.Size = new Size(413, 328);
-			rtxtb_DescProjeto.TabIndex = 3;
+			rtxtb_DescProjeto.TabIndex = 4;
 			rtxtb_DescProjeto.Text = "";
 			// 
 			// lbl_NomeProj
@@ -99,7 +107,7 @@
 			lbl_NomeProj.Location = new Point(23, 97);
 			lbl_NomeProj.Name = "lbl_NomeProj";
 			lbl_NomeProj.Size = new Size(125, 20);
-			lbl_NomeProj.TabIndex = 4;
+			lbl_NomeProj.TabIndex = 1;
 			lbl_NomeProj.Text = "Nome do projeto";
 			// 
 			// lbl_ObjProj
@@ -107,9 +115,9 @@
 			lbl_ObjProj.AutoSize = true;
 			lbl_ObjProj.Location = new Point(22, 165);
 			lbl_ObjProj.Name = "lbl_ObjProj";
-			lbl_ObjProj.Size = new Size(147, 20);
-			lbl_ObjProj.TabIndex = 5;
-			lbl_ObjProj.Text = "Objetivos do projeto";
+			lbl_ObjProj.Size = new Size(186, 20);
+			lbl_ObjProj.TabIndex = 3;
+			lbl_ObjProj.Text = "Anotações sobre o projeto";
 			// 
 			// btn_Salvar
 			// 
@@ -117,7 +125,7 @@
 			btn_Salvar.Margin = new Padding(3, 4, 3, 4);
 			btn_Salvar.Name = "btn_Salvar";
 			btn_Salvar.Size = new Size(151, 31);
-			btn_Salvar.TabIndex = 6;
+			btn_Salvar.TabIndex = 5;
 			btn_Salvar.Text = "Salvar";
 			btn_Salvar.UseVisualStyleBackColor = true;
 			btn_Salvar.Click += btn_Salvar_Click;
@@ -129,7 +137,7 @@
 			rtxtb_NomeProjeto.Multiline = false;
 			rtxtb_NomeProjeto.Name = "rtxtb_NomeProjeto";
 			rtxtb_NomeProjeto.Size = new Size(412, 37);
-			rtxtb_NomeProjeto.TabIndex = 7;
+			rtxtb_NomeProjeto.TabIndex = 2;
 			rtxtb_NomeProjeto.Text = "";
 			// 
 			// btn_ProcessData
@@ -137,19 +145,18 @@
 			btn_ProcessData.Location = new Point(699, 255);
 			btn_ProcessData.Name = "btn_ProcessData";
 			btn_ProcessData.Size = new Size(136, 43);
-			btn_ProcessData.TabIndex = 8;
+			btn_ProcessData.TabIndex = 11;
 			btn_ProcessData.Text = "Processar ";
 			btn_ProcessData.UseVisualStyleBackColor = true;
 			btn_ProcessData.Click += btn_ProcessData_Click;
 			// 
 			// lbl_processStatus
 			// 
-			lbl_processStatus.AutoSize = true;
 			lbl_processStatus.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
-			lbl_processStatus.Location = new Point(897, 513);
+			lbl_processStatus.Location = new Point(699, 301);
 			lbl_processStatus.Name = "lbl_processStatus";
-			lbl_processStatus.Size = new Size(50, 20);
-			lbl_processStatus.TabIndex = 9;
+			lbl_processStatus.Size = new Size(178, 47);
+			lbl_processStatus.TabIndex = 12;
 			lbl_processStatus.Text = "label1";
 			// 
 			// btn_ActivitiesDependenciesMatrix
@@ -159,7 +166,7 @@
 			btn_ActivitiesDependenciesMatrix.Margin = new Padding(3, 4, 3, 4);
 			btn_ActivitiesDependenciesMatrix.Name = "btn_ActivitiesDependenciesMatrix";
 			btn_ActivitiesDependenciesMatrix.Size = new Size(249, 31);
-			btn_ActivitiesDependenciesMatrix.TabIndex = 10;
+			btn_ActivitiesDependenciesMatrix.TabIndex = 14;
 			btn_ActivitiesDependenciesMatrix.Text = "Relação entre Atividades do Processo";
 			btn_ActivitiesDependenciesMatrix.UseVisualStyleBackColor = true;
 			btn_ActivitiesDependenciesMatrix.Click += btn_ActivitiesDependenciesMatrix_Click;
@@ -172,7 +179,7 @@
 			btn_DownloadActivityComparativeMatrix.Margin = new Padding(3, 4, 3, 4);
 			btn_DownloadActivityComparativeMatrix.Name = "btn_DownloadActivityComparativeMatrix";
 			btn_DownloadActivityComparativeMatrix.Size = new Size(34, 31);
-			btn_DownloadActivityComparativeMatrix.TabIndex = 16;
+			btn_DownloadActivityComparativeMatrix.TabIndex = 23;
 			btn_DownloadActivityComparativeMatrix.UseVisualStyleBackColor = true;
 			btn_DownloadActivityComparativeMatrix.Click += btn_DownloadComparativeMatrix_Click;
 			// 
@@ -184,7 +191,7 @@
 			btn_DownloadElementMatrix.Margin = new Padding(3, 4, 3, 4);
 			btn_DownloadElementMatrix.Name = "btn_DownloadElementMatrix";
 			btn_DownloadElementMatrix.Size = new Size(35, 31);
-			btn_DownloadElementMatrix.TabIndex = 15;
+			btn_DownloadElementMatrix.TabIndex = 19;
 			btn_DownloadElementMatrix.Text = "\r\n";
 			btn_DownloadElementMatrix.UseVisualStyleBackColor = true;
 			btn_DownloadElementMatrix.Click += btn_DownloadElementMatrix_Click;
@@ -197,7 +204,7 @@
 			btn_DownloadActivivtyMatrix.Margin = new Padding(3, 4, 3, 4);
 			btn_DownloadActivivtyMatrix.Name = "btn_DownloadActivivtyMatrix";
 			btn_DownloadActivivtyMatrix.Size = new Size(35, 31);
-			btn_DownloadActivivtyMatrix.TabIndex = 14;
+			btn_DownloadActivivtyMatrix.TabIndex = 15;
 			btn_DownloadActivivtyMatrix.UseVisualStyleBackColor = true;
 			btn_DownloadActivivtyMatrix.Click += btn_DownloadActivivtyMatrix_Click;
 			// 
@@ -208,7 +215,7 @@
 			btn_ComparativeMatrixWithRedundancies.Margin = new Padding(3, 4, 3, 4);
 			btn_ComparativeMatrixWithRedundancies.Name = "btn_ComparativeMatrixWithRedundancies";
 			btn_ComparativeMatrixWithRedundancies.Size = new Size(301, 31);
-			btn_ComparativeMatrixWithRedundancies.TabIndex = 13;
+			btn_ComparativeMatrixWithRedundancies.TabIndex = 24;
 			btn_ComparativeMatrixWithRedundancies.Text = "Congruência do Processo - com redundância";
 			btn_ComparativeMatrixWithRedundancies.UseVisualStyleBackColor = true;
 			btn_ComparativeMatrixWithRedundancies.Click += btn_ComparativeMatrixWithRedundancies_Click;
@@ -220,7 +227,7 @@
 			btn_ComparativeMatrixWithoutRedundancies.Margin = new Padding(3, 4, 3, 4);
 			btn_ComparativeMatrixWithoutRedundancies.Name = "btn_ComparativeMatrixWithoutRedundancies";
 			btn_ComparativeMatrixWithoutRedundancies.Size = new Size(301, 31);
-			btn_ComparativeMatrixWithoutRedundancies.TabIndex = 12;
+			btn_ComparativeMatrixWithoutRedundancies.TabIndex = 22;
 			btn_ComparativeMatrixWithoutRedundancies.Text = "Congruência do Processo - sem redundância";
 			btn_ComparativeMatrixWithoutRedundancies.UseVisualStyleBackColor = true;
 			btn_ComparativeMatrixWithoutRedundancies.Click += btn_ComparativeMatrixWithoutRedundancies_Click;
@@ -232,7 +239,7 @@
 			btn_ComponentsInterfacesMatrix.Margin = new Padding(3, 4, 3, 4);
 			btn_ComponentsInterfacesMatrix.Name = "btn_ComponentsInterfacesMatrix";
 			btn_ComponentsInterfacesMatrix.Size = new Size(249, 31);
-			btn_ComponentsInterfacesMatrix.TabIndex = 11;
+			btn_ComponentsInterfacesMatrix.TabIndex = 18;
 			btn_ComponentsInterfacesMatrix.Text = "Relação entre Elementos do Ambiente";
 			btn_ComponentsInterfacesMatrix.UseVisualStyleBackColor = true;
 			btn_ComponentsInterfacesMatrix.Click += btn_ComponentsInterfacesMatrix_Click;
@@ -244,7 +251,7 @@
 			btn_ComponentComparativeMatrixWithRedundancies.Margin = new Padding(3, 4, 3, 4);
 			btn_ComponentComparativeMatrixWithRedundancies.Name = "btn_ComponentComparativeMatrixWithRedundancies";
 			btn_ComponentComparativeMatrixWithRedundancies.Size = new Size(301, 31);
-			btn_ComponentComparativeMatrixWithRedundancies.TabIndex = 18;
+			btn_ComponentComparativeMatrixWithRedundancies.TabIndex = 28;
 			btn_ComponentComparativeMatrixWithRedundancies.Text = "Congruência do Ambiente - com redundância";
 			btn_ComponentComparativeMatrixWithRedundancies.UseVisualStyleBackColor = true;
 			btn_ComponentComparativeMatrixWithRedundancies.Click += btn_ComponentComparativeMatrixWithRedundancies_Click;
@@ -256,7 +263,7 @@
 			btn_ComponentComparativeMatrixWithoutRedundancies.Margin = new Padding(3, 4, 3, 4);
 			btn_ComponentComparativeMatrixWithoutRedundancies.Name = "btn_ComponentComparativeMatrixWithoutRedundancies";
 			btn_ComponentComparativeMatrixWithoutRedundancies.Size = new Size(301, 31);
-			btn_ComponentComparativeMatrixWithoutRedundancies.TabIndex = 17;
+			btn_ComponentComparativeMatrixWithoutRedundancies.TabIndex = 26;
 			btn_ComponentComparativeMatrixWithoutRedundancies.Text = "Congruência do Ambiente - sem redundância";
 			btn_ComponentComparativeMatrixWithoutRedundancies.UseVisualStyleBackColor = true;
 			btn_ComponentComparativeMatrixWithoutRedundancies.Click += btn_ComponentComparativeMatrixWithoutRedundancies_Click;
@@ -268,7 +275,7 @@
 			btn_AffiliationMatrix.Margin = new Padding(3, 4, 3, 4);
 			btn_AffiliationMatrix.Name = "btn_AffiliationMatrix";
 			btn_AffiliationMatrix.Size = new Size(249, 31);
-			btn_AffiliationMatrix.TabIndex = 19;
+			btn_AffiliationMatrix.TabIndex = 16;
 			btn_AffiliationMatrix.Text = "Relação entre Atividades e Elementos";
 			btn_AffiliationMatrix.UseVisualStyleBackColor = true;
 			btn_AffiliationMatrix.Click += btn_AffiliationMatrix_Click;
@@ -281,7 +288,7 @@
 			btn_DownloadRelationshipMatrix.Margin = new Padding(3, 4, 3, 4);
 			btn_DownloadRelationshipMatrix.Name = "btn_DownloadRelationshipMatrix";
 			btn_DownloadRelationshipMatrix.Size = new Size(35, 31);
-			btn_DownloadRelationshipMatrix.TabIndex = 20;
+			btn_DownloadRelationshipMatrix.TabIndex = 17;
 			btn_DownloadRelationshipMatrix.UseVisualStyleBackColor = true;
 			btn_DownloadRelationshipMatrix.Click += btn_DownloadRelationshipMatrix_Click;
 			// 
@@ -349,7 +356,7 @@
 			btn_Organization.Location = new Point(511, 185);
 			btn_Organization.Name = "btn_Organization";
 			btn_Organization.Size = new Size(144, 31);
-			btn_Organization.TabIndex = 41;
+			btn_Organization.TabIndex = 6;
 			btn_Organization.Text = "Organização";
 			btn_Organization.UseVisualStyleBackColor = true;
 			btn_Organization.Click += btn_Organization_Click;
@@ -359,7 +366,7 @@
 			btn_Process.Location = new Point(511, 235);
 			btn_Process.Name = "btn_Process";
 			btn_Process.Size = new Size(144, 31);
-			btn_Process.TabIndex = 42;
+			btn_Process.TabIndex = 7;
 			btn_Process.Text = "Processo";
 			btn_Process.UseVisualStyleBackColor = true;
 			btn_Process.Click += btn_Process_Click;
@@ -369,7 +376,7 @@
 			btn_Environment.Location = new Point(511, 285);
 			btn_Environment.Name = "btn_Environment";
 			btn_Environment.Size = new Size(144, 31);
-			btn_Environment.TabIndex = 43;
+			btn_Environment.TabIndex = 8;
 			btn_Environment.Text = "Ambiente";
 			btn_Environment.UseVisualStyleBackColor = true;
 			btn_Environment.Click += btn_Environment_Click;
@@ -379,7 +386,7 @@
 			btn_Resources.Location = new Point(511, 335);
 			btn_Resources.Name = "btn_Resources";
 			btn_Resources.Size = new Size(144, 31);
-			btn_Resources.TabIndex = 44;
+			btn_Resources.TabIndex = 9;
 			btn_Resources.Text = "Recurso";
 			btn_Resources.UseVisualStyleBackColor = true;
 			btn_Resources.Click += btn_Resources_Click;
@@ -431,11 +438,11 @@
 			// 
 			// btn_errorLog
 			// 
-			btn_errorLog.Location = new Point(897, 537);
+			btn_errorLog.Location = new Point(699, 351);
 			btn_errorLog.Name = "btn_errorLog";
-			btn_errorLog.Size = new Size(215, 29);
-			btn_errorLog.TabIndex = 50;
-			btn_errorLog.Text = "Relatório do Processamento";
+			btn_errorLog.Size = new Size(138, 29);
+			btn_errorLog.TabIndex = 13;
+			btn_errorLog.Text = "Relatório de erro";
 			btn_errorLog.UseVisualStyleBackColor = true;
 			btn_errorLog.Click += btn_errorLog_Click;
 			// 
@@ -447,7 +454,7 @@
 			btn_DownloadComponentComparativeMatrix.Margin = new Padding(3, 4, 3, 4);
 			btn_DownloadComponentComparativeMatrix.Name = "btn_DownloadComponentComparativeMatrix";
 			btn_DownloadComponentComparativeMatrix.Size = new Size(35, 31);
-			btn_DownloadComponentComparativeMatrix.TabIndex = 53;
+			btn_DownloadComponentComparativeMatrix.TabIndex = 27;
 			btn_DownloadComponentComparativeMatrix.UseVisualStyleBackColor = true;
 			btn_DownloadComponentComparativeMatrix.Click += btn_DownloadComponentComparativeMatrix_Click;
 			// 
@@ -459,7 +466,7 @@
 			btn_DownloadComponentComparativeMatrixWithRedundancy.Margin = new Padding(3, 4, 3, 4);
 			btn_DownloadComponentComparativeMatrixWithRedundancy.Name = "btn_DownloadComponentComparativeMatrixWithRedundancy";
 			btn_DownloadComponentComparativeMatrixWithRedundancy.Size = new Size(35, 31);
-			btn_DownloadComponentComparativeMatrixWithRedundancy.TabIndex = 52;
+			btn_DownloadComponentComparativeMatrixWithRedundancy.TabIndex = 29;
 			btn_DownloadComponentComparativeMatrixWithRedundancy.Text = "\r\n";
 			btn_DownloadComponentComparativeMatrixWithRedundancy.UseVisualStyleBackColor = true;
 			btn_DownloadComponentComparativeMatrixWithRedundancy.Click += btn_DownloadComponentComparativeMatrixWithRedundancy_Click;
@@ -472,7 +479,7 @@
 			btn_DownloadActivityComparativeMatrixWithRedundancy.Margin = new Padding(3, 4, 3, 4);
 			btn_DownloadActivityComparativeMatrixWithRedundancy.Name = "btn_DownloadActivityComparativeMatrixWithRedundancy";
 			btn_DownloadActivityComparativeMatrixWithRedundancy.Size = new Size(35, 31);
-			btn_DownloadActivityComparativeMatrixWithRedundancy.TabIndex = 51;
+			btn_DownloadActivityComparativeMatrixWithRedundancy.TabIndex = 25;
 			btn_DownloadActivityComparativeMatrixWithRedundancy.UseVisualStyleBackColor = true;
 			btn_DownloadActivityComparativeMatrixWithRedundancy.Click += btn_DownloadActivityComparativeMatrixWithRedundancy_Click;
 			// 
@@ -490,11 +497,11 @@
 			// 
 			// btn_ExportAll
 			// 
-			btn_ExportAll.Location = new Point(511, 408);
+			btn_ExportAll.Location = new Point(509, 502);
 			btn_ExportAll.Name = "btn_ExportAll";
-			btn_ExportAll.Size = new Size(144, 51);
-			btn_ExportAll.TabIndex = 55;
-			btn_ExportAll.Text = "Baixar .csv dos dados e relações";
+			btn_ExportAll.Size = new Size(144, 65);
+			btn_ExportAll.TabIndex = 10;
+			btn_ExportAll.Text = "Exportar .csv dos dados inseridos";
 			btn_ExportAll.UseVisualStyleBackColor = true;
 			btn_ExportAll.Click += btn_ExportAll_Click;
 			// 
@@ -503,8 +510,8 @@
 			btn_Priorities.Font = new Font("Segoe UI", 8F, FontStyle.Regular, GraphicsUnit.Point);
 			btn_Priorities.Location = new Point(919, 385);
 			btn_Priorities.Name = "btn_Priorities";
-			btn_Priorities.Size = new Size(284, 29);
-			btn_Priorities.TabIndex = 56;
+			btn_Priorities.Size = new Size(267, 29);
+			btn_Priorities.TabIndex = 20;
 			btn_Priorities.Text = "Relação de prioridade de atividades";
 			btn_Priorities.UseVisualStyleBackColor = true;
 			btn_Priorities.Click += btn_Priorities_Click;
@@ -523,8 +530,8 @@
 			btn_Paralelism.Font = new Font("Segoe UI", 8F, FontStyle.Regular, GraphicsUnit.Point);
 			btn_Paralelism.Location = new Point(919, 429);
 			btn_Paralelism.Name = "btn_Paralelism";
-			btn_Paralelism.Size = new Size(284, 29);
-			btn_Paralelism.TabIndex = 58;
+			btn_Paralelism.Size = new Size(267, 29);
+			btn_Paralelism.TabIndex = 21;
 			btn_Paralelism.Text = "Relação de paralelismo entre atividades";
 			btn_Paralelism.UseVisualStyleBackColor = true;
 			btn_Paralelism.Click += button1_Click;
@@ -538,11 +545,89 @@
 			lbl_CheckParalelism.TabIndex = 59;
 			lbl_CheckParalelism.Text = "x";
 			// 
+			// btn_SaveTemplates
+			// 
+			btn_SaveTemplates.Location = new Point(509, 424);
+			btn_SaveTemplates.Name = "btn_SaveTemplates";
+			btn_SaveTemplates.Size = new Size(144, 72);
+			btn_SaveTemplates.TabIndex = 10;
+			btn_SaveTemplates.Text = "Salvar templates .csv para importar dados";
+			btn_SaveTemplates.UseVisualStyleBackColor = true;
+			btn_SaveTemplates.Click += btn_SaveTemplates_Click;
+			// 
+			// btn_ExportAllResults
+			// 
+			btn_ExportAllResults.Location = new Point(1406, 414);
+			btn_ExportAllResults.Name = "btn_ExportAllResults";
+			btn_ExportAllResults.Size = new Size(197, 39);
+			btn_ExportAllResults.TabIndex = 60;
+			btn_ExportAllResults.Text = "Salvar todos os resultados";
+			btn_ExportAllResults.UseVisualStyleBackColor = true;
+			btn_ExportAllResults.Click += btn_ExportAllResults_Click;
+			// 
+			// label4
+			// 
+			label4.Location = new Point(1267, 527);
+			label4.Name = "label4";
+			label4.Size = new Size(345, 54);
+			label4.TabIndex = 61;
+			label4.Text = "- clicar no botão [↓] para salvar separadamente cada faceta.";
+			// 
+			// label5
+			// 
+			label5.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+			label5.Location = new Point(1267, 475);
+			label5.Name = "label5";
+			label5.Size = new Size(363, 46);
+			label5.TabIndex = 62;
+			label5.Text = "obs.: os resultados processados não ficam salvos. Para preservar os registros, é preciso: ";
+			// 
+			// label6
+			// 
+			label6.Location = new Point(1267, 581);
+			label6.Name = "label6";
+			label6.Size = new Size(345, 54);
+			label6.TabIndex = 63;
+			label6.Text = "- clicar em [salvar todos os resultados] ";
+			// 
+			// btn_DownloadParalelism
+			// 
+			btn_DownloadParalelism.BackgroundImage = Properties.Resources.download_icon_black;
+			btn_DownloadParalelism.BackgroundImageLayout = ImageLayout.Center;
+			btn_DownloadParalelism.Location = new Point(1188, 427);
+			btn_DownloadParalelism.Margin = new Padding(3, 4, 3, 4);
+			btn_DownloadParalelism.Name = "btn_DownloadParalelism";
+			btn_DownloadParalelism.Size = new Size(35, 31);
+			btn_DownloadParalelism.TabIndex = 64;
+			btn_DownloadParalelism.Text = "\r\n";
+			btn_DownloadParalelism.UseVisualStyleBackColor = true;
+			btn_DownloadParalelism.Click += btn_DownloadParalelism_Click;
+			// 
+			// btn_DownloadPriorities
+			// 
+			btn_DownloadPriorities.BackgroundImage = Properties.Resources.download_icon_black;
+			btn_DownloadPriorities.BackgroundImageLayout = ImageLayout.Center;
+			btn_DownloadPriorities.Location = new Point(1188, 385);
+			btn_DownloadPriorities.Margin = new Padding(3, 4, 3, 4);
+			btn_DownloadPriorities.Name = "btn_DownloadPriorities";
+			btn_DownloadPriorities.Size = new Size(35, 31);
+			btn_DownloadPriorities.TabIndex = 65;
+			btn_DownloadPriorities.Text = "\r\n";
+			btn_DownloadPriorities.UseVisualStyleBackColor = true;
+			btn_DownloadPriorities.Click += btn_DownloadPriorities_Click;
+			// 
 			// Frm_Main
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
 			AutoScaleMode = AutoScaleMode.Font;
 			ClientSize = new Size(1685, 753);
+			Controls.Add(btn_DownloadPriorities);
+			Controls.Add(btn_DownloadParalelism);
+			Controls.Add(label6);
+			Controls.Add(label5);
+			Controls.Add(label4);
+			Controls.Add(btn_ExportAllResults);
+			Controls.Add(btn_SaveTemplates);
 			Controls.Add(lbl_CheckParalelism);
 			Controls.Add(btn_Paralelism);
 			Controls.Add(lbl_CheckPriorities);
@@ -587,6 +672,7 @@
 			Controls.Add(lbl_NomeProj);
 			Controls.Add(rtxtb_DescProjeto);
 			Controls.Add(lbl_Titulo);
+			Icon = (Icon)resources.GetObject("$this.Icon");
 			Name = "Frm_Main";
 			Text = "MScMD - Geral";
 			WindowState = FormWindowState.Maximized;
@@ -640,5 +726,12 @@
 		private Label lbl_CheckPriorities;
 		private Button btn_Paralelism;
 		private Label lbl_CheckParalelism;
+		private Button btn_SaveTemplates;
+		private Button btn_ExportAllResults;
+		private Label label4;
+		private Label label5;
+		private Label label6;
+		private Button btn_DownloadParalelism;
+		private Button btn_DownloadPriorities;
 	}
 }

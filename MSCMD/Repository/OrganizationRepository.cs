@@ -85,7 +85,7 @@ namespace MSCMD.Repository
 		{
 			foreach (Organization org in organizacoes)
 			{
-				AddNew(org);
+				Save(org);
 			}
 
 		}

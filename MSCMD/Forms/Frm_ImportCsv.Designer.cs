@@ -47,7 +47,7 @@
 			btn_SelectFile.Location = new Point(40, 111);
 			btn_SelectFile.Name = "btn_SelectFile";
 			btn_SelectFile.Size = new Size(157, 40);
-			btn_SelectFile.TabIndex = 0;
+			btn_SelectFile.TabIndex = 3;
 			btn_SelectFile.Text = "Selecionar arquivo";
 			btn_SelectFile.UseVisualStyleBackColor = true;
 			btn_SelectFile.Click += btn_SelectFile_Click;
@@ -66,7 +66,7 @@
 			btn_Save.Location = new Point(852, 713);
 			btn_Save.Name = "btn_Save";
 			btn_Save.Size = new Size(158, 35);
-			btn_Save.TabIndex = 2;
+			btn_Save.TabIndex = 9;
 			btn_Save.Text = "Importar tudo";
 			btn_Save.UseVisualStyleBackColor = true;
 			btn_Save.Click += btn_Save_Click;
@@ -82,7 +82,7 @@
 			dgv_Itens.RowTemplate.Height = 29;
 			dgv_Itens.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 			dgv_Itens.Size = new Size(1074, 499);
-			dgv_Itens.TabIndex = 3;
+			dgv_Itens.TabIndex = 6;
 			// 
 			// lbl_Titulo
 			// 
@@ -109,7 +109,7 @@
 			btn_Save_Selected.Location = new Point(625, 713);
 			btn_Save_Selected.Name = "btn_Save_Selected";
 			btn_Save_Selected.Size = new Size(225, 35);
-			btn_Save_Selected.TabIndex = 6;
+			btn_Save_Selected.TabIndex = 8;
 			btn_Save_Selected.Text = "Importar linhas selecionadas";
 			btn_Save_Selected.UseVisualStyleBackColor = true;
 			btn_Save_Selected.Click += btn_Save_Selected_Click;
@@ -120,7 +120,7 @@
 			label1.Location = new Point(40, 181);
 			label1.Name = "label1";
 			label1.Size = new Size(766, 20);
-			label1.TabIndex = 7;
+			label1.TabIndex = 5;
 			label1.Text = "Para selecionar mais de uma linha pressione o Ctrl ou utilize o Shift para seleciona todos os itens entre duas linhas.";
 			// 
 			// btn_DownloadTemplate
@@ -129,7 +129,7 @@
 			btn_DownloadTemplate.Location = new Point(926, 37);
 			btn_DownloadTemplate.Name = "btn_DownloadTemplate";
 			btn_DownloadTemplate.Size = new Size(187, 45);
-			btn_DownloadTemplate.TabIndex = 8;
+			btn_DownloadTemplate.TabIndex = 4;
 			btn_DownloadTemplate.Text = "Baixar Template .csv";
 			btn_DownloadTemplate.UseVisualStyleBackColor = true;
 			btn_DownloadTemplate.Click += btn_DownloadTemplate_Click;
@@ -140,7 +140,7 @@
 			btn_Close.Location = new Point(1013, 713);
 			btn_Close.Name = "btn_Close";
 			btn_Close.Size = new Size(101, 35);
-			btn_Close.TabIndex = 39;
+			btn_Close.TabIndex = 10;
 			btn_Close.Text = "Fechar";
 			btn_Close.UseVisualStyleBackColor = true;
 			btn_Close.Click += btn_Close_Click;
@@ -151,7 +151,7 @@
 			lbl_StatusMessage.Location = new Point(40, 715);
 			lbl_StatusMessage.Name = "lbl_StatusMessage";
 			lbl_StatusMessage.Size = new Size(385, 49);
-			lbl_StatusMessage.TabIndex = 40;
+			lbl_StatusMessage.TabIndex = 7;
 			lbl_StatusMessage.Text = "label2";
 			// 
 			// Frm_ImportCsv
