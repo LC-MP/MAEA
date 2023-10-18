@@ -29,6 +29,7 @@
 		private void InitializeComponent()
 		{
 			components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Frm_Activity));
 			lbl_TituloAtividade = new Label();
 			btn_Importarcsv = new Button();
 			dg_Activities = new DataGridView();
@@ -70,6 +71,9 @@
 			relationshipDataGridViewTextBoxColumn2 = new DataGridViewTextBoxColumn();
 			relationshipViewModelBindingSource2 = new BindingSource(components);
 			dg_Group = new DataGridView();
+			subprocessIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+			codeDataGridViewTextBoxColumn3 = new DataGridViewTextBoxColumn();
+			nameDataGridViewTextBoxColumn3 = new DataGridViewTextBoxColumn();
 			subprocessBindingSource = new BindingSource(components);
 			lbl_DetAtividade = new Label();
 			lbl_Title = new Label();
@@ -111,9 +115,6 @@
 			btn_New = new Button();
 			btn_NewGroup = new Button();
 			label3 = new Label();
-			subprocessIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-			codeDataGridViewTextBoxColumn3 = new DataGridViewTextBoxColumn();
-			nameDataGridViewTextBoxColumn3 = new DataGridViewTextBoxColumn();
 			((System.ComponentModel.ISupportInitialize)dg_Activities).BeginInit();
 			((System.ComponentModel.ISupportInitialize)activityBindingSource).BeginInit();
 			((System.ComponentModel.ISupportInitialize)dg_activityRelationship).BeginInit();
@@ -547,6 +548,31 @@
 			dg_Group.CellFormatting += dg_Group_CellFormatting;
 			dg_Group.ColumnHeaderMouseClick += dg_Group_ColumnHeaderMouseClick;
 			// 
+			// subprocessIdDataGridViewTextBoxColumn
+			// 
+			subprocessIdDataGridViewTextBoxColumn.DataPropertyName = "SubprocessId";
+			subprocessIdDataGridViewTextBoxColumn.HeaderText = "Id";
+			subprocessIdDataGridViewTextBoxColumn.MinimumWidth = 6;
+			subprocessIdDataGridViewTextBoxColumn.Name = "subprocessIdDataGridViewTextBoxColumn";
+			subprocessIdDataGridViewTextBoxColumn.ReadOnly = true;
+			subprocessIdDataGridViewTextBoxColumn.Width = 50;
+			// 
+			// codeDataGridViewTextBoxColumn3
+			// 
+			codeDataGridViewTextBoxColumn3.DataPropertyName = "Code";
+			codeDataGridViewTextBoxColumn3.HeaderText = "Código";
+			codeDataGridViewTextBoxColumn3.MinimumWidth = 6;
+			codeDataGridViewTextBoxColumn3.Name = "codeDataGridViewTextBoxColumn3";
+			codeDataGridViewTextBoxColumn3.Width = 90;
+			// 
+			// nameDataGridViewTextBoxColumn3
+			// 
+			nameDataGridViewTextBoxColumn3.DataPropertyName = "Name";
+			nameDataGridViewTextBoxColumn3.HeaderText = "Nome*";
+			nameDataGridViewTextBoxColumn3.MinimumWidth = 6;
+			nameDataGridViewTextBoxColumn3.Name = "nameDataGridViewTextBoxColumn3";
+			nameDataGridViewTextBoxColumn3.Width = 360;
+			// 
 			// subprocessBindingSource
 			// 
 			subprocessBindingSource.DataSource = typeof(Model.Subprocess);
@@ -964,31 +990,6 @@
 			label3.TabIndex = 26;
 			label3.Text = "Subprocesso";
 			// 
-			// subprocessIdDataGridViewTextBoxColumn
-			// 
-			subprocessIdDataGridViewTextBoxColumn.DataPropertyName = "SubprocessId";
-			subprocessIdDataGridViewTextBoxColumn.HeaderText = "Id";
-			subprocessIdDataGridViewTextBoxColumn.MinimumWidth = 6;
-			subprocessIdDataGridViewTextBoxColumn.Name = "subprocessIdDataGridViewTextBoxColumn";
-			subprocessIdDataGridViewTextBoxColumn.ReadOnly = true;
-			subprocessIdDataGridViewTextBoxColumn.Width = 50;
-			// 
-			// codeDataGridViewTextBoxColumn3
-			// 
-			codeDataGridViewTextBoxColumn3.DataPropertyName = "Code";
-			codeDataGridViewTextBoxColumn3.HeaderText = "Código";
-			codeDataGridViewTextBoxColumn3.MinimumWidth = 6;
-			codeDataGridViewTextBoxColumn3.Name = "codeDataGridViewTextBoxColumn3";
-			codeDataGridViewTextBoxColumn3.Width = 90;
-			// 
-			// nameDataGridViewTextBoxColumn3
-			// 
-			nameDataGridViewTextBoxColumn3.DataPropertyName = "Name";
-			nameDataGridViewTextBoxColumn3.HeaderText = "Nome*";
-			nameDataGridViewTextBoxColumn3.MinimumWidth = 6;
-			nameDataGridViewTextBoxColumn3.Name = "nameDataGridViewTextBoxColumn3";
-			nameDataGridViewTextBoxColumn3.Width = 360;
-			// 
 			// Frm_Activity
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
@@ -1048,9 +1049,10 @@
 			Controls.Add(dg_Activities);
 			Controls.Add(btn_Importarcsv);
 			Controls.Add(lbl_TituloAtividade);
+			Icon = (Icon)resources.GetObject("$this.Icon");
 			Name = "Frm_Activity";
 			StartPosition = FormStartPosition.CenterScreen;
-			Text = "MScMD - Processo";
+			Text = "MAEA - Processo";
 			Load += Frm_Atividades_Load;
 			((System.ComponentModel.ISupportInitialize)dg_Activities).EndInit();
 			((System.ComponentModel.ISupportInitialize)activityBindingSource).EndInit();

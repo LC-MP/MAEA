@@ -29,6 +29,7 @@
 		private void InitializeComponent()
 		{
 			components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Frm_Element));
 			lbl_Titulo = new Label();
 			dg_Elementos = new DataGridView();
 			elementIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
@@ -1042,9 +1043,10 @@
 			Controls.Add(label2);
 			Controls.Add(dg_Elementos);
 			Controls.Add(lbl_Titulo);
+			Icon = (Icon)resources.GetObject("$this.Icon");
 			Name = "Frm_Element";
 			StartPosition = FormStartPosition.CenterScreen;
-			Text = "MScMD - Ambiente";
+			Text = "MAEA - Ambiente";
 			Load += Frm_Element_Load;
 			((System.ComponentModel.ISupportInitialize)dg_Elementos).EndInit();
 			((System.ComponentModel.ISupportInitialize)elementBindingSource).EndInit();

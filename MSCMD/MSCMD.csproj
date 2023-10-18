@@ -7,7 +7,8 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <Platforms>AnyCPU;x64</Platforms>
-    <ApplicationIcon>Resources\analytics_icon.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\maea_icon.ico</ApplicationIcon>
+    <AssemblyName>MAEA</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,9 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Resources\analytics_icon.ico">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Resources\maea_icon.ico" />
     <Content Include="TemplatesCSV\1.1_divisão.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

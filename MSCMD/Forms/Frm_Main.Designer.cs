@@ -674,7 +674,7 @@
 			Controls.Add(lbl_Titulo);
 			Icon = (Icon)resources.GetObject("$this.Icon");
 			Name = "Frm_Main";
-			Text = "MScMD - Geral";
+			Text = "MAEA - Geral";
 			WindowState = FormWindowState.Maximized;
 			Load += Frm_Geral_Load;
 			ResumeLayout(false);

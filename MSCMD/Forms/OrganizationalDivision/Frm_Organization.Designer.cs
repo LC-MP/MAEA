@@ -29,6 +29,7 @@
 		private void InitializeComponent()
 		{
 			components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Frm_Organization));
 			lbl_Title = new Label();
 			dg_Agents = new DataGridView();
 			agentIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
@@ -985,9 +986,10 @@
 			Controls.Add(btn_DeleteAgent);
 			Controls.Add(dg_Agents);
 			Controls.Add(lbl_Title);
+			Icon = (Icon)resources.GetObject("$this.Icon");
 			Name = "Frm_Organization";
 			StartPosition = FormStartPosition.CenterScreen;
-			Text = "MScMD - Organização";
+			Text = "MAEA - Organização";
 			Load += Frm_Organization_Load;
 			((System.ComponentModel.ISupportInitialize)dg_Agents).EndInit();
 			((System.ComponentModel.ISupportInitialize)agentBindingSource).EndInit();

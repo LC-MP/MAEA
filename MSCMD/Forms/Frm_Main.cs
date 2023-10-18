@@ -164,6 +164,7 @@ namespace MSCMD.Forms
 				e.Graphics.DrawLine(penDashed, btnCompMX - size3, btnCompMY, btnCompMX, btnCompMY);
 
 				e.Graphics.DrawLine(penDashed, btnActMX - size3, btnActMY, btnActMX - size3, btnCompMY);
+
 				e.Graphics.DrawLine(penDashed, btnOrgX + size2, btnAffMY, btnActMX - size3, btnAffMY);
 
 				e.Graphics.DrawLine(penDashed, btnActMX, btnActMY, btnComparativeMX - size3, btnActMY);
