@@ -29,6 +29,7 @@
 		private void InitializeComponent()
 		{
 			components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Frm_Resources));
 			lbl_Title = new Label();
 			dg_HumanResource = new DataGridView();
 			personIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
@@ -196,9 +197,11 @@
 			Controls.Add(btn_Delete);
 			Controls.Add(dg_HumanResource);
 			Controls.Add(lbl_Title);
+			Icon = (Icon)resources.GetObject("$this.Icon");
 			Name = "Frm_Resources";
+			RightToLeftLayout = true;
 			StartPosition = FormStartPosition.CenterScreen;
-			Text = "MScMD - Recursos";
+			Text = "MAEA - Recursos";
 			Load += Frm_Resources_Load;
 			((System.ComponentModel.ISupportInitialize)dg_HumanResource).EndInit();
 			((System.ComponentModel.ISupportInitialize)pessoaBindingSource).EndInit();

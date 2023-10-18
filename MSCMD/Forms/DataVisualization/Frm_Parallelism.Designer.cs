@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Frm_Parallelism));
 			textBox1 = new TextBox();
 			SuspendLayout();
 			// 
@@ -49,8 +50,9 @@
 			AutoScaleMode = AutoScaleMode.Font;
 			ClientSize = new Size(1049, 799);
 			Controls.Add(textBox1);
+			Icon = (Icon)resources.GetObject("$this.Icon");
 			Name = "Frm_Parallelism";
-			Text = "Relação de Paralelismo entre atividades";
+			Text = "MAEA - Relação de Paralelismo entre atividades";
 			Load += Frm_Parallelism_Load;
 			ResumeLayout(false);
 			PerformLayout();

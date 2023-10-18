@@ -29,13 +29,14 @@
 		private void InitializeComponent()
 		{
 			components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Frm_Priorities));
 			dataGridView1 = new DataGridView();
-			priorityViewModelBindingSource = new BindingSource(components);
-			relationshipViewModelBindingSource = new BindingSource(components);
-			label1 = new Label();
 			iDDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
 			nameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
 			priorityDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+			priorityViewModelBindingSource = new BindingSource(components);
+			relationshipViewModelBindingSource = new BindingSource(components);
+			label1 = new Label();
 			((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
 			((System.ComponentModel.ISupportInitialize)priorityViewModelBindingSource).BeginInit();
 			((System.ComponentModel.ISupportInitialize)relationshipViewModelBindingSource).BeginInit();
@@ -58,24 +59,6 @@
 			dataGridView1.RowTemplate.Height = 29;
 			dataGridView1.Size = new Size(760, 605);
 			dataGridView1.TabIndex = 0;
-			// 
-			// priorityViewModelBindingSource
-			// 
-			priorityViewModelBindingSource.DataSource = typeof(ViewModel.PriorityViewModel);
-			// 
-			// relationshipViewModelBindingSource
-			// 
-			relationshipViewModelBindingSource.DataSource = typeof(ViewModel.RelationshipViewModel);
-			// 
-			// label1
-			// 
-			label1.AutoSize = true;
-			label1.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
-			label1.Location = new Point(26, 20);
-			label1.Name = "label1";
-			label1.Size = new Size(288, 23);
-			label1.TabIndex = 1;
-			label1.Text = "Relação de prioridade das atividades";
 			// 
 			// iDDataGridViewTextBoxColumn
 			// 
@@ -104,6 +87,24 @@
 			priorityDataGridViewTextBoxColumn.ReadOnly = true;
 			priorityDataGridViewTextBoxColumn.Width = 125;
 			// 
+			// priorityViewModelBindingSource
+			// 
+			priorityViewModelBindingSource.DataSource = typeof(ViewModel.PriorityViewModel);
+			// 
+			// relationshipViewModelBindingSource
+			// 
+			relationshipViewModelBindingSource.DataSource = typeof(ViewModel.RelationshipViewModel);
+			// 
+			// label1
+			// 
+			label1.AutoSize = true;
+			label1.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
+			label1.Location = new Point(26, 20);
+			label1.Name = "label1";
+			label1.Size = new Size(288, 23);
+			label1.TabIndex = 1;
+			label1.Text = "Relação de prioridade das atividades";
+			// 
 			// Frm_Priorities
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
@@ -111,8 +112,9 @@
 			ClientSize = new Size(819, 692);
 			Controls.Add(label1);
 			Controls.Add(dataGridView1);
+			Icon = (Icon)resources.GetObject("$this.Icon");
 			Name = "Frm_Priorities";
-			Text = "MSCMD - Prioridades";
+			Text = "MAEA - Prioridades";
 			Load += Frm_Priorities_Load;
 			((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
 			((System.ComponentModel.ISupportInitialize)priorityViewModelBindingSource).EndInit();
