@@ -33,176 +33,111 @@ export module xablau.organizational_analysis:reader;
 export import :fundamental_definitions;
 
 export import <iostream>;
-export import <istream>;
 export import <format>;
 export import <locale>;
 export import <regex>;
 
-export namespace xablau::organizational_analysis::reader
+namespace xablau::organizational_analysis::reader
 {
 	namespace internals
 	{
 		constexpr size_t max_line_length = 2048;
 
-		template < typename CharType >
 		consteval auto comment_expression()
 		{
-			if constexpr (std::same_as < CharType, char >)
-			{
-				return "^[\\s]*\\/\\/";
-			}
-
-			else
-			{
-				return L"^[\\s]*\\/\\/";
-			}
+			return "^[\\s]*\\/\\/";
 		}
 
-		template < typename CharType >
 		consteval auto relation_expression()
 		{
-			if constexpr (std::same_as < CharType, char >)
-			{
-				return "^(?!\t)\\s*(.*[^\\s])\\s*<=>\\s*(.*(?![\\s|\\0]).)";
-			}
-
-			else
-			{
-				return L"^(?!\t)\\s*(.*[^\\s])\\s*<=>\\s*(.*(?![\\s|\\0]).)";
-			}
+			return "^(?!\t)\\s*(.*[^\\s])\\s*<=>\\s*(.*(?![\\s|\\0]).)";
 		}
 
-		template < typename CharType >
 		consteval auto role_expression()
 		{
-			return relation_expression < CharType > ();
+			return relation_expression();
 		}
 
-		template < typename CharType >
 		consteval auto activity_expression()
 		{
-			return relation_expression < CharType > ();
+			return relation_expression();
 		}
 
-		template < typename CharType >
 		consteval auto component_expression()
 		{
-			return relation_expression < CharType > ();
+			return relation_expression();
 		}
 
-		template < typename CharType >
 		consteval auto single_field_expression()
 		{
-			if constexpr (std::same_as < CharType, char >)
-			{
-				return "^(?!\t)\\s*(.*(?![\\s|\\0]).)";
-			}
-
-			else
-			{
-				return L"^(?!\t)\\s*(.*(?![\\s|\\0]).)";
-			}
+			return "^(?!\t)\\s*(.*(?![\\s|\\0]).)";
 		}
 
-		template < typename CharType >
 		consteval auto tabbed_single_field_expression()
 		{
-			if constexpr (std::same_as < CharType, char >)
-			{
-				return "^(?!\t\t)\t\\s*(.*(?![\\s|\\0]).)";
-			}
-
-			else
-			{
-				return L"^(?!\t\t)\t\\s*(.*(?![\\s|\\0]).)";
-			}
+			return "^(?!\t\t)\t\\s*(.*(?![\\s|\\0]).)";
 		}
 
-		template < typename CharType >
 		consteval auto double_tabbed_single_field_expression()
 		{
-			if constexpr (std::same_as < CharType, char >)
-			{
-				return "^(?!\t\t\t)\t\t\\s*(.*(?![\\s|\\0]).)";
-			}
-
-			else
-			{
-				return L"^(?!\t\t\t)\t\t\\s*(.*(?![\\s|\\0]).)";
-			}
+			return "^(?!\t\t\t)\t\t\\s*(.*(?![\\s|\\0]).)";
 		}
 
-		template < typename CharType >
 		consteval auto group_expression()
 		{
-			return single_field_expression < CharType > ();
+			return single_field_expression();
 		}
 
-		template < typename CharType >
 		consteval auto component_interaction_expression()
 		{
-			return tabbed_single_field_expression < CharType > ();
+			return tabbed_single_field_expression();
 		}
 
-		template < typename CharType >
 		consteval auto agent_in_charge_expression()
 		{
-			return tabbed_single_field_expression < CharType > ();
+			return tabbed_single_field_expression();
 		}
 
-		template < typename CharType >
 		consteval auto dependency_expression()
 		{
-			return double_tabbed_single_field_expression < CharType > ();
+			return double_tabbed_single_field_expression();
 		}
 
-		template < typename CharType >
 		consteval auto affiliation_activity_expression()
 		{
-			return relation_expression < CharType > ();
+			return relation_expression();
 		}
 
-		template < typename CharType >
 		consteval auto affiliation_component_weight_expression()
 		{
-			if constexpr (std::same_as < CharType, char >)
-			{
-				return "\t\\s*(.*[^\\s])\\s*,\\s*(.*(?![\\s|\\0]).)";
-			}
-
-			else
-			{
-				return L"\t\\s*(.*[^\\s])\\s*,\\s*(.*(?![\\s|\\0]).)";
-			}
+			return "\t\\s*(.*[^\\s])\\s*,\\s*(.*(?![\\s|\\0]).)";
 		}
 	}
 
-	template < typename CharType, typename Traits >
-	requires (std::same_as < CharType, char > || std::same_as < CharType, wchar_t >)
-	std::basic_istream < CharType, Traits > &read_agents(
-		std::basic_istream < CharType, Traits > &input,
-		organizational_analysis::agents < CharType, Traits > &agents,
-		std::basic_ostream < CharType, Traits > &errorOutput = internals::default_error_output < CharType > (),
+	std::istream &read_agents(
+		std::istream &input,
+		organizational_analysis::agents_type &agents,
+		std::ostream &errorOutput = std::cerr,
 		const std::locale &locale = std::locale(""))
 	{
 		size_t lineCounter{};
-		std::basic_string < CharType, Traits > group;
-		std::basic_regex < CharType > commentExpression;
-		std::basic_regex < CharType > groupExpression;
-		std::basic_regex < CharType > roleExpression;
+		std::string group;
+		std::regex commentExpression;
+		std::regex groupExpression;
+		std::regex roleExpression;
 
 		commentExpression.imbue(locale);
 		groupExpression.imbue(locale);
 		roleExpression.imbue(locale);
 
-		commentExpression.assign(internals::comment_expression < CharType > ());
-		groupExpression.assign(internals::group_expression < CharType > ());
-		roleExpression.assign(internals::role_expression < CharType > ());
+		commentExpression.assign(internals::comment_expression());
+		groupExpression.assign(internals::group_expression());
+		roleExpression.assign(internals::role_expression());
 
 		while (input.good())
 		{
-			std::basic_string < CharType, Traits > line;
-			std::match_results < typename std::basic_string < CharType, Traits > ::const_iterator > match;
+			std::string line;
+			std::smatch match;
 
 			line.resize(internals::max_line_length);
 
@@ -210,20 +145,9 @@ export namespace xablau::organizational_analysis::reader
 
 			lineCounter++;
 
-			if constexpr (std::same_as < CharType, char >)
+			if (line.empty())
 			{
-				if (std::strlen(line.c_str()) == 0)
-				{
-					continue;
-				}
-			}
-
-			else
-			{
-				if (std::wcslen(line.c_str()) == 0)
-				{
-					continue;
-				}
+				continue;
 			}
 
 			if (std::regex_search(line, match, commentExpression))
@@ -233,17 +157,16 @@ export namespace xablau::organizational_analysis::reader
 
 			if (std::regex_search(line, match, roleExpression))
 			{
-				std::basic_string < CharType, Traits > agent = match[1].str();
-				std::basic_string < CharType, Traits > role = match[2].str();
+				std::set < std::string > groups;
+				organizational_analysis::agent _agent;
 
-				const auto iterator =
-					agents.descriptions.insert(
-						std::make_pair(
-							std::move(agent),
-							organizational_analysis::agents < CharType, Traits > ::description())).first;
+				groups.insert(group);
 
-				iterator->second.role = std::move(role);
-				iterator->second.groups.insert(group);
+				_agent.identification = std::move(match[1].str());
+				_agent.groups = std::move(groups);
+				_agent.role = std::move(match[2].str());
+
+				agents.insert(std::move(_agent));
 			}
 
 			else if (std::regex_search(line, match, groupExpression))
@@ -253,38 +176,29 @@ export namespace xablau::organizational_analysis::reader
 
 			else if (!line.empty())
 			{
-				if constexpr (std::same_as < CharType, char >)
-				{
-					errorOutput << std::format("Unknown agent at line {}: \"{}\"\n", lineCounter, line);
-				}
-
-				else
-				{
-					errorOutput << std::format(L"Unknown agent at line {}: \"{}\"\n", lineCounter, line);
-				}
+				errorOutput << std::format("Unknown agent at line {}: \"{}\"\n", lineCounter, line);
 			}
 		}
 
 		return input;
 	}
 
-	template < typename CharType, typename Traits >
-	requires (std::same_as < CharType, char > || std::same_as < CharType, wchar_t >)
-	std::basic_istream < CharType, Traits > &read_activities(
-		std::basic_istream < CharType, Traits > &input,
-		organizational_analysis::activities < CharType, Traits > &activities,
-		const organizational_analysis::agents < CharType, Traits > &agents,
-		std::basic_ostream < CharType, Traits > &errorOutput = internals::default_error_output < CharType > (),
+	std::istream &read_activities(
+		std::istream &input,
+		organizational_analysis::activities_type &activities,
+		organizational_analysis::activity_dependencies_type &activityDependencies,
+		const organizational_analysis::agents_type &agents,
+		std::ostream &errorOutput = std::cerr,
 		const std::locale &locale = std::locale(""))
 	{
 		size_t lineCounter{};
-		std::basic_string < CharType, Traits > activity;
-		std::basic_string < CharType, Traits > group;
-		std::basic_regex < CharType > commentExpression;
-		std::basic_regex < CharType > groupExpression;
-		std::basic_regex < CharType > activityExpression;
-		std::basic_regex < CharType > agentInChargeExpression;
-		std::basic_regex < CharType > dependencyExpression;
+		std::string activity;
+		std::string group;
+		std::regex commentExpression;
+		std::regex groupExpression;
+		std::regex activityExpression;
+		std::regex agentInChargeExpression;
+		std::regex dependencyExpression;
 
 		commentExpression.imbue(locale);
 		groupExpression.imbue(locale);
@@ -292,16 +206,16 @@ export namespace xablau::organizational_analysis::reader
 		agentInChargeExpression.imbue(locale);
 		dependencyExpression.imbue(locale);
 
-		commentExpression.assign(internals::comment_expression < CharType > ());
-		groupExpression.assign(internals::group_expression < CharType > ());
-		activityExpression.assign(internals::activity_expression < CharType > ());
-		agentInChargeExpression.assign(internals::agent_in_charge_expression < CharType > ());
-		dependencyExpression.assign(internals::dependency_expression < CharType > ());
+		commentExpression.assign(internals::comment_expression());
+		groupExpression.assign(internals::group_expression());
+		activityExpression.assign(internals::activity_expression());
+		agentInChargeExpression.assign(internals::agent_in_charge_expression());
+		dependencyExpression.assign(internals::dependency_expression());
 
 		while (input.good())
 		{
-			std::basic_string < CharType, Traits > line;
-			std::match_results < typename std::basic_string < CharType, Traits > ::const_iterator > match;
+			std::string line;
+			std::smatch match;
 
 			line.resize(internals::max_line_length);
 
@@ -309,20 +223,9 @@ export namespace xablau::organizational_analysis::reader
 
 			lineCounter++;
 
-			if constexpr (std::same_as < CharType, char >)
+			if (line.empty())
 			{
-				if (std::strlen(line.c_str()) == 0)
-				{
-					continue;
-				}
-			}
-
-			else
-			{
-				if (std::wcslen(line.c_str()) == 0)
-				{
-					continue;
-				}
+				continue;
 			}
 
 			if (std::regex_search(line, match, commentExpression))
@@ -332,57 +235,53 @@ export namespace xablau::organizational_analysis::reader
 
 			if (std::regex_search(line, match, activityExpression))
 			{
-				activity = match[1].str();
-				std::basic_string < CharType, Traits > name = match[2].str();
+				std::set < std::string > groups;
+				organizational_analysis::activity _activity;
 
-				const auto iterator =
-					activities.descriptions.insert(
-						std::make_pair(
-							activity,
-							organizational_analysis::activities < CharType, Traits > ::description())).first;
+				groups.insert(group);
 
-				iterator->second.name = std::move(name);
-				iterator->second.groups.insert(group);
+				_activity.identification = std::move(match[1].str());
+				_activity.groups = std::move(groups);
+				_activity.name = std::move(match[2].str());
+
+				activity = _activity.identification;
+
+				activities.insert(std::move(_activity));
 			}
 
 			else if (std::regex_search(line, match, agentInChargeExpression))
 			{
-				std::basic_string < CharType, Traits > agentInCharge = match[1].str();
+				std::string agentInCharge = match[1].str();
 
-				if (!agents.descriptions.contains(agentInCharge))
+				if (!agents.contains(agentInCharge))
 				{
-					if constexpr (std::same_as < CharType, char >)
-					{
-						throw std::runtime_error(std::format("Could not find agent \"{}\".", agentInCharge));
-					}
-
-					else
-					{
-						throw std::runtime_error("Could not find an agent.");
-					}
+					throw std::runtime_error(std::format("Could not find agent \"{}\".", agentInCharge));
 				}
 
-				activities.descriptions.at(activity).agents_in_charge.insert(std::move(agentInCharge));
+				auto node = activities.extract(activity);
+
+				if (node.empty())
+				{
+					throw std::runtime_error(std::format("Could not find activity \"{}\".", activity));
+				}
+
+				auto &_activity = node.value();
+
+				_activity.agents_in_charge.insert(std::move(agentInCharge));
+
+				activities.insert(std::move(node));
 			}
 
 			else if (std::regex_search(line, match, dependencyExpression))
 			{
-				std::basic_string < CharType, Traits > dependency = match[1].str();
+				std::string dependency = match[1].str();
 
 				if (activity == dependency)
 				{
-					if constexpr (std::same_as < CharType, char >)
-					{
-						throw std::runtime_error(std::format("Activity \"{}\" is depending on itself.", activity));
-					}
-
-					else
-					{
-						throw std::runtime_error("An activity is depending on itself.");
-					}
+					throw std::runtime_error(std::format("Activity \"{}\" is depending on itself.", activity));
 				}
 
-				activities.dependencies.insert(activity, dependency);
+				activityDependencies.insert(activity, dependency);
 			}
 
 			else if (std::regex_search(line, match, groupExpression))
@@ -392,96 +291,72 @@ export namespace xablau::organizational_analysis::reader
 
 			else if (!line.empty())
 			{
-				if constexpr (std::same_as < CharType, char >)
-				{
-					errorOutput << std::format("Unknown activity at line {}: \"{}\"\n", lineCounter, line);
-				}
-
-				else
-				{
-					errorOutput << std::format(L"Unknown activity at line {}: \"{}\"\n", lineCounter, line);
-				}
+				errorOutput << std::format("Unknown activity at line {}: \"{}\"\n", lineCounter, line);
 			}
 		}
 
-		for (const auto &[identification, description] : activities.descriptions)
+		for (const auto &_activity : activities)
 		{
-			activities.dependencies.insert(identification);
+			activityDependencies.insert(_activity.identification);
 		}
 
-		for (const auto &dependency : activities.dependencies.container())
+		for (const auto &dependency : activityDependencies.container())
 		{
-			if (!activities.descriptions.contains(dependency.first.value))
+			if (!activities.contains(dependency.first.value))
 			{
-				if constexpr (std::same_as < CharType, char >)
-				{
-					throw
-						std::runtime_error(
-							std::format(
-								"Dependency \"{}\" does not have a description.",
-								dependency.first.value));
-				}
-
-				else
-				{
-					throw std::runtime_error("A dependency does not have a description.");
-				}
+				throw
+					std::runtime_error(
+						std::format(
+							"Dependency \"{}\" does not have a description.",
+							dependency.first.value));
 			}
 		}
 
-		for (const auto &[_activity, description] : activities.descriptions)
+		for (const auto &_activity : activities)
 		{
-			if (description.agents_in_charge.empty())
+			if (_activity.agents_in_charge.empty())
 			{
-				if constexpr (std::same_as < CharType, char >)
-				{
-					throw
-						std::runtime_error(
-							std::format(
-								"Activity \"{}\" does not have an agent in charge.",
-								_activity));
-				}
-
-				else
-				{
-					throw std::runtime_error("An activity does not have an agent in charge.");
-				}
+				throw
+					std::runtime_error(
+						std::format(
+							"Activity \"{}\" does not have an agent in charge.",
+							_activity.identification));
 			}
 		}
 
 		return input;
 	}
 
-	template < bool InterfacesAreReciprocal, typename CharType, typename Traits >
-	requires (std::same_as < CharType, char > || std::same_as < CharType, wchar_t >)
-	std::basic_istream < CharType, Traits > &read_components(
-		std::basic_istream < CharType, Traits > &input,
-		organizational_analysis::components < InterfacesAreReciprocal, CharType, Traits > &components,
-		std::basic_ostream < CharType, Traits > &errorOutput = internals::default_error_output < CharType > (),
+	template < bool InterfacesAreReciprocal >
+	std::istream &read_components(
+		std::istream &input,
+		organizational_analysis::components_type &components,
+		organizational_analysis::component_interactions_type < InterfacesAreReciprocal > &componentInteractions,
+		std::ostream &errorOutput = std::cerr,
 		const std::locale &locale = std::locale(""))
 	{
 		size_t lineCounter{};
-		std::basic_string < CharType, Traits > component;
-		std::basic_string < CharType, Traits > group;
-		std::basic_regex < CharType > commentExpression;
-		std::basic_regex < CharType > groupExpression;
-		std::basic_regex < CharType > componentExpression;
-		std::basic_regex < CharType > interactionExpression;
+		std::string component;
+		std::string group;
+		std::regex commentExpression;
+		std::regex groupExpression;
+		std::regex componentExpression;
+		std::regex interactionExpression;
 
 		commentExpression.imbue(locale);
 		groupExpression.imbue(locale);
 		componentExpression.imbue(locale);
 		interactionExpression.imbue(locale);
 
-		commentExpression.assign(internals::comment_expression < CharType > ());
-		groupExpression.assign(internals::group_expression < CharType > ());
-		componentExpression.assign(internals::component_expression < CharType > ());
-		interactionExpression.assign(internals::component_interaction_expression < CharType > ());
+		commentExpression.assign(internals::comment_expression());
+		groupExpression.assign(internals::group_expression());
+		componentExpression.assign(internals::component_expression());
+		interactionExpression.assign(internals::component_interaction_expression());
 
 		while (input.good())
 		{
-			std::basic_string < CharType, Traits > line;
-			std::match_results < typename std::basic_string < CharType, Traits > ::const_iterator > match;
+			std::string line;
+			std::smatch match;
 
 			line.resize(internals::max_line_length);
 
@@ -489,20 +364,9 @@ export namespace xablau::organizational_analysis::reader
 
 			lineCounter++;
 
-			if constexpr (std::same_as < CharType, char >)
+			if (line.empty())
 			{
-				if (std::strlen(line.c_str()) == 0)
-				{
-					continue;
-				}
-			}
-
-			else
-			{
-				if (std::wcslen(line.c_str()) == 0)
-				{
-					continue;
-				}
+				continue;
 			}
 
 			if (std::regex_search(line, match, commentExpression))
@@ -512,22 +376,23 @@ export namespace xablau::organizational_analysis::reader
 
 			if (std::regex_search(line, match, componentExpression))
 			{
-				component = match[1].str();
-				std::basic_string < CharType, Traits > name = match[2].str();
+				std::set < std::string > groups;
+				organizational_analysis::component _component;
 
-				const auto iterator =
-					components.descriptions.insert(
-						std::make_pair(
-							component,
-							organizational_analysis::components < InterfacesAreReciprocal, CharType, Traits > ::description())).first;
+				groups.insert(group);
 
-				iterator->second.name = std::move(name);
-				iterator->second.groups.insert(group);
+				_component.identification = std::move(match[1].str());
+				_component.name = std::move(match[2].str());
+				_component.groups = std::move(groups);
+
+				component = _component.identification;
+
+				components.insert(std::move(_component));
 			}
 
 			else if (std::regex_search(line, match, interactionExpression))
 			{
-				components.interactions.insert(component, match[1].str());
+				componentInteractions.insert(component, match[1].str());
 			}
 
 			else if (std::regex_search(line, match, groupExpression))
@@ -537,49 +402,39 @@ export namespace xablau::organizational_analysis::reader
 
 			else if (!line.empty())
 			{
-				if constexpr (std::same_as < CharType, char >)
-				{
-					errorOutput << std::format("Unknown component at line {}: \"{}\"\n", lineCounter, line);
-				}
-
-				else
-				{
-					errorOutput << std::format(L"Unknown component at line {}: \"{}\"\n", lineCounter, line);
-				}
+				errorOutput << std::format("Unknown component at line {}: \"{}\"\n", lineCounter, line);
 			}
 		}
 
 		return input;
 	}
 
-	template < bool InterfacesAreReciprocal, typename CharType, typename Traits >
-	requires (std::same_as < CharType, char > || std::same_as < CharType, wchar_t >)
-	std::basic_istream < CharType, Traits > &read_affiliations(
-		std::basic_istream < CharType, Traits > &input,
-		organizational_analysis::affiliations < CharType, Traits > &affiliations,
-		const organizational_analysis::activities < CharType, Traits > &activities,
-		const organizational_analysis::components < InterfacesAreReciprocal, CharType, Traits > &components,
-		std::basic_ostream < CharType, Traits > &errorOutput = internals::default_error_output < CharType > (),
+	std::istream &read_affiliations(
+		std::istream &input,
+		organizational_analysis::affiliations_type &affiliations,
+		const organizational_analysis::activities_type &activities,
+		const organizational_analysis::components_type &components,
+		std::ostream &errorOutput = std::cerr,
 		const std::locale &locale = std::locale(""))
 	{
 		size_t lineCounter{};
-		std::basic_string < CharType, Traits > activity;
-		std::basic_regex < CharType > commentExpression;
-		std::basic_regex < CharType > affiliationActivityExpression;
-		std::basic_regex < CharType > affiliationComponentWeightExpression;
+		std::string activity;
+		std::regex commentExpression;
+		std::regex affiliationActivityExpression;
+		std::regex affiliationComponentWeightExpression;
 
 		commentExpression.imbue(locale);
 		affiliationActivityExpression.imbue(locale);
 		affiliationComponentWeightExpression.imbue(locale);
 
-		commentExpression.assign(internals::comment_expression < CharType > ());
-		affiliationActivityExpression.assign(internals::affiliation_activity_expression < CharType > ());
-		affiliationComponentWeightExpression.assign(internals::affiliation_component_weight_expression < CharType > ());
+		commentExpression.assign(internals::comment_expression());
+		affiliationActivityExpression.assign(internals::affiliation_activity_expression());
+		affiliationComponentWeightExpression.assign(internals::affiliation_component_weight_expression());
 
 		while (input.good())
 		{
-			std::basic_string < CharType, Traits > line;
-			std::match_results < typename std::basic_string < CharType, Traits > ::const_iterator > match;
+			std::string line;
+			std::smatch match;
 
 			line.resize(internals::max_line_length);
 
@@ -587,20 +442,9 @@ export namespace xablau::organizational_analysis::reader
 
 			lineCounter++;
 
-			if constexpr (std::same_as < CharType, char >)
+			if (line.empty())
 			{
-				if (std::strlen(line.c_str()) == 0)
-				{
-					continue;
-				}
-			}
-
-			else
-			{
-				if (std::wcslen(line.c_str()) == 0)
-				{
-					continue;
-				}
+				continue;
 			}
 
 			if (std::regex_search(line, match, commentExpression))
@@ -612,82 +456,48 @@ export namespace xablau::organizational_analysis::reader
 			{
 				activity = match[1].str();
 
-				if (!activities.descriptions.contains(activity))
+				if (!activities.contains(activity))
 				{
-					if constexpr (std::same_as < CharType, char >)
-					{
-						throw std::runtime_error(std::format("Could not find activity \"{}\".", activity));
-					}
-
-					else
-					{
-						throw std::runtime_error("Could not find an activity.");
-					}
+					throw std::runtime_error(std::format("Could not find activity \"{}\".", activity));
 				}
 
-				affiliations.responsabilities.insert(
-					std::make_pair(
-						activity,
-						std::map < std::basic_string < CharType, Traits >, float > ()));
+				affiliations.emplace(
+					activity,
+					std::map < std::string, float > ());
 			}
 
 			else if (std::regex_search(line, match, affiliationComponentWeightExpression))
 			{
-				std::basic_string < CharType, Traits > component = match[1].str();
+				std::string component = match[1].str();
 				float weight = std::stof(match[2].str(), nullptr);
 
-				if (!components.descriptions.contains(component))
+				if (!components.contains(component))
 				{
-					if constexpr (std::same_as < CharType, char >)
-					{
-						throw std::runtime_error(std::format("Could not find component \"{}\".", component));
-					}
-
-					else
-					{
-						throw std::runtime_error("Could not find a component.");
-					}
-
+					throw std::runtime_error(std::format("Could not find component \"{}\".", component));
 				}
 
 				if (weight == float{})
 				{
-					if constexpr (std::same_as < CharType, char >)
-					{
-						throw
-							std::runtime_error(
-								std::format(
-									"Activity \"{}\" has null connection with component \"{}\".",
-									activity,
-									component));
-					}
-
-					else
-					{
-						throw std::runtime_error("An activity has a null connection with a component.");
-					}
+					throw
+						std::runtime_error(
+							std::format(
+								"Activity \"{}\" has null connection with component \"{}\".",
+								activity,
+								component));
 				}
 
-				affiliations.responsabilities.at(activity).emplace(std::move(component), std::move(weight));
+				affiliations.at(activity).emplace(std::move(component), std::move(weight));
 			}
 
 			else if (!line.empty())
 			{
-				if constexpr (std::same_as < CharType, char >)
-				{
-					errorOutput << std::format("Unknown affliation at line {}: \"{}\"\n", lineCounter, line);
-				}
-
-				else
-				{
-					errorOutput << std::format(L"Unknown affliation at line {}: \"{}\"\n", lineCounter, line);
-				}
+				errorOutput << std::format("Unknown affliation at line {}: \"{}\"\n", lineCounter, line);
 			}
 		}
 
-		for (const auto &[identification, description] : activities.descriptions)
+		for (const auto &_activity : activities)
 		{
-			affiliations.responsabilities.insert(std::make_pair(identification, std::map < std::basic_string < CharType, Traits >, float > ()));
+			affiliations.emplace(_activity.identification, std::map < std::string, float > ());
 		}
 
 		return input;

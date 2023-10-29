@@ -4,8 +4,8 @@
 
 // MIT License
 //
-// Copyright (c) 2023 Jean Amaro <jean.amaro@outlook.com.br>
-// Copyright (c) 2023 Lucas Melchiori Pereira <lc.melchiori@gmail.com>
+// Copyright (c) 2023 Jean Amaro <jean.amaro@outlook.com.br>,
+//                    Lucas Melchiori Pereira <lc.melchiori@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -34,9 +34,6 @@ import xablau.organizational_analysis;
 
 int main(int argc, char** argv)
 {
-	using CharType = char;
-	using Traits = std::char_traits < CharType >;
-
 	try
 	{
 		if (argc < 25)
@@ -46,29 +43,29 @@ int main(int argc, char** argv)
 			return -1;
 		}
 
-		CharType separator{argv[23][0]};
-		CharType lister{argv[24][0]};
+		char separator{argv[23][0]};
+		char lister{argv[24][0]};
 
-		xablau::organizational_analysis::processor < true, CharType, Traits > processor{};
+		xablau::organizational_analysis::processor < true > processor{};
 
 		processor.indirectly_related_degree(1.0f);
 		processor.related_degree(2.0f);
 		processor.directly_related_degree(3.0f);
 
-		xablau::io::fstream < CharType > agentsInput(argv[1], std::ios_base::in);
-		xablau::io::fstream < CharType > activitiesInput(argv[2], std::ios_base::in);
-		xablau::io::fstream < CharType > componentsInput(argv[3], std::ios_base::in);
-		xablau::io::fstream < CharType > affiliationsInput(argv[4], std::ios_base::in);
+		xablau::io::fstream < char > agentsInput(argv[1], std::ios_base::in);
+		xablau::io::fstream < char > activitiesInput(argv[2], std::ios_base::in);
+		xablau::io::fstream < char > componentsInput(argv[3], std::ios_base::in);
+		xablau::io::fstream < char > affiliationsInput(argv[4], std::ios_base::in);
 
 		std::cout << "\n--------------------Reading inputs---------------------\n";
 
-		processor.read(agentsInput, activitiesInput, componentsInput, affiliationsInput);
+		processor.read_inputs(agentsInput, activitiesInput, componentsInput, affiliationsInput);
 
 		std::cout << "\n-------------------------------------------------------\n";
 		std::cout << "\n\n";
 		std::cout << "\n---------------Possible parallelizations---------------\n";
 
-		xablau::io::fstream < CharType > parallelizationsOutput(argv[21], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < char > parallelizationsOutput(argv[21], std::ios_base::out | std::ios_base::trunc);
 		const auto parallelizations = processor.identify_parallelizations();
 
 		size_t level{};
@@ -93,7 +90,7 @@ int main(int argc, char** argv)
 		std::cout << "\n\n";
 		std::cout << "\n-----------------------Priorities----------------------\n";
 
-		xablau::io::fstream < CharType > prioritiesOutput(argv[22], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < char > prioritiesOutput(argv[22], std::ios_base::out | std::ios_base::trunc);
 		const auto priorities = processor.identify_priorities();
 
 		for (const auto &priority : priorities)
@@ -143,8 +140,8 @@ int main(int argc, char** argv)
 			}
 		}
 
-		xablau::io::fstream < CharType > reportWithoutRedundanciesOutput(argv[19], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > reportWithRedundanciesOutput(argv[20], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < char > reportWithoutRedundanciesOutput(argv[19], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < char > reportWithRedundanciesOutput(argv[20], std::ios_base::out | std::ios_base::trunc);
 
 		if (std::atoi(argv[5]) == 0)
 		{
@@ -165,24 +162,24 @@ int main(int argc, char** argv)
 		std::cout << "\n\n";
 		std::cout << "\n-------------------------Saving------------------------\n";
 
-		xablau::io::fstream < CharType > agentsOutput(argv[7], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > activitiesOutput(argv[8], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > componentsOutput(argv[9], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > affiliationsOutput(argv[10], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < char > agentsOutput(argv[7], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < char > activitiesOutput(argv[8], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < char > componentsOutput(argv[9], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < char > affiliationsOutput(argv[10], std::ios_base::out | std::ios_base::trunc);
 
 		processor.write_agents(agentsOutput, separator, lister);
 		processor.write_activities(activitiesOutput, separator, lister);
 		processor.write_components(componentsOutput, separator, lister);
 		processor.write_affiliations(affiliationsOutput, separator, lister);
 
-		xablau::io::fstream < CharType > weakAffiliationsOutput(argv[11], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > strongAffiliationsOutput(argv[12], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > totalAffiliationsOutput(argv[13], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > totalPotentialOutput(argv[14], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > strongTotalPotentialWithoutRedundanciesOutput(argv[15], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > strongTotalPotentialWithRedundanciesOutput(argv[16], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > comparativeWithoutRedundanciesOutput(argv[17], std::ios_base::out | std::ios_base::trunc);
-		xablau::io::fstream < CharType > comparativeWithRedundanciesOutput(argv[18], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < char > weakAffiliationsOutput(argv[11], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < char > strongAffiliationsOutput(argv[12], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < char > totalAffiliationsOutput(argv[13], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < char > totalPotentialOutput(argv[14], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < char > strongTotalPotentialWithoutRedundanciesOutput(argv[15], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < char > strongTotalPotentialWithRedundanciesOutput(argv[16], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < char > comparativeWithoutRedundanciesOutput(argv[17], std::ios_base::out | std::ios_base::trunc);
+		xablau::io::fstream < char > comparativeWithRedundanciesOutput(argv[18], std::ios_base::out | std::ios_base::trunc);
 
 		processor.write_weak_affiliations_matrix(weakAffiliationsOutput, separator, lister);
 		processor.write_strong_affiliations_matrix(strongAffiliationsOutput, separator, lister);

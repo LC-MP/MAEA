@@ -31,96 +31,175 @@
 
 export module xablau.organizational_analysis:fundamental_definitions;
 
+export import <array>;
 export import <map>;
 export import <set>;
 export import <string>;
 
 export import xablau.graph;
 
-export namespace xablau::organizational_analysis
+namespace xablau::organizational_analysis
 {
-	namespace internals
+	struct agent final
 	{
-		template < typename CharType >
-		constexpr auto &default_error_output()
-		{
-			if constexpr (std::same_as < CharType, char >)
-			{
-				return std::cerr;
-			}
+		std::string identification{};
+		std::string role{};
+		std::set < std::string > groups{};
 
-			else
-			{
-				return std::wcerr;
-			}
+		[[nodiscard]] constexpr bool operator<(const agent &other) const
+		{
+			return this->identification < other.identification;
 		}
-	}
 
-	template < typename CharType, typename Traits >
-	struct agents
-	{
-		using string_type = std::basic_string < CharType, Traits >;
-
-		struct description
+		[[nodiscard]] constexpr bool operator==(const agent &other) const
 		{
-			std::set < string_type > groups{};
-			string_type role{};
-		};
+			return this->identification == other.identification;
+		}
 
-		std::map < string_type, agents::description > descriptions{};
+		agent() = default;
+
+		agent(const std::string &identification, const std::string &role = "") :
+			identification(identification),
+			role(role)
+		{
+		}
+
+		agent(const agent &) = default;
+
+		agent(agent &&) = default;
 	};
 
-	template < typename CharType, typename Traits >
-	struct activities
-	{
-		using string_type = std::basic_string < CharType, Traits >;
+	using agents_type = std::set < organizational_analysis::agent >;
 
-		struct description
+	struct activity final
+	{
+		struct task final
 		{
-			string_type name{};
-			std::set < string_type > groups{};
-			std::set < string_type > agents_in_charge{};
+			std::string identification{};
+			std::string name{};
+			std::array < size_t, 2 > coordinates{};
+
+			[[nodiscard]] constexpr bool operator<(const task &other) const
+			{
+				return this->identification < other.identification;
+			}
+
+			[[nodiscard]] constexpr bool operator==(const task &other) const
+			{
+				return this->identification == other.identification;
+			}
+
+			friend std::ostream &operator<<(std::ostream &stream, const task &task)
+			{
+				stream << task.identification;
+
+				return stream;
+			}
+
+			task() = default;
+
+			task(const std::string &identification, const std::string &name = "", const std::array < size_t, 2 > &coordinates = {}) :
+				identification(identification),
+				name(name),
+				coordinates(coordinates)
+			{
+			}
+
+			task(const task &) = default;
+
+			task(task &&) = default;
 		};
 
-		std::map < string_type, activities::description > descriptions{};
+		using tasks_type =
+			xablau::graph::digraph <
+				xablau::graph::node < activity::task >,
+				xablau::graph::graph_container_type < xablau::graph::graph_container_type_value::ordered >,
+				xablau::graph::edge < float > >;
 
+		std::string identification{};
+		std::string name{};
+		std::set < std::string > groups{};
+		std::set < std::string > agents_in_charge{};
+		tasks_type tasks{};
+
+		[[nodiscard]] constexpr bool operator<(const activity &other) const
+		{
+			return this->identification < other.identification;
+		}
+
+		[[nodiscard]] constexpr bool operator==(const activity &other) const
+		{
+			return this->identification == other.identification;
+		}
+
+		activity() = default;
+
+		activity(const std::string &identification, const std::string &name = "") :
+			identification(identification),
+			name(name)
+		{
+		}
+
+		activity(const activity &) = default;
+
+		activity(activity &&) = default;
+	};
+
+	using activities_type = std::set < organizational_analysis::activity >;
+
+	using activity_dependencies_type =
 		xablau::graph::digraph <
-			xablau::graph::node < string_type >,
+			xablau::graph::node < std::string >,
 			xablau::graph::graph_container_type < xablau::graph::graph_container_type_value::ordered >,
-			xablau::graph::edge < float > > dependencies{};
+			xablau::graph::edge < float > >;
+
+	struct component final
+	{
+		std::string identification{};
+		std::string name{};
+		std::set < std::string > groups{};
+		std::set < std::string > agents_in_charge{};
+
+		[[nodiscard]] constexpr bool operator<(const component &other) const
+		{
+			return this->identification < other.identification;
+		}
+
+		[[nodiscard]] constexpr bool operator==(const component &other) const
+		{
+			return this->identification == other.identification;
+		}
+
+		component() = default;
+
+		component(const std::string &identification, const std::string &name = "") :
+			identification(identification),
+			name(name)
+		{
+		}
+
+		component(const component &) = default;
+
+		component(component &&) = default;
 	};
 
-	template < bool InterfacesAreReciprocal, typename CharType, typename Traits >
-	struct components
-	{
-		using string_type = std::basic_string < CharType, Traits >;
+	using components_type = std::set < organizational_analysis::component >;
 
-		struct description
-		{
-			string_type name{};
-			std::set < string_type > groups{};
-			std::set < string_type > agents_in_charge{};
-		};
-
-		std::map < string_type, components::description > descriptions{};
-
+	template < bool InterfacesAreReciprocal >
+	using component_interactions_type =
 		typename std::conditional <
 			InterfacesAreReciprocal,
 			xablau::graph::graph <
-				xablau::graph::node < string_type >,
+				xablau::graph::node < std::string >,
 				xablau::graph::graph_container_type < xablau::graph::graph_container_type_value::ordered >,
 				xablau::graph::edge < float > >,
 			xablau::graph::digraph <
-				xablau::graph::node < string_type >,
+				xablau::graph::node < std::string >,
 				xablau::graph::graph_container_type < xablau::graph::graph_container_type_value::ordered >,
-				xablau::graph::edge < float > > > ::type interactions{};
-	};
+				xablau::graph::edge < float > > > ::type;
 
-	template < typename CharType, typename Traits >
-	struct affiliations
-	{
-		using string_type = std::basic_string < CharType, Traits >;
-
-		std::map < string_type, std::map < string_type, float > > responsabilities{};
-	};
+	using affiliations_type =
+		std::map <
+			std::string,
+			std::map < std::string, float > >;
 }

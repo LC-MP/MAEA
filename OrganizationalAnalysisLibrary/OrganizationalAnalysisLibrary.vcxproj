@@ -152,7 +152,7 @@
       <AdditionalOptions>/Zc:__cplusplus /volatile:iso /Zc:char8_t /bigobj /utf-8 %(AdditionalOptions)</AdditionalOptions>
       <TranslateIncludes>false</TranslateIncludes>
       <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <TreatWarningAsError>false</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
     </ClCompile>
@@ -183,7 +183,7 @@
       <AdditionalOptions>/Zc:__cplusplus /volatile:iso /Zc:char8_t /bigobj /utf-8 %(AdditionalOptions)</AdditionalOptions>
       <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
       <TranslateIncludes>false</TranslateIncludes>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <TreatWarningAsError>false</TreatWarningAsError>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
     </ClCompile>
     <Link>
@@ -196,18 +196,4 @@
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ItemGroup>
-    <ClCompile Update="D:\OneDrive\Xablau\OrganizationalAnalysis\Xablau.OrganizationalAnalysis.Exporter.cppm">
-      <FileType>Document</FileType>
-    </ClCompile>
-    <ClCompile Update="D:\OneDrive\Xablau\OrganizationalAnalysis\Xablau.OrganizationalAnalysis.Processor.cppm">
-      <FileType>Document</FileType>
-    </ClCompile>
-    <ClCompile Update="D:\OneDrive\Xablau\OrganizationalAnalysis\Xablau.OrganizationalAnalysis.Reader.cppm">
-      <FileType>Document</FileType>
-    </ClCompile>
-    <ClCompile Update="D:\OneDrive\Xablau\OrganizationalAnalysis\Xablau.OrganizationalAnalysis.Writer.cppm">
-      <FileType>Document</FileType>
-    </ClCompile>
-  </ItemGroup>
 </Project>

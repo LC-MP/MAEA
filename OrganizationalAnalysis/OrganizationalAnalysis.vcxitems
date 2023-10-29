@@ -14,6 +14,7 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Xablau.OrganizationalAnalysis.Blueprint.cppm" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Xablau.OrganizationalAnalysis.Processor.cppm" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Xablau.OrganizationalAnalysis.cppm" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Xablau.OrganizationalAnalysis.FundamentalDefinitions.cppm" />
