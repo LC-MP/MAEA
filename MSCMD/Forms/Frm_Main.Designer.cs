@@ -155,9 +155,9 @@
 			lbl_processStatus.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
 			lbl_processStatus.Location = new Point(699, 301);
 			lbl_processStatus.Name = "lbl_processStatus";
-			lbl_processStatus.Size = new Size(178, 47);
+			lbl_processStatus.Size = new Size(158, 66);
 			lbl_processStatus.TabIndex = 12;
-			lbl_processStatus.Text = "label1";
+			lbl_processStatus.Text = "Processamento:";
 			// 
 			// btn_ActivitiesDependenciesMatrix
 			// 
@@ -438,7 +438,7 @@
 			// 
 			// btn_errorLog
 			// 
-			btn_errorLog.Location = new Point(699, 351);
+			btn_errorLog.Location = new Point(699, 370);
 			btn_errorLog.Name = "btn_errorLog";
 			btn_errorLog.Size = new Size(138, 29);
 			btn_errorLog.TabIndex = 13;

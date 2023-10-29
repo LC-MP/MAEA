@@ -1189,5 +1189,29 @@ namespace MSCMD.Forms
 				if (dg_Group[e.ColumnIndex, e.RowIndex].ReadOnly)
 					e.CellStyle.BackColor = Color.LightGray;
 		}
+
+		private void btn_DeleteDivision_Click(object sender, EventArgs e)
+		{
+			Model.Element ele = GetElementoSelected();
+
+			if (ele != null)
+			{
+				if (ele.OcupiedBy != null)
+				{
+					DialogResult dialogResult = MessageBox.Show("Tem certeza que deseja desvincular a divisão?", "Desvincular Divisão Organizacional", MessageBoxButtons.YesNo);
+
+					if (dialogResult == DialogResult.Yes)
+					{
+						ele.OcupiedBy = null;
+						_elementsRepository.Save(ele);
+						refresh_ElementDetails();
+					}	
+				}
+			}
+			else
+			{
+				MessageBox.Show(errorMessageNotSelected);
+			}
+		}
 	}
 }

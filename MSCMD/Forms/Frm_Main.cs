@@ -116,7 +116,7 @@ namespace MSCMD.Forms
 			// Add the PictureBox control to the Form.
 			this.Controls.Add(pictureBox1);
 
-			dir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+			dir = AppContext.BaseDirectory;
 
 		}
 
@@ -260,7 +260,7 @@ namespace MSCMD.Forms
 				generateMatrixes();
 			}).ContinueWith((result) =>
 			{
-				lbl_processStatus.Text = "Processamento: " + DateTime.Now.ToString(@"dd\/MM\/yyyy HH:mm");
+				lbl_processStatus.Text = "Processamento:\n" + DateTime.Now.ToString(@"dd\/MM\/yyyy HH:mm");
 				btn_ProcessData.Enabled = true;
 				btn_errorLog.Enabled = true;
 				btn_ExportAllResults.Enabled = true;
@@ -837,7 +837,7 @@ namespace MSCMD.Forms
 
 		private void btn_DeleteAll_Click(object sender, EventArgs e)
 		{
-			string dir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+			string dir = AppContext.BaseDirectory;
 
 			DialogResult dialogResult = MessageBox.Show("Todos os dados serão excluidos permanentemente. Tem certeza que deseja continuar? \n\nObs: Caso queira salvar um backup do banco de dados, você pode salvar uma cópia do arquivo mscmd.db encontrado na pasta: " + dir, "Tem certeza que deseja deletar todos os dados da aplicação?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Stop);
 			if (dialogResult == DialogResult.Yes)
@@ -965,7 +965,7 @@ namespace MSCMD.Forms
 					{
 						try
 						{
-							string dir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+							string dir = AppContext.BaseDirectory; //AppContext.BaseDirectory;
 
 							foreach (string file in fileNames)
 							{
