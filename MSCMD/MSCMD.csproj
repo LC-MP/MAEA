@@ -113,4 +113,8 @@
     <Exec Command="copy &quot;$(SolutionDir)$(Platform)\$(Configuration)\*.dll&quot; &quot;$(TargetDir)&quot;" />
   </Target>
 
+  <Target Name="PostPublish" AfterTargets="Publish">
+    <Exec Command="copy &quot;$(SolutionDir)$(Platform)\$(Configuration)\*.dll&quot; &quot;$(PublishDir)&quot;" />
+  </Target>
+
 </Project>
