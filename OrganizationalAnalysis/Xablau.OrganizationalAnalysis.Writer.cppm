@@ -40,6 +40,7 @@ export import <locale>;
 export import <optional>;
 export import <ranges>;
 export import <regex>;
+export import <set>;
 export import <stdexcept>;
 export import <vector>;
 
@@ -453,6 +454,8 @@ namespace xablau::organizational_analysis::writer
 
 		for (size_t i = 0; i < comparativeMatrix.dimensionalities()[0]; i++)
 		{
+			std::array < std::set < std::string >, 3 > attendances{};
+
 			for (size_t j = 0; j < comparativeMatrix.dimensionalities()[1]; j++)
 			{
 				const auto cell1 = comparativeMatrix(i, j);
@@ -460,16 +463,22 @@ namespace xablau::organizational_analysis::writer
 				if (cell1 >= indirectlyRelatedDegree && cell1 < relatedDegree)
 				{
 					interactions[0][i]++;
+
+					attendances[0].insert(baseIndexToKeyMap.at(j));
 				}
 
 				else if (cell1 >= relatedDegree && cell1 < directlyRelatedDegree)
 				{
 					interactions[1][i]++;
+
+					attendances[1].insert(baseIndexToKeyMap.at(j));
 				}
 
 				else
 				{
 					interactions[2][i]++;
+
+					attendances[2].insert(baseIndexToKeyMap.at(j));
 				}
 
 				const auto cell2 = comparativeMatrix(j, i);
@@ -477,24 +486,49 @@ namespace xablau::organizational_analysis::writer
 				if (cell2 >= indirectlyRelatedDegree && cell2 < relatedDegree)
 				{
 					interactions[0][i]++;
+
+					attendances[0].insert(baseIndexToKeyMap.at(j));
 				}
 
 				else if (cell2 >= relatedDegree && cell2 < directlyRelatedDegree)
 				{
 					interactions[1][i]++;
+
+					attendances[1].insert(baseIndexToKeyMap.at(j));
 				}
 
 				else
 				{
 					interactions[2][i]++;
+
+					attendances[2].insert(baseIndexToKeyMap.at(j));
 				}
 			}
 
-			output <<
-				"Element " << baseIndexToKeyMap.at(i) << "\n" <<
-				"Attended interactions: " << interactions[1][i] << "\n" <<
-				"Unexpected interactions: " << interactions[2][i] << "\n" <<
-				"Unattended interactions: " << interactions[0][i] << "\n\n";
+			output << "Element " << baseIndexToKeyMap.at(i) << "\n";
+
+			output << "Attended interactions: " << interactions[1][i] << "\n";
+
+			for (const auto &attendance : attendances[1])
+			{
+				output << "\t" << attendance << "\n";
+			}
+
+			output << "Unexpected interactions: " << interactions[2][i] << "\n";
+
+			for (const auto &attendance : attendances[2])
+			{
+				output << "\t" << attendance << "\n";
+			}
+
+			output << "Unattended interactions: " << interactions[0][i] << "\n";
+
+			for (const auto &attendance : attendances[0])
+			{
+				output << "\t" << attendance << "\n";
+			}
+
+			output << "\n";
 		}
 
 		output <<
