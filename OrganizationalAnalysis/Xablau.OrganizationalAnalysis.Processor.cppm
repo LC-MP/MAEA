@@ -1852,7 +1852,7 @@ export namespace xablau::organizational_analysis
 			writer::write_matrix(output, this->_comparative_matrix_with_redundancies_step_2, separator, lister, optionalLabels, optionalLabels);
 		}
 
-		void write_element_instances_csv(
+		void write_element_instances(
 			const std::string &directory,
 			const char separator,
 			const char lister) const
@@ -1971,7 +1971,7 @@ export namespace xablau::organizational_analysis
 				std::make_optional(std::move(labelsMetadata)));
 		}
 
-		void write_element_instance_neighborhood_csv(
+		void write_element_instance_neighborhood(
 			const std::string &directory,
 			const char separator,
 			const char lister) const

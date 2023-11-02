@@ -1,14 +1,23 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace OrganizationalAnalysis
 {
+    public enum Traversability
+    {
+        Closed,
+        Open,
+        Border,
+        Teleport
+    };
+
     public class Processor
     {
-        readonly private ulong processorObjectAddress;
+        readonly private nuint processorObjectAddress;
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr indirectly_related_degree(
-            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint indirectly_related_degree(
+            nuint processorObjectAddress,
             [MarshalAs(UnmanagedType.R4)] float degree);
 
         public void IndirectlyRelatedDegree(float degree)
@@ -22,8 +31,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr related_degree(
-            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint related_degree(
+            nuint processorObjectAddress,
             [MarshalAs(UnmanagedType.R4)] float degree);
 
         public void RelatedDegree(float degree)
@@ -37,8 +46,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr directly_related_degree(
-            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint directly_related_degree(
+            nuint processorObjectAddress,
             [MarshalAs(UnmanagedType.R4)] float degree);
 
         public void DirectlyRelatedDegree(float degree)
@@ -52,8 +61,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr insert_or_assign_agent(
-            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint insert_or_assign_agent(
+            nuint processorObjectAddress,
             [MarshalAs(UnmanagedType.LPStr)] string agent,
             [MarshalAs(UnmanagedType.LPStr)] string role);
 
@@ -68,8 +77,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr erase_agent(
-            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint erase_agent(
+            nuint processorObjectAddress,
             [MarshalAs(UnmanagedType.LPStr)] string agent);
 
         public void EraseAgent(string agent)
@@ -83,8 +92,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr insert_agent_group(
-            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint insert_agent_group(
+            nuint processorObjectAddress,
             [MarshalAs(UnmanagedType.LPStr)] string agent,
             [MarshalAs(UnmanagedType.LPStr)] string group);
 
@@ -99,8 +108,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr erase_agent_group(
-            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint erase_agent_group(
+            nuint processorObjectAddress,
             [MarshalAs(UnmanagedType.LPStr)] string agent,
             [MarshalAs(UnmanagedType.LPStr)] string group);
 
@@ -115,8 +124,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr insert_or_edit_activity(
-            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint insert_or_edit_activity(
+            nuint processorObjectAddress,
             [MarshalAs(UnmanagedType.LPStr)] string activity,
             [MarshalAs(UnmanagedType.LPStr)] string name);
 
@@ -131,8 +140,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr erase_activity(
-            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint erase_activity(
+            nuint processorObjectAddress,
             [MarshalAs(UnmanagedType.LPStr)] string activity);
 
         public void EraseActivity(string activity)
@@ -146,8 +155,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr insert_activity_group(
-            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint insert_activity_group(
+            nuint processorObjectAddress,
             [MarshalAs(UnmanagedType.LPStr)] string activity,
             [MarshalAs(UnmanagedType.LPStr)] string group);
 
@@ -162,8 +171,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr erase_activity_group(
-            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint erase_activity_group(
+            nuint processorObjectAddress,
             [MarshalAs(UnmanagedType.LPStr)] string activity,
             [MarshalAs(UnmanagedType.LPStr)] string group);
 
@@ -178,8 +187,102 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr insert_agent_in_charge_of_activity(
-            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint insert_task(
+            nuint processorObjectAddress,
+            [MarshalAs(UnmanagedType.LPStr)] string activity,
+            [MarshalAs(UnmanagedType.LPStr)] string task_identification,
+            [MarshalAs(UnmanagedType.LPStr)] string task_name,
+            nuint x,
+            nuint y);
+
+        public void InsertTask(string activity, string task_identification, string task_name, nuint x, nuint y)
+        {
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.insert_task(
+                        this.processorObjectAddress,
+                        activity,
+                        task_identification,
+                        task_name,
+                        x,
+                        y));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint insert_task_dependency(
+            nuint processorObjectAddress,
+            [MarshalAs(UnmanagedType.LPStr)] string activity,
+            [MarshalAs(UnmanagedType.LPStr)] string task_dependent,
+            [MarshalAs(UnmanagedType.LPStr)] string task_dependency);
+
+        public void InsertTaskDependency(string activity, string task_dependent, string task_dependency)
+        {
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.insert_task_dependency(
+                        this.processorObjectAddress,
+                        activity,
+                        task_dependent,
+                        task_dependency));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint erase_task(
+            nuint processorObjectAddress,
+            [MarshalAs(UnmanagedType.LPStr)] string activity,
+            [MarshalAs(UnmanagedType.LPStr)] string task);
+
+        public void EraseTask(string activity, string task)
+        {
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.erase_task(
+                        this.processorObjectAddress,
+                        activity,
+                        task));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint erase_task_dependency(
+            nuint processorObjectAddress,
+            [MarshalAs(UnmanagedType.LPStr)] string activity,
+            [MarshalAs(UnmanagedType.LPStr)] string task_dependent,
+            [MarshalAs(UnmanagedType.LPStr)] string task_dependency);
+
+        public void EraseTaskDependency(string activity, string task_dependent, string task_dependency)
+        {
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.erase_task_dependency(
+                        this.processorObjectAddress,
+                        activity,
+                        task_dependent,
+                        task_dependency));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint insert_agent_in_charge_of_activity(
+            nuint processorObjectAddress,
             [MarshalAs(UnmanagedType.LPStr)] string agent,
             [MarshalAs(UnmanagedType.LPStr)] string activity);
 
@@ -194,8 +297,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr erase_agent_in_charge_of_activity(
-            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint erase_agent_in_charge_of_activity(
+            nuint processorObjectAddress,
             [MarshalAs(UnmanagedType.LPStr)] string agent,
             [MarshalAs(UnmanagedType.LPStr)] string activity);
 
@@ -210,8 +313,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr insert_activity_dependency(
-            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint insert_activity_dependency(
+            nuint processorObjectAddress,
             [MarshalAs(UnmanagedType.LPStr)] string dependent,
             [MarshalAs(UnmanagedType.LPStr)] string dependency);
 
@@ -226,8 +329,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr erase_activity_dependency(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint erase_activity_dependency(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string dependent,
            [MarshalAs(UnmanagedType.LPStr)] string dependency);
 
@@ -242,8 +345,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr insert_or_edit_component(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint insert_or_edit_component(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string component,
            [MarshalAs(UnmanagedType.LPStr)] string name);
 
@@ -258,8 +361,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr erase_component(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint erase_component(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string component);
 
         public void EraseComponent(string component)
@@ -273,8 +376,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr insert_component_group(
-            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint insert_component_group(
+            nuint processorObjectAddress,
             [MarshalAs(UnmanagedType.LPStr)] string component,
             [MarshalAs(UnmanagedType.LPStr)] string group);
 
@@ -289,8 +392,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr erase_component_group(
-            [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint erase_component_group(
+            nuint processorObjectAddress,
             [MarshalAs(UnmanagedType.LPStr)] string component,
             [MarshalAs(UnmanagedType.LPStr)] string group);
 
@@ -305,8 +408,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr insert_component_interface(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint insert_component_interface(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string component1,
            [MarshalAs(UnmanagedType.LPStr)] string component2);
 
@@ -321,8 +424,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr erase_component_interface(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint erase_component_interface(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string component1,
            [MarshalAs(UnmanagedType.LPStr)] string component2);
 
@@ -337,8 +440,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr insert_or_assign_affiliation(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint insert_or_assign_affiliation(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string activity,
            [MarshalAs(UnmanagedType.LPStr)] string component,
            [MarshalAs(UnmanagedType.R4)] float rating);
@@ -354,8 +457,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr erase_affiliation(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint erase_affiliation(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string activity,
            [MarshalAs(UnmanagedType.LPStr)] string component);
 
@@ -370,24 +473,22 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern void clear(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress);
+        private static extern void clear(nuint processorObjectAddress);
 
         public void Clear()
         {
             Processor.clear(this.processorObjectAddress);
         }
 
-        private delegate void ResizeVector(
-            [MarshalAs(UnmanagedType.U8)] ulong size);
+        private delegate void ResizeVector(nuint size);
 
         private delegate void InsertStringIntoPosition1(
             [MarshalAs(UnmanagedType.LPStr)] string activity,
-            [MarshalAs(UnmanagedType.U8)] ulong position);
+            nuint position);
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr identify_parallelizations(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint identify_parallelizations(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.FunctionPtr)] ResizeVector resizer,
            [MarshalAs(UnmanagedType.FunctionPtr)] InsertStringIntoPosition1 inserter);
 
@@ -396,16 +497,16 @@ namespace OrganizationalAnalysis
             var parallelizations = new List<SortedSet<string>>();
 
             ResizeVector resizer =
-                ([MarshalAs(UnmanagedType.U8)] ulong size) =>
+                (nuint size) =>
                 {
-                    for (ulong i = 0; i < size; i++)
+                    for (nuint i = 0; i < size; i++)
                     {
                         parallelizations.Add(new SortedSet < string > ());
                     }
                 };
 
             InsertStringIntoPosition1 inserter =
-                ([MarshalAs(UnmanagedType.LPStr)] string activity, [MarshalAs(UnmanagedType.U8)] ulong position) =>
+                ([MarshalAs(UnmanagedType.LPStr)] string activity, nuint position) =>
                 {
                     parallelizations[(int)position].Add(new string(activity));
                 };
@@ -422,11 +523,11 @@ namespace OrganizationalAnalysis
 
         private delegate void InsertPairOfStringAndSizeT(
             [MarshalAs(UnmanagedType.LPStr)] string activity,
-            [MarshalAs(UnmanagedType.U8)] ulong position);
+            nuint position);
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr identify_priorities(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint identify_priorities(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.FunctionPtr)] InsertPairOfStringAndSizeT inserter);
 
         public SortedDictionary<string, ulong> IdentifyPriorities()
@@ -434,7 +535,7 @@ namespace OrganizationalAnalysis
             var priorities = new SortedDictionary<string, ulong>();
 
             InsertPairOfStringAndSizeT inserter =
-                ([MarshalAs(UnmanagedType.LPStr)] string activity, [MarshalAs(UnmanagedType.U8)] ulong priority) =>
+                ([MarshalAs(UnmanagedType.LPStr)] string activity, nuint priority) =>
                 {
                     priorities.Add(new string(activity), priority);
                 };
@@ -449,19 +550,19 @@ namespace OrganizationalAnalysis
             return priorities;
         }
 
-        private delegate void InsertString(
+        private delegate void InsertStringInContainer(
             [MarshalAs(UnmanagedType.LPStr)] string elementWithoutAgentsInCharge);
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr components_without_agents_in_charge(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
-           [MarshalAs(UnmanagedType.FunctionPtr)] InsertString inserter);
+        private static extern nint components_without_agents_in_charge(
+           nuint processorObjectAddress,
+           [MarshalAs(UnmanagedType.FunctionPtr)] InsertStringInContainer inserter);
 
         public List<string> ComponentsWithoutAgentsInCharge()
         {
             var componentsWithoutAgents = new List<string>();
 
-            InsertString inserter =
+            InsertStringInContainer inserter =
                 ([MarshalAs(UnmanagedType.LPStr)] string elementWithoutAgentsInCharge) =>
                 {
                     componentsWithoutAgents.Add(new string(elementWithoutAgentsInCharge));
@@ -478,15 +579,15 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr activities_without_agents_in_charge(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
-           [MarshalAs(UnmanagedType.FunctionPtr)] InsertString inserter);
+        private static extern nint activities_without_agents_in_charge(
+           nuint processorObjectAddress,
+           [MarshalAs(UnmanagedType.FunctionPtr)] InsertStringInContainer inserter);
 
         public List<string> ActivitiesWithoutAgentsInCharge()
         {
             var activitiesWithoutAgents = new List<string>();
 
-            InsertString inserter =
+            InsertStringInContainer inserter =
                 ([MarshalAs(UnmanagedType.LPStr)] string elementWithoutAgentsInCharge) =>
                 {
                     activitiesWithoutAgents.Add(new string(elementWithoutAgentsInCharge));
@@ -503,8 +604,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr minimum_relation_degree_for_agents_in_charge_of_components(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint minimum_relation_degree_for_agents_in_charge_of_components(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.R4)] float degree);
 
         public void MinimumRelationDegreeForAgentsInChargeOfComponents(float degree)
@@ -521,8 +622,8 @@ namespace OrganizationalAnalysis
             [MarshalAs(UnmanagedType.LPStr)] string nativeString);
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr agent_role(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint agent_role(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string agent,
            [MarshalAs(UnmanagedType.FunctionPtr)] CopyString copier);
 
@@ -547,8 +648,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr activity_name(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint activity_name(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string activity,
            [MarshalAs(UnmanagedType.FunctionPtr)] CopyString copier);
 
@@ -573,8 +674,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr component_name(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint component_name(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string component,
            [MarshalAs(UnmanagedType.FunctionPtr)] CopyString copier);
 
@@ -599,8 +700,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr compare_activities_and_organization(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress);
+        private static extern nint compare_activities_and_organization(
+           nuint processorObjectAddress);
 
         public void CompareActivitiesAndOrganization()
         {
@@ -613,8 +714,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr compare_components_and_organization(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint compare_components_and_organization(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.R4)] float minimumRelationDegreeForAgentsInChargeOfComponents);
 
         public void CompareComponentsAndOrganization(float minimumRelationDegreeForAgentsInChargeOfComponents)
@@ -631,18 +732,16 @@ namespace OrganizationalAnalysis
             }
         }
 
-        private delegate void ResizeMatrix(
-            [MarshalAs(UnmanagedType.U8)] ulong rows,
-            [MarshalAs(UnmanagedType.U8)] ulong columns);
+        private delegate void ResizeMatrix(nuint rows, nuint columns);
 
         private delegate void InsertFloatIntoPosition2(
             [MarshalAs(UnmanagedType.R4)] float value,
-            [MarshalAs(UnmanagedType.U8)] ulong row,
-            [MarshalAs(UnmanagedType.U8)] ulong column);
+            nuint row,
+            nuint column);
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr activities_dependencies_matrix(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint activities_dependencies_matrix(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.FunctionPtr)] ResizeMatrix resizer,
            [MarshalAs(UnmanagedType.FunctionPtr)] InsertFloatIntoPosition2 inserter);
 
@@ -651,7 +750,7 @@ namespace OrganizationalAnalysis
             List<List<float>> matrix = new List<List<float>>();
 
             ResizeMatrix resizer =
-                ([MarshalAs(UnmanagedType.U8)] ulong rows, [MarshalAs(UnmanagedType.U8)] ulong columns) =>
+                (nuint rows, nuint columns) =>
                 {
                     matrix = new List<List<float>>((int)rows);
 
@@ -667,7 +766,7 @@ namespace OrganizationalAnalysis
                 };
 
             InsertFloatIntoPosition2 inserter =
-                ([MarshalAs(UnmanagedType.R4)] float value, [MarshalAs(UnmanagedType.U8)] ulong row, [MarshalAs(UnmanagedType.U8)] ulong column) =>
+                ([MarshalAs(UnmanagedType.R4)] float value, nuint row, nuint column) =>
                 {
                     matrix[(int)row][(int)column] = value;
                 };
@@ -683,8 +782,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr components_interfaces_matrix(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint components_interfaces_matrix(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.FunctionPtr)] ResizeMatrix resizer,
            [MarshalAs(UnmanagedType.FunctionPtr)] InsertFloatIntoPosition2 inserter);
 
@@ -693,7 +792,7 @@ namespace OrganizationalAnalysis
             List<List<float>> matrix = new List<List<float>>();
 
             ResizeMatrix resizer =
-                ([MarshalAs(UnmanagedType.U8)] ulong rows, [MarshalAs(UnmanagedType.U8)] ulong columns) =>
+                (nuint rows, nuint columns) =>
                 {
                     matrix = new List<List<float>>((int)rows);
 
@@ -709,7 +808,7 @@ namespace OrganizationalAnalysis
                 };
 
             InsertFloatIntoPosition2 inserter =
-                ([MarshalAs(UnmanagedType.R4)] float value, [MarshalAs(UnmanagedType.U8)] ulong row, [MarshalAs(UnmanagedType.U8)] ulong column) =>
+                ([MarshalAs(UnmanagedType.R4)] float value, nuint row, nuint column) =>
                 {
                     matrix[(int)row][(int)column] = value;
                 };
@@ -725,8 +824,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr weak_affiliations_matrix(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint weak_affiliations_matrix(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.FunctionPtr)] ResizeMatrix resizer,
            [MarshalAs(UnmanagedType.FunctionPtr)] InsertFloatIntoPosition2 inserter);
 
@@ -735,7 +834,7 @@ namespace OrganizationalAnalysis
             List<List<float>> matrix = new List<List<float>>();
 
             ResizeMatrix resizer =
-                ([MarshalAs(UnmanagedType.U8)] ulong rows, [MarshalAs(UnmanagedType.U8)] ulong columns) =>
+                (nuint rows, nuint columns) =>
                 {
                     matrix = new List<List<float>>((int)rows);
 
@@ -751,7 +850,7 @@ namespace OrganizationalAnalysis
                 };
 
             InsertFloatIntoPosition2 inserter =
-                ([MarshalAs(UnmanagedType.R4)] float value, [MarshalAs(UnmanagedType.U8)] ulong row, [MarshalAs(UnmanagedType.U8)] ulong column) =>
+                ([MarshalAs(UnmanagedType.R4)] float value, nuint row, nuint column) =>
                 {
                     matrix[(int)row][(int)column] = value;
                 };
@@ -767,8 +866,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr strong_affiliations_matrix(
-          [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint strong_affiliations_matrix(
+          nuint processorObjectAddress,
           [MarshalAs(UnmanagedType.FunctionPtr)] ResizeMatrix resizer,
           [MarshalAs(UnmanagedType.FunctionPtr)] InsertFloatIntoPosition2 inserter);
 
@@ -777,7 +876,7 @@ namespace OrganizationalAnalysis
             List<List<float>> matrix = new List<List<float>>();
 
             ResizeMatrix resizer =
-                ([MarshalAs(UnmanagedType.U8)] ulong rows, [MarshalAs(UnmanagedType.U8)] ulong columns) =>
+                (nuint rows, nuint columns) =>
                 {
                     matrix = new List<List<float>>((int)rows);
 
@@ -793,7 +892,7 @@ namespace OrganizationalAnalysis
                 };
 
             InsertFloatIntoPosition2 inserter =
-                ([MarshalAs(UnmanagedType.R4)] float value, [MarshalAs(UnmanagedType.U8)] ulong row, [MarshalAs(UnmanagedType.U8)] ulong column) =>
+                ([MarshalAs(UnmanagedType.R4)] float value, nuint row, nuint column) =>
                 {
                     matrix[(int)row][(int)column] = value;
                 };
@@ -809,8 +908,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr total_affiliations_matrix(
-          [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint total_affiliations_matrix(
+          nuint processorObjectAddress,
           [MarshalAs(UnmanagedType.FunctionPtr)] ResizeMatrix resizer,
           [MarshalAs(UnmanagedType.FunctionPtr)] InsertFloatIntoPosition2 inserter);
 
@@ -819,7 +918,7 @@ namespace OrganizationalAnalysis
             List<List<float>> matrix = new List<List<float>>();
 
             ResizeMatrix resizer =
-                ([MarshalAs(UnmanagedType.U8)] ulong rows, [MarshalAs(UnmanagedType.U8)] ulong columns) =>
+                (nuint rows, nuint columns) =>
                 {
                     matrix = new List<List<float>>((int)rows);
 
@@ -835,7 +934,7 @@ namespace OrganizationalAnalysis
                 };
 
             InsertFloatIntoPosition2 inserter =
-                ([MarshalAs(UnmanagedType.R4)] float value, [MarshalAs(UnmanagedType.U8)] ulong row, [MarshalAs(UnmanagedType.U8)] ulong column) =>
+                ([MarshalAs(UnmanagedType.R4)] float value, nuint row, nuint column) =>
                 {
                     matrix[(int)row][(int)column] = value;
                 };
@@ -851,8 +950,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr comparative_matrix_without_redundancies(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint comparative_matrix_without_redundancies(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.FunctionPtr)] ResizeMatrix resizer,
            [MarshalAs(UnmanagedType.FunctionPtr)] InsertFloatIntoPosition2 inserter);
 
@@ -861,7 +960,7 @@ namespace OrganizationalAnalysis
             List<List<float>> matrix = new List<List<float>>();
 
             ResizeMatrix resizer =
-                ([MarshalAs(UnmanagedType.U8)] ulong rows, [MarshalAs(UnmanagedType.U8)] ulong columns) =>
+                (nuint rows, nuint columns) =>
                 {
                     matrix = new List<List<float>>((int)rows);
 
@@ -877,7 +976,7 @@ namespace OrganizationalAnalysis
                 };
 
             InsertFloatIntoPosition2 inserter =
-                ([MarshalAs(UnmanagedType.R4)] float value, [MarshalAs(UnmanagedType.U8)] ulong row, [MarshalAs(UnmanagedType.U8)] ulong column) =>
+                ([MarshalAs(UnmanagedType.R4)] float value, nuint row, nuint column) =>
                 {
                     matrix[(int)row][(int)column] = value;
                 };
@@ -893,8 +992,8 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr comparative_matrix_with_redundancies(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint comparative_matrix_with_redundancies(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.FunctionPtr)] ResizeMatrix resizer,
            [MarshalAs(UnmanagedType.FunctionPtr)] InsertFloatIntoPosition2 inserter);
 
@@ -903,7 +1002,7 @@ namespace OrganizationalAnalysis
             List<List<float>> matrix = new List<List<float>>();
 
             ResizeMatrix resizer =
-                ([MarshalAs(UnmanagedType.U8)] ulong rows, [MarshalAs(UnmanagedType.U8)] ulong columns) =>
+                (nuint rows, nuint columns) =>
                 {
                     matrix = new List<List<float>>((int)rows);
 
@@ -919,7 +1018,7 @@ namespace OrganizationalAnalysis
                 };
 
             InsertFloatIntoPosition2 inserter =
-                ([MarshalAs(UnmanagedType.R4)] float value, [MarshalAs(UnmanagedType.U8)] ulong row, [MarshalAs(UnmanagedType.U8)] ulong column) =>
+                ([MarshalAs(UnmanagedType.R4)] float value, nuint row, nuint column) =>
                 {
                     matrix[(int)row][(int)column] = value;
                 };
@@ -935,11 +1034,629 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr write_agents(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint insert_blueprint_element_single_color(
+           nuint processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string identification,
+           byte red,
+           byte green,
+           byte blue,
+           [MarshalAs(UnmanagedType.I4)] Traversability state);
+
+        public void InsertBlueprintElement(string identification, System.Drawing.Color color, Traversability state)
+        {
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.insert_blueprint_element_single_color(
+                        this.processorObjectAddress,
+                        identification,
+                        color.R,
+                        color.G,
+                        color.B,
+                        state));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint insert_blueprint_element_color_range(
+           nuint processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string identification,
+           byte minRed,
+           byte minGreen,
+           byte minBlue,
+           byte maxRed,
+           byte maxGreen,
+           byte maxBlue,
+           [MarshalAs(UnmanagedType.I4)] Traversability state);
+
+        public void InsertBlueprintElement(
+            string identification,
+            System.Drawing.Color min,
+            System.Drawing.Color max,
+            Traversability state)
+        {
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.insert_blueprint_element_color_range(
+                        this.processorObjectAddress,
+                        identification,
+                        min.R,
+                        min.G,
+                        min.B,
+                        max.R,
+                        max.G,
+                        max.B,
+                        state));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint rename_blueprint_element_instance(
+           nuint processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string oldIdentification,
+           [MarshalAs(UnmanagedType.LPStr)] string newIdentification);
+
+        public void RenameBlueprintElementInstance(
+            string oldIdentification,
+            string newIdentification)
+        {
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.rename_blueprint_element_instance(
+                        this.processorObjectAddress,
+                        oldIdentification,
+                        newIdentification));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint rename_blueprint_element_instance_hash(
+           nuint processorObjectAddress,
+           [MarshalAs(UnmanagedType.Bool)] bool absolute,
+           nuint hash,
+           [MarshalAs(UnmanagedType.LPStr)] string newIdentification);
+
+        public void RenameBlueprintElementInstanceHash(
+            bool absolute,
+            nuint hash,
+            string newIdentification)
+        {
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.rename_blueprint_element_instance_hash(
+                        this.processorObjectAddress,
+                        absolute,
+                        hash,
+                        newIdentification));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint blueprint_element_instance_hash(
+           nuint processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string identification,
+           out nuint absolutePositionHash,
+           out nuint relativePositionHash);
+
+        public void BlueprintElementInstanceHash(
+            string identification,
+            out nuint absolutePositionHash,
+            out nuint relativePositionHash)
+        {
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.blueprint_element_instance_hash(
+                        this.processorObjectAddress,
+                        identification,
+                        out absolutePositionHash,
+                        out relativePositionHash));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint set_blueprint_element_traversability(
+           nuint processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string identification,
+           [MarshalAs(UnmanagedType.I4)] Traversability state);
+
+        public void BlueprintElementTraversability(
+            string identification,
+            Traversability state)
+        {
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.set_blueprint_element_traversability(
+                        this.processorObjectAddress,
+                        identification,
+                        state));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint set_blueprint_element_instance_traversability(
+           nuint processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string identification,
+           [MarshalAs(UnmanagedType.I4)] Traversability state);
+
+        public void BlueprintElementInstanceTraversability(
+            string identification,
+            Traversability state)
+        {
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.set_blueprint_element_instance_traversability(
+                        this.processorObjectAddress,
+                        identification,
+                        state));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint erase_blueprint_element(
+           nuint processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string identification);
+
+        public void EraseBlueprintElement(string identification)
+        {
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.erase_blueprint_element(
+                        this.processorObjectAddress,
+                        identification));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint read_blueprint_and_detect_instances(
+           nuint processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string identification,
+           [MarshalAs(UnmanagedType.R4)] float referenceInMeters);
+
+        public void ReadBlueprintAndDetectInstances(string identification, float referenceInMeters)
+        {
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.read_blueprint_and_detect_instances(
+                        this.processorObjectAddress,
+                        identification,
+                        referenceInMeters));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint detect_blueprint_instances(
+           nuint processorObjectAddress);
+
+        public void DetectBlueprintInstances()
+        {
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.detect_blueprint_instances(
+                        this.processorObjectAddress));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint update_blueprint_space(
+           nuint processorObjectAddress);
+
+        public void UpdateBlueprintSpace()
+        {
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.update_blueprint_space(
+                        this.processorObjectAddress));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        private delegate void InsertMappedPairOfSizeTAndCoordinates(
+            [MarshalAs(UnmanagedType.LPStr)] string key1,
+            [MarshalAs(UnmanagedType.LPStr)] string key2,
+            nuint x,
+            nuint y);
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint blueprint_element_instance_neighborhood(
+           nuint processorObjectAddress,
+           InsertMappedPairOfSizeTAndCoordinates inserter);
+
+        public SortedDictionary<Tuple<string, string>, SortedSet<Tuple<nuint, nuint>>> BlueprintElementInstanceNeighborhood()
+        {
+            SortedDictionary<Tuple<string, string>, SortedSet<Tuple<nuint, nuint>>> neighborhood = new();
+
+            InsertMappedPairOfSizeTAndCoordinates inserter =
+                (string key1, string key2, nuint x, nuint y) =>
+                {
+                    Tuple<string, string> key = new(key1, key2);
+
+                    if (neighborhood.TryGetValue(key, out SortedSet<Tuple<nuint, nuint>>? value))
+                    {
+                        value.Add(new Tuple<nuint, nuint>(x, y));
+                    }
+
+                    else
+                    {
+                        value = new SortedSet<Tuple<nuint, nuint>>();
+
+                        neighborhood.Add(key, value);
+                    }
+                };
+
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.blueprint_element_instance_neighborhood(
+                        this.processorObjectAddress,
+                        inserter));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+
+            return neighborhood;
+        }
+
+        private delegate void InsertPairOfSizeTInContainer(
+            nuint value1,
+            nuint value2);
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint trace_path_on_blueprint(
+           nuint processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string activity,
+           [MarshalAs(UnmanagedType.FunctionPtr)] InsertStringInContainer taskInserter,
+           [MarshalAs(UnmanagedType.FunctionPtr)] InsertStringInContainer instanceInserter,
+           [MarshalAs(UnmanagedType.FunctionPtr)] InsertPairOfSizeTInContainer coordinateInserter,
+           [MarshalAs(UnmanagedType.R4)] out float distance);
+
+        public Tuple<List<string>, List<string>, List<Tuple<nuint, nuint>>, float> TracePathOnBlueprint(string activity)
+        {
+            List<string> taskIdentifications = new();
+            List<string> instanceIdentifications = new();
+            List<Tuple<nuint, nuint>> path = new();
+            float distance = 0;
+
+            InsertStringInContainer taskInserter =
+                ([MarshalAs(UnmanagedType.LPStr)] string key) =>
+                {
+                    taskIdentifications.Add(key);
+                };
+
+            InsertStringInContainer instanceInserter =
+                ([MarshalAs(UnmanagedType.LPStr)] string key) =>
+                {
+                    instanceIdentifications.Add(key);
+                };
+
+            InsertPairOfSizeTInContainer coordinateInserter =
+                (nuint value1, nuint value2) =>
+                {
+                    path.Add(new Tuple<nuint, nuint>(value1, value2));
+                };
+
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.trace_path_on_blueprint(
+                        this.processorObjectAddress,
+                        activity,
+                        taskInserter,
+                        instanceInserter,
+                        coordinateInserter,
+                        out distance));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+
+            return new(taskIdentifications, instanceIdentifications, path, distance);
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint element_instance_identifications(
+           nuint processorObjectAddress,
+           [MarshalAs(UnmanagedType.FunctionPtr)] InsertStringInContainer inserter);
+
+        public List<string> ElementInstanceIdentifications()
+        {
+            List<string> elementInstanceIdentifications = new();
+
+            InsertStringInContainer inserter =
+                ([MarshalAs(UnmanagedType.LPStr)] string identification) =>
+                {
+                    elementInstanceIdentifications.Add(identification);
+                };
+
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.element_instance_identifications(
+                        this.processorObjectAddress,
+                        inserter));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+
+            return elementInstanceIdentifications;
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint write_blueprint(
+           nuint processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string path);
+
+        public void WriteBlueprint(string path)
+        {
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.write_blueprint(
+                        this.processorObjectAddress,
+                        path));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint write_blueprint_contours(
+           nuint processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string path);
+
+        public void WriteBlueprintContours(string path)
+        {
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.write_blueprint_contours(
+                        this.processorObjectAddress,
+                        path));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint write_blueprint_element_instance(
+           nuint processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string directory,
+           [MarshalAs(UnmanagedType.LPStr)] string identification,
+           int cameraDistanceLevel);
+
+        public void WriteBlueprintElementInstance(
+            string directory,
+            string identification,
+            int cameraDistanceLevel)
+        {
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.write_blueprint_element_instance(
+                        this.processorObjectAddress,
+                        directory,
+                        identification,
+                        cameraDistanceLevel));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [return: MarshalAs(UnmanagedType.LPStr)]
+        private delegate string StringFromVector(nuint i);
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint write_blueprint_element_instances(
+           nuint processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string directory,
+           int cameraDistanceLevel,
+           [MarshalAs(UnmanagedType.FunctionPtr)] StringFromVector getter,
+           nuint vectorSize);
+
+        public void WriteBlueprintElementInstances(
+            string directory,
+            int cameraDistanceLevel,
+            List<string> ?inclusion = null)
+        {
+            nuint vectorSize = inclusion != null ? (nuint)inclusion.Count : 0;
+
+            StringFromVector getter =
+                (nuint i) =>
+                {
+                    if (inclusion != null)
+                    {
+                        return inclusion[(int)i];
+                    }
+
+                    return "";
+                };
+
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.write_blueprint_element_instances(
+                        this.processorObjectAddress,
+                        directory,
+                        cameraDistanceLevel,
+                        getter,
+                        vectorSize));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint blueprint_element_domain(
+           nuint processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string identification,
+           out byte minRed,
+           out byte minGreen,
+           out byte minBlue,
+           out byte maxRed,
+           out byte maxGreen,
+           out byte maxBlue);
+
+        public Tuple<System.Drawing.Color, System.Drawing.Color> BlueprintElementDomain(string identification)
+        {
+            byte minRed;
+            byte minGreen;
+            byte minBlue;
+            byte maxRed;
+            byte maxGreen;
+            byte maxBlue;
+
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.blueprint_element_domain(
+                        this.processorObjectAddress,
+                        identification,
+                        out minRed,
+                        out minGreen,
+                        out minBlue,
+                        out maxRed,
+                        out maxGreen,
+                        out maxBlue));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+
+
+            return
+                new Tuple<
+                    System.Drawing.Color,
+                    System.Drawing.Color>(
+                        System.Drawing.Color.FromArgb(minRed, minGreen, minBlue),
+                        System.Drawing.Color.FromArgb(maxRed, maxGreen, maxBlue));
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint get_blueprint_element_traversability(
+           nuint processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string identification,
+           out Traversability state);
+
+        public Traversability BlueprintElementTraversability(string identification)
+        {
+            Traversability state;
+
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.get_blueprint_element_traversability(
+                        this.processorObjectAddress,
+                        identification,
+                        out state));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+
+            return state;
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint get_blueprint_element_instance_traversability(
+           nuint processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string identification,
+           out Traversability state);
+
+        public Traversability BlueprintElementInstanceTraversability(string identification)
+        {
+            Traversability state;
+
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.get_blueprint_element_instance_traversability(
+                        this.processorObjectAddress,
+                        identification,
+                        out state));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+
+            return state;
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint meters_per_pixel_on_blueprint(
+           nuint processorObjectAddress,
+           [MarshalAs(UnmanagedType.R4)] out float metersPerPixel);
+
+        public float MetersPerPixelOnBlueprint()
+        {
+            float meterPerPixel;
+
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.meters_per_pixel_on_blueprint(
+                        this.processorObjectAddress,
+                        out meterPerPixel));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+
+            return meterPerPixel;
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint write_agents(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string filename,
-           [MarshalAs(UnmanagedType.I1)] sbyte separator,
-           [MarshalAs(UnmanagedType.I1)] sbyte lister);
+           sbyte separator,
+           sbyte lister);
 
         public void WriteAgents(string filename, char separator, char lister)
         {
@@ -958,11 +1675,11 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr write_activities(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint write_activities(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string filename,
-           [MarshalAs(UnmanagedType.I1)] sbyte separator,
-           [MarshalAs(UnmanagedType.I1)] sbyte lister);
+           sbyte separator,
+           sbyte lister);
 
         public void WriteActivities(string filename, char separator, char lister)
         {
@@ -981,11 +1698,11 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr write_components(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint write_components(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string filename,
-           [MarshalAs(UnmanagedType.I1)] sbyte separator,
-           [MarshalAs(UnmanagedType.I1)] sbyte lister);
+           sbyte separator,
+           sbyte lister);
 
         public void WriteComponents(string filename, char separator, char lister)
         {
@@ -1004,11 +1721,11 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr write_affiliations(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint write_affiliations(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string filename,
-           [MarshalAs(UnmanagedType.I1)] sbyte separator,
-           [MarshalAs(UnmanagedType.I1)] sbyte lister);
+           sbyte separator,
+           sbyte lister);
 
         public void WriteAffiliations(string filename, char separator, char lister)
         {
@@ -1027,11 +1744,11 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr write_weak_affiliations_matrix(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint write_weak_affiliations_matrix(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string filename,
-           [MarshalAs(UnmanagedType.I1)] sbyte separator,
-           [MarshalAs(UnmanagedType.I1)] sbyte lister);
+           sbyte separator,
+           sbyte lister);
 
         public void WriteWeakAffiliationsMatrix(string filename, char separator, char lister)
         {
@@ -1050,11 +1767,11 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr write_strong_affiliations_matrix(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint write_strong_affiliations_matrix(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string filename,
-           [MarshalAs(UnmanagedType.I1)] sbyte separator,
-           [MarshalAs(UnmanagedType.I1)] sbyte lister);
+           sbyte separator,
+           sbyte lister);
 
         public void WriteStrongAffiliationsMatrix(string filename, char separator, char lister)
         {
@@ -1073,11 +1790,11 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr write_total_affiliations_matrix(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint write_total_affiliations_matrix(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string filename,
-           [MarshalAs(UnmanagedType.I1)] sbyte separator,
-           [MarshalAs(UnmanagedType.I1)] sbyte lister);
+           sbyte separator,
+           sbyte lister);
 
         public void WriteTotalAffiliationsMatrix(string filename, char separator, char lister)
         {
@@ -1096,11 +1813,11 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr write_total_potential_matrix(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint write_total_potential_matrix(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string filename,
-           [MarshalAs(UnmanagedType.I1)] sbyte separator,
-           [MarshalAs(UnmanagedType.I1)] sbyte lister);
+           sbyte separator,
+           sbyte lister);
 
         public void WriteTotalPotentialMatrix(string filename, char separator, char lister)
         {
@@ -1119,11 +1836,11 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr write_strong_potential_matrix_without_redundancies(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint write_strong_potential_matrix_without_redundancies(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string filename,
-           [MarshalAs(UnmanagedType.I1)] sbyte separator,
-           [MarshalAs(UnmanagedType.I1)] sbyte lister);
+           sbyte separator,
+           sbyte lister);
 
         public void WriteStrongPotentialMatrixWithoutRedundancies(string filename, char separator, char lister)
         {
@@ -1142,11 +1859,11 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr write_strong_potential_matrix_with_redundancies(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint write_strong_potential_matrix_with_redundancies(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string filename,
-           [MarshalAs(UnmanagedType.I1)] sbyte separator,
-           [MarshalAs(UnmanagedType.I1)] sbyte lister);
+           sbyte separator,
+           sbyte lister);
 
         public void WriteStrongPotentialMatrixWithRedundancies(string filename, char separator, char lister)
         {
@@ -1165,11 +1882,11 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr write_comparative_matrix_without_redundancies(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint write_comparative_matrix_without_redundancies(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string filename,
-           [MarshalAs(UnmanagedType.I1)] sbyte separator,
-           [MarshalAs(UnmanagedType.I1)] sbyte lister);
+           sbyte separator,
+           sbyte lister);
 
         public void WriteComparativeMatrixWithoutRedundancies(string filename, char separator, char lister)
         {
@@ -1188,11 +1905,11 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern IntPtr write_comparative_matrix_with_redundancies(
-           [MarshalAs(UnmanagedType.U8)] ulong processorObjectAddress,
+        private static extern nint write_comparative_matrix_with_redundancies(
+           nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string filename,
-           [MarshalAs(UnmanagedType.I1)] sbyte separator,
-           [MarshalAs(UnmanagedType.I1)] sbyte lister);
+           sbyte separator,
+           sbyte lister);
 
         public void WriteComparativeMatrixWithRedundancies(string filename, char separator, char lister)
         {
@@ -1211,7 +1928,53 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern ulong construct();
+        private static extern nint write_element_instances(
+           nuint processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string directory,
+           sbyte separator,
+           sbyte lister);
+
+        public void WriteElementInstances(string directory, char separator, char lister)
+        {
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.write_element_instances(
+                        this.processorObjectAddress,
+                        directory,
+                        Convert.ToSByte(separator),
+                        Convert.ToSByte(lister)));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint write_element_instance_neighborhood(
+           nuint processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string directory,
+           sbyte separator,
+           sbyte lister);
+
+        public void WriteElementInstanceNeighborhood(string directory, char separator, char lister)
+        {
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.write_element_instance_neighborhood(
+                        this.processorObjectAddress,
+                        directory,
+                        Convert.ToSByte(separator),
+                        Convert.ToSByte(lister)));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nuint construct();
 
         public Processor()
         {
@@ -1219,7 +1982,7 @@ namespace OrganizationalAnalysis
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern void destroy(ulong processorObjectAddress);
+        private static extern void destroy(nuint processorObjectAddress);
 
         ~Processor()
         {

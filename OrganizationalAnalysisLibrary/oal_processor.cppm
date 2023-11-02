@@ -15,7 +15,7 @@ using ResizeMatrix = void(*)(const size_t rows, const size_t columns);
 using InsertFloatIntoPosition2 = void(*)(const float value, const size_t i, const size_t j);
 using CopyNativeStringToManagedString = void(*)(const char *string);
 using StringFromVector = const char *(*)(const size_t i);
-using InsertMappedPairOfSizeTAndCoordinates = void(*)(const char *key1, const char *key2, const size_t row, const size_t column);
+using InsertMappedPairOfSizeTAndCoordinates = void(*)(const char *key1, const char *key2, const size_t x, const size_t y);
 
 extern "C"
 {
@@ -251,14 +251,14 @@ extern "C"
 		const char *activity,
 		const char *task_identification,
 		const char *task_name,
-		const size_t row,
-		const size_t column)
+		const size_t x,
+		const size_t y)
 	{
 		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
-			processor->insert_task(activity, task_identification, task_name, std::to_array({ row, column }));
+			processor->insert_task(activity, task_identification, task_name, std::to_array({ x, y }));
 		}
 		catch (const std::exception &exception)
 		{
@@ -1213,14 +1213,14 @@ extern "C"
 	_declspec(dllexport) const char *blueprint_element_instance_hash(
 		uintptr_t address,
 		const char *identification,
-		size_t *absolutePositionHash,
-		size_t *relativePositionHash)
+		size_t &absolutePositionHash,
+		size_t &relativePositionHash)
 	{
 		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
-			std::tie(*absolutePositionHash, *relativePositionHash) =
+			std::tie(absolutePositionHash, relativePositionHash) =
 				processor->blueprint_element_instance_hash(identification);
 		}
 		catch (const std::exception &exception)
@@ -1400,7 +1400,7 @@ extern "C"
 		InsertStringInContainer taskInserter,
 		InsertStringInContainer instanceInserter,
 		InsertPairOfSizeTInContainer coordinateInserter,
-		float *distance)
+		float &distance)
 	{
 		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
 
@@ -1423,7 +1423,7 @@ extern "C"
 				coordinateInserter(coordinate[0], coordinate[1]);
 			}
 
-			*distance = _distance;
+			distance = _distance;
 		}
 		catch (const std::exception &exception)
 		{
@@ -1507,7 +1507,7 @@ extern "C"
 	_declspec(dllexport) const char *write_blueprint_element_instance(
 		uintptr_t address,
 		const char *directory,
-		const std::string &identification,
+		const char *identification,
 		const int cameraDistanceLevel)
 	{
 		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
@@ -1563,12 +1563,12 @@ extern "C"
 	_declspec(dllexport) const char *blueprint_element_domain(
 		uintptr_t address,
 		const char *identification,
-		unsigned char *minRed,
-		unsigned char *minGreen,
-		unsigned char *minBlue,
-		unsigned char *maxRed,
-		unsigned char *maxGreen,
-		unsigned char *maxBlue)
+		unsigned char &minRed,
+		unsigned char &minGreen,
+		unsigned char &minBlue,
+		unsigned char &maxRed,
+		unsigned char &maxGreen,
+		unsigned char &maxBlue)
 	{
 		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
 
@@ -1576,13 +1576,13 @@ extern "C"
 		{
 			const auto [min, max] = processor->blueprint_element_domain(identification);
 
-			*minRed = min[0];
-			*minGreen = min[1];
-			*minBlue = min[2];
+			minRed = min[0];
+			minGreen = min[1];
+			minBlue = min[2];
 
-			*maxRed = max[0];
-			*maxGreen = max[1];
-			*maxBlue = max[2];
+			maxRed = max[0];
+			maxGreen = max[1];
+			maxBlue = max[2];
 		}
 		catch (const std::exception &exception)
 		{
@@ -1599,13 +1599,13 @@ extern "C"
 	_declspec(dllexport) const char *get_blueprint_element_traversability(
 		uintptr_t address,
 		const char *identification,
-		xablau::organizational_analysis::traversability *state)
+		xablau::organizational_analysis::traversability &state)
 	{
 		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
-			*state = processor->blueprint_element_traversability(identification);
+			state = processor->blueprint_element_traversability(identification);
 		}
 		catch (const std::exception &exception)
 		{
@@ -1622,13 +1622,13 @@ extern "C"
 	_declspec(dllexport) const char *get_blueprint_element_instance_traversability(
 		uintptr_t address,
 		const char *identification,
-		xablau::organizational_analysis::traversability *state)
+		xablau::organizational_analysis::traversability &state)
 	{
 		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
-			*state = processor->blueprint_element_instance_traversability(identification);
+			state = processor->blueprint_element_instance_traversability(identification);
 		}
 		catch (const std::exception &exception)
 		{
@@ -1644,13 +1644,13 @@ extern "C"
 
 	_declspec(dllexport) const char *meters_per_pixel_on_blueprint(
 		uintptr_t address,
-		float *metersPerPixel)
+		float &metersPerPixel)
 	{
 		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
-			*metersPerPixel = processor->meters_per_pixel_on_blueprint();
+			metersPerPixel = processor->meters_per_pixel_on_blueprint();
 		}
 		catch (const std::exception &exception)
 		{
@@ -1976,7 +1976,7 @@ extern "C"
 		return nullptr;
 	}
 
-	_declspec(dllexport) const char *write_element_instances_csv(
+	_declspec(dllexport) const char *write_element_instances(
 		uintptr_t address,
 		const char *directory,
 		const char separator,
@@ -1986,7 +1986,7 @@ extern "C"
 
 		try
 		{
-			processor->write_element_instances_csv(directory, separator, lister);
+			processor->write_element_instances(directory, separator, lister);
 		}
 		catch (const std::exception &exception)
 		{
@@ -2000,7 +2000,7 @@ extern "C"
 		return nullptr;
 	}
 
-	_declspec(dllexport) const char *write_element_instance_neighborhood_csv(
+	_declspec(dllexport) const char *write_element_instance_neighborhood(
 		uintptr_t address,
 		const char *directory,
 		const char separator,
@@ -2010,7 +2010,7 @@ extern "C"
 
 		try
 		{
-			processor->write_element_instance_neighborhood_csv(directory, separator, lister);
+			processor->write_element_instance_neighborhood(directory, separator, lister);
 		}
 		catch (const std::exception &exception)
 		{
