@@ -721,6 +721,7 @@ export namespace xablau::organizational_analysis
 			const std::string &activity,
 			const std::string &task_identification,
 			const std::string &task_name,
+			const float degree,
 			const std::array < size_t, 2 > &task_coordinates)
 		{
 			auto node = this->_activities.extract(activity);
@@ -730,7 +731,7 @@ export namespace xablau::organizational_analysis
 				throw std::runtime_error(std::format("Activity \"{}\" does not exist.", activity));
 			}
 
-			node.value().tasks.insert(task_type(task_identification, task_name, task_coordinates));
+			node.value().tasks.insert(task_type(task_identification, task_name, degree, task_coordinates));
 
 			this->_activities.insert(std::move(node));
 		}
@@ -1007,7 +1008,7 @@ export namespace xablau::organizational_analysis
 		void insert_or_assign_affiliation(
 			const std::string &activity,
 			const std::string &component,
-			const float rating)
+			const float degree)
 		{
 			if (!this->_activities.contains(activity))
 			{
@@ -1024,7 +1025,7 @@ export namespace xablau::organizational_analysis
 					activity,
 					std::map < std::string, float > {}).first->second;
 
-			components.insert_or_assign(component, rating);
+			components.insert_or_assign(component, degree);
 		}
 
 		void erase_affiliation(
@@ -1437,6 +1438,52 @@ export namespace xablau::organizational_analysis
 			}
 
 			return this->_blueprint.trace_path(iterator->tasks);
+		}
+
+		[[nodiscard]] auto trace_path_on_blueprint_and_update_affiliations(const std::string &activity)
+		{
+			const auto iterator1 = this->_activities.find(activity);
+
+			if (iterator1 == this->_activities.cend())
+			{
+				throw std::runtime_error(std::format("Activity \"{}\" does not exist.", activity));
+			}
+
+			auto result = this->_blueprint.trace_path(iterator1->tasks);
+
+			for (const auto &task : std::get < 0 > (result))
+			{
+				const auto &_task = iterator1->tasks.container().find(activity::task(task))->first.value;
+
+				if (_task.degree == float{})
+				{
+					continue;
+				}
+
+				if (const auto iterator2 = this->_components.find(task);
+					iterator2 != this->_components.end())
+				{
+					this->insert_or_assign_affiliation(activity, iterator2->identification, _task.degree);
+				}
+			}
+
+			return result;
+		}
+
+		[[nodiscard]] auto absolute_coordinates_from_element_instance_coordinates_on_blueprint(
+			const std::string &identification,
+			const int cameraDistanceLevel,
+			const size_t x,
+			const size_t y) const
+		{
+			return this->_blueprint.absolute_coordinates_from_element_instance_coordinates(identification, cameraDistanceLevel, x, y);
+		}
+
+		[[nodiscard]] std::string element_instance_from_absolute_coordinates_on_blueprint(
+			const size_t x,
+			const size_t y) const
+		{
+			return this->_blueprint.element_instance_from_absolute_coordinates(x, y);
 		}
 
 		[[nodiscard]] std::vector < std::string > element_instance_identifications() const

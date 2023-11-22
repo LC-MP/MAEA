@@ -77,6 +77,7 @@ namespace xablau::organizational_analysis
 		{
 			std::string identification{};
 			std::string name{};
+			float degree{};
 			std::array < size_t, 2 > coordinates{};
 
 			[[nodiscard]] constexpr bool operator<(const task &other) const
@@ -98,9 +99,14 @@ namespace xablau::organizational_analysis
 
 			task() = default;
 
-			task(const std::string &identification, const std::string &name = "", const std::array < size_t, 2 > &coordinates = {}) :
+			task(const std::string &identification,
+				const std::string &name = "",
+				const float degree = float{},
+				const std::array < size_t, 2 > &coordinates = {}) :
+
 				identification(identification),
 				name(name),
+				degree(degree),
 				coordinates(coordinates)
 			{
 			}

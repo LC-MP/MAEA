@@ -192,10 +192,11 @@ namespace OrganizationalAnalysis
             [MarshalAs(UnmanagedType.LPStr)] string activity,
             [MarshalAs(UnmanagedType.LPStr)] string task_identification,
             [MarshalAs(UnmanagedType.LPStr)] string task_name,
+            [MarshalAs(UnmanagedType.R4)] float degree,
             nuint x,
             nuint y);
 
-        public void InsertTask(string activity, string task_identification, string task_name, nuint x, nuint y)
+        public void InsertTask(string activity, string task_identification, string task_name, float degree, nuint x, nuint y)
         {
             string? message =
                 Marshal.PtrToStringAnsi(
@@ -204,6 +205,7 @@ namespace OrganizationalAnalysis
                         activity,
                         task_identification,
                         task_name,
+                        degree,
                         x,
                         y));
 
@@ -444,11 +446,11 @@ namespace OrganizationalAnalysis
            nuint processorObjectAddress,
            [MarshalAs(UnmanagedType.LPStr)] string activity,
            [MarshalAs(UnmanagedType.LPStr)] string component,
-           [MarshalAs(UnmanagedType.R4)] float rating);
+           [MarshalAs(UnmanagedType.R4)] float degree);
 
-        public void InsertOrAssignAffiliation(string activity, string component, float rating)
+        public void InsertOrAssignAffiliation(string activity, string component, float degree)
         {
-            string? message = Marshal.PtrToStringAnsi(Processor.insert_or_assign_affiliation(this.processorObjectAddress, activity, component, rating));
+            string? message = Marshal.PtrToStringAnsi(Processor.insert_or_assign_affiliation(this.processorObjectAddress, activity, component, degree));
 
             if (message != null)
             {
@@ -1292,6 +1294,59 @@ namespace OrganizationalAnalysis
             }
         }
 
+        class InstanceComparer : IComparer<Tuple<string, string>>
+        {
+            int IComparer<Tuple<string, string>>.Compare(Tuple<string, string> ?pair1, Tuple<string, string> ?pair2)
+            {
+                if (pair1 == null && pair2 == null)
+                {
+                    return 0;
+                }
+
+                if (pair1 == null)
+                {
+                    return 1;
+                }
+
+                if (pair2 == null)
+                {
+                    return -1;
+                }
+
+                var min1 = pair1.Item1.CompareTo(pair1.Item2) < 0 ? pair1.Item1 : pair1.Item2;
+                var max1 = pair1.Item1.CompareTo(pair1.Item2) < 0 ? pair1.Item2 : pair1.Item1;
+
+                var min2 = pair2.Item1.CompareTo(pair2.Item2) < 0 ? pair2.Item1 : pair2.Item2;
+                var max2 = pair2.Item1.CompareTo(pair2.Item2) < 0 ? pair2.Item2 : pair2.Item1;
+
+                int comparison1 = min1.CompareTo(min2);
+
+                if (comparison1 < 0)
+                {
+                    return -1;
+                }
+
+                if (comparison1 > 0)
+                {
+                    return 1;
+                }
+
+                int comparison2 = max1.CompareTo(max2);
+
+                if (comparison2 < 0)
+                {
+                    return -1;
+                }
+
+                if (comparison2 > 0)
+                {
+                    return 1;
+                }
+
+                return 0;
+            }
+        }
+
         private delegate void InsertMappedPairOfSizeTAndCoordinates(
             [MarshalAs(UnmanagedType.LPStr)] string key1,
             [MarshalAs(UnmanagedType.LPStr)] string key2,
@@ -1301,11 +1356,11 @@ namespace OrganizationalAnalysis
         [DllImport("OrganizationalAnalysisLibrary.dll")]
         private static extern nint blueprint_element_instance_neighborhood(
            nuint processorObjectAddress,
-           InsertMappedPairOfSizeTAndCoordinates inserter);
+           [MarshalAs(UnmanagedType.FunctionPtr)] InsertMappedPairOfSizeTAndCoordinates inserter);
 
         public SortedDictionary<Tuple<string, string>, SortedSet<Tuple<nuint, nuint>>> BlueprintElementInstanceNeighborhood()
         {
-            SortedDictionary<Tuple<string, string>, SortedSet<Tuple<nuint, nuint>>> neighborhood = new();
+            SortedDictionary<Tuple<string, string>, SortedSet<Tuple<nuint, nuint>>> neighborhood = new(new InstanceComparer());
 
             InsertMappedPairOfSizeTAndCoordinates inserter =
                 (string key1, string key2, nuint x, nuint y) =>
@@ -1393,6 +1448,131 @@ namespace OrganizationalAnalysis
             }
 
             return new(taskIdentifications, instanceIdentifications, path, distance);
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint trace_path_on_blueprint_and_update_affiliations(
+           nuint processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string activity,
+           [MarshalAs(UnmanagedType.FunctionPtr)] InsertStringInContainer taskInserter,
+           [MarshalAs(UnmanagedType.FunctionPtr)] InsertStringInContainer instanceInserter,
+           [MarshalAs(UnmanagedType.FunctionPtr)] InsertPairOfSizeTInContainer coordinateInserter,
+           [MarshalAs(UnmanagedType.R4)] out float distance);
+
+        public Tuple<List<string>, List<string>, List<Tuple<nuint, nuint>>, float> TracePathOnBlueprintAndUpdateAffiliations(string activity)
+        {
+            List<string> taskIdentifications = new();
+            List<string> instanceIdentifications = new();
+            List<Tuple<nuint, nuint>> path = new();
+            float distance = 0;
+
+            InsertStringInContainer taskInserter =
+                ([MarshalAs(UnmanagedType.LPStr)] string key) =>
+                {
+                    taskIdentifications.Add(key);
+                };
+
+            InsertStringInContainer instanceInserter =
+                ([MarshalAs(UnmanagedType.LPStr)] string key) =>
+                {
+                    instanceIdentifications.Add(key);
+                };
+
+            InsertPairOfSizeTInContainer coordinateInserter =
+                (nuint value1, nuint value2) =>
+                {
+                    path.Add(new Tuple<nuint, nuint>(value1, value2));
+                };
+
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.trace_path_on_blueprint_and_update_affiliations(
+                        this.processorObjectAddress,
+                        activity,
+                        taskInserter,
+                        instanceInserter,
+                        coordinateInserter,
+                        out distance));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+
+            return new(taskIdentifications, instanceIdentifications, path, distance);
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint absolute_coordinates_from_element_instance_coordinates_on_blueprint(
+           nuint processorObjectAddress,
+           [MarshalAs(UnmanagedType.LPStr)] string identification,
+           int cameraDistanceLevel,
+           nuint relativeX,
+           nuint relativeY,
+           out nuint absoluteX,
+           out nuint absoluteY);
+
+        public Tuple<nuint, nuint> AbsoluteCoordinatesFromElementInstanceCoordinatesOnBlueprint(
+            string identification,
+            int cameraDistanceLevel,
+            nuint x,
+            nuint y)
+        {
+            nuint absoluteX;
+            nuint absoluteY;
+
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.absolute_coordinates_from_element_instance_coordinates_on_blueprint(
+                        this.processorObjectAddress,
+                        identification,
+                        cameraDistanceLevel,
+                        x,
+                        y,
+                        out absoluteX,
+                        out absoluteY));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+
+            return new(absoluteX, absoluteY);
+        }
+
+        [DllImport("OrganizationalAnalysisLibrary.dll")]
+        private static extern nint element_instance_from_absolute_coordinates_on_blueprint(
+           nuint processorObjectAddress,
+           nuint x,
+           nuint y,
+           [MarshalAs(UnmanagedType.FunctionPtr)] CopyString copier);
+
+        public string ElementInstanceFromAbsoluteCoordinatesOnBlueprint(
+            nuint x,
+            nuint y)
+        {
+            string managedString = "";
+
+            CopyString copier =
+                ([MarshalAs(UnmanagedType.LPStr)] string nativeString) =>
+                {
+                    managedString = new string(nativeString);
+                };
+
+            string? message =
+                Marshal.PtrToStringAnsi(
+                    Processor.element_instance_from_absolute_coordinates_on_blueprint(
+                        this.processorObjectAddress,
+                        x,
+                        y,
+                        copier));
+
+            if (message != null)
+            {
+                throw new Exception(message);
+            }
+
+            return managedString;
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]

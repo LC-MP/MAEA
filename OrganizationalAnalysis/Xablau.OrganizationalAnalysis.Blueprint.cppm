@@ -172,22 +172,10 @@ namespace xablau::organizational_analysis
 			}
 		};
 
-		struct less_coordinate
-		{
-			[[nodiscard]] constexpr bool operator()(
-				const std::array < size_t, 2 > &coordinate1,
-				const std::array < size_t, 2 > &coordinate2) const
-			{
-				return
-					(coordinate1[0] < coordinate2[0]) ||
-					(coordinate1[0] == coordinate2[0] && coordinate1[1] < coordinate2[1]);
-			}
-		};
-
 		using element_instance_neighborhood_type =
 			std::map <
 				std::pair < std::string, std::string >,
-				std::set < std::array < size_t, 2 >, less_coordinate >,
+				std::set < std::array < size_t, 2 > >,
 				less_pair >;
 
 	private:
@@ -641,7 +629,7 @@ namespace xablau::organizational_analysis
 
 		[[nodiscard]] element_instance_neighborhood_type element_instance_neighborhood() const
 		{
-			using CoordinateSetType = std::set < std::array < size_t, 2 >, less_coordinate >;
+			using CoordinateSetType = std::set < std::array < size_t, 2 > >;
 
 			if (!this->_up_to_date)
 			{
@@ -663,7 +651,7 @@ namespace xablau::organizational_analysis
 						auto &setOfCoordinates =
 							neighborhood.emplace(
 								std::make_pair(center.identification, neighbor.value().get().identification),
-								CoordinateSetType(less_coordinate{})).first->second;
+								CoordinateSetType()).first->second;
 
 						setOfCoordinates.emplace(std::to_array({ i, j }));
 						setOfCoordinates.emplace(std::to_array({ i, j + 1 }));
@@ -677,7 +665,7 @@ namespace xablau::organizational_analysis
 							auto &setOfCoordinates =
 								neighborhood.emplace(
 									std::make_pair(center.identification, neighbor.value().get().identification),
-									CoordinateSetType(less_coordinate{})).first->second;
+									CoordinateSetType()).first->second;
 
 							setOfCoordinates.emplace(std::to_array({ i, j }));
 							setOfCoordinates.emplace(std::to_array({ i + 1, j + k - 1 }));
@@ -995,6 +983,125 @@ namespace xablau::organizational_analysis
 			return std::make_tuple(std::move(taskIdentifications), std::move(instanceIdentifications), std::move(fullPath), distance);
 		}
 
+		[[nodiscard]] auto absolute_coordinates_from_element_instance_coordinates(
+			const std::string &identification,
+			const int cameraDistanceLevel,
+			const size_t x,
+			const size_t y) const
+		{
+			cv::Point selectedPoint(static_cast < int > (x), static_cast < int > (y));
+
+			if (cameraDistanceLevel < 0 || cameraDistanceLevel > 100)
+			{
+				throw std::runtime_error("\"cameraDistanceLevel\" must be [0, 100].");
+			}
+
+			const auto iterator = this->_element_instances.find(identification);
+
+			if (iterator == this->_element_instances.cend())
+			{
+				throw std::runtime_error(std::format("Could not find element instance \"{}\".", identification));
+			}
+
+			const auto &elementInstance = *iterator;
+			const auto rectangle = cv::boundingRect(elementInstance.contour);
+
+			const int offset = (std::max(rectangle.width, rectangle.height) * static_cast < int > (cameraDistanceLevel + 3)) / 2;
+
+			int startX = rectangle.x - offset;
+			int startY = rectangle.y - offset;
+
+			startX = startX < 0 ? 0 : startX;
+			startY = startY < 0 ? 0 : startY;
+
+			std::vector < cv::Point > contour = elementInstance.contour;
+
+			std::for_each(contour.begin(), contour.end(),
+				[&] (cv::Point &point) -> void
+				{
+					point.x -= startX;
+					point.y -= startY;
+				});
+
+			if (cv::pointPolygonTest(contour, selectedPoint, false) == -1)
+			{
+				throw
+					std::runtime_error(
+						std::format(
+							"Point at ({}, {}) is not inside element instance \"{}\".",
+							selectedPoint.x,
+							selectedPoint.y,
+							identification));
+			}
+
+			if (!elementInstance.islands.empty())
+			{
+				auto islands = elementInstance.islands;
+
+				std::for_each(islands.begin(), islands.end(),
+					[&] (std::vector < cv::Point > &island) -> void
+					{
+						std::for_each(island.begin(), island.end(),
+							[&] (cv::Point &point) -> void
+							{
+								point.x -= startX;
+								point.y -= startY;
+							});
+					});
+
+				for (const auto &island : islands)
+				{
+					if (cv::pointPolygonTest(island, selectedPoint, false) != -1)
+					{
+						throw
+							std::runtime_error(
+								std::format(
+									"Point at ({}, {}) is an invalid position of element instance \"{}\".",
+									selectedPoint.x,
+									selectedPoint.y,
+									identification));
+					}
+				}
+			}
+
+			return std::make_pair(x + static_cast < size_t > (startX), y + static_cast < size_t > (startY));
+		}
+
+		[[nodiscard]] std::string element_instance_from_absolute_coordinates(
+			const size_t x,
+			const size_t y) const
+		{
+			cv::Point selectedPoint(static_cast < int > (x), static_cast < int > (y));
+
+			if (selectedPoint.x >= this->_original_image.cols ||
+				selectedPoint.y >= this->_original_image.rows)
+			{
+				throw
+					std::runtime_error(
+						std::format(
+							"Point at ({}, {}) is not inside image dimensions ({}, {}).",
+							selectedPoint.x,
+							selectedPoint.y,
+							this->_original_image.cols,
+							this->_original_image.rows));
+			}
+
+			for (const auto &elementInstance : this->_element_instances)
+			{
+				if (cv::pointPolygonTest(elementInstance.contour, selectedPoint, false) != -1)
+				{
+					return elementInstance.identification;
+				}
+			}
+
+			throw
+				std::runtime_error(
+					std::format(
+						"There is not an element instance for point at ({}, {}).",
+						selectedPoint.x,
+						selectedPoint.y));
+		}
+
 		void write_image(const std::string &path) const
 		{
 			cv::imwrite(path, this->_original_image);
@@ -1052,7 +1159,7 @@ namespace xablau::organizational_analysis
 				throw std::runtime_error(std::format("Directory \"{}\" does not exist and could not be created.", elementDirectory));
 			}
 
-			const cv::Rect rectangle = cv::boundingRect(elementInstance.contour);
+			const auto rectangle = cv::boundingRect(elementInstance.contour);
 
 			const int offset = (std::max(rectangle.width, rectangle.height) * static_cast < int > (cameraDistanceLevel + 3)) / 2;
 
@@ -1092,7 +1199,7 @@ namespace xablau::organizational_analysis
 					[&] (std::vector < cv::Point > &island) -> void
 					{
 						std::for_each(island.begin(), island.end(),
-						[&] (cv::Point &point) -> void
+							[&] (cv::Point &point) -> void
 							{
 								point.x -= startX;
 								point.y -= startY;

@@ -251,6 +251,7 @@ extern "C"
 		const char *activity,
 		const char *task_identification,
 		const char *task_name,
+		const float degree,
 		const size_t x,
 		const size_t y)
 	{
@@ -258,7 +259,7 @@ extern "C"
 
 		try
 		{
-			processor->insert_task(activity, task_identification, task_name, std::to_array({ x, y }));
+			processor->insert_task(activity, task_identification, task_name, degree, std::to_array({ x, y }));
 		}
 		catch (const std::exception &exception)
 		{
@@ -576,13 +577,13 @@ extern "C"
 		uintptr_t address,
 		const char *activity,
 		const char *component,
-		const float rating)
+		const float degree)
 	{
 		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
-			processor->insert_or_assign_affiliation(activity, component, rating);
+			processor->insert_or_assign_affiliation(activity, component, degree);
 		}
 		catch (const std::exception &exception)
 		{
@@ -1424,6 +1425,108 @@ extern "C"
 			}
 
 			distance = _distance;
+		}
+		catch (const std::exception &exception)
+		{
+			static std::string message;
+
+			message = exception.what();
+
+			return message.c_str();
+		}
+
+		return nullptr;
+	}
+
+	_declspec(dllexport) const char *trace_path_on_blueprint_and_update_affiliations(
+		uintptr_t address,
+		const char *activity,
+		InsertStringInContainer taskInserter,
+		InsertStringInContainer instanceInserter,
+		InsertPairOfSizeTInContainer coordinateInserter,
+		float &distance)
+	{
+		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+
+		try
+		{
+			const auto [tasks, instances, path, _distance] = processor->trace_path_on_blueprint_and_update_affiliations(activity);
+
+			for (const auto &task : tasks)
+			{
+				taskInserter(task.c_str());
+			}
+
+			for (const auto &instance : instances)
+			{
+				instanceInserter(instance.c_str());
+			}
+
+			for (const auto &coordinate : path)
+			{
+				coordinateInserter(coordinate[0], coordinate[1]);
+			}
+
+			distance = _distance;
+		}
+		catch (const std::exception &exception)
+		{
+			static std::string message;
+
+			message = exception.what();
+
+			return message.c_str();
+		}
+
+		return nullptr;
+	}
+
+	_declspec(dllexport) const char *absolute_coordinates_from_element_instance_coordinates_on_blueprint(
+		uintptr_t address,
+		const char *identification,
+		const int cameraDistanceLevel,
+		const size_t relativeX,
+		const size_t relativeY,
+		size_t &absoluteX,
+		size_t &absoluteY)
+	{
+		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+
+		try
+		{
+			const auto result =
+				processor->absolute_coordinates_from_element_instance_coordinates_on_blueprint(
+					identification,
+					cameraDistanceLevel,
+					relativeX,
+					relativeY);
+
+			absoluteX = result.first;
+			absoluteY = result.second;
+		}
+		catch (const std::exception &exception)
+		{
+			static std::string message;
+
+			message = exception.what();
+
+			return message.c_str();
+		}
+
+		return nullptr;
+	}
+
+	_declspec(dllexport) const char *element_instance_from_absolute_coordinates_on_blueprint(
+		uintptr_t address,
+		const size_t x,
+		const size_t y,
+		CopyNativeStringToManagedString copier)
+	{
+		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+
+		try
+		{
+			copier(processor->element_instance_from_absolute_coordinates_on_blueprint(x, y).c_str());
 		}
 		catch (const std::exception &exception)
 		{
