@@ -1345,26 +1345,6 @@ extern "C"
 		return nullptr;
 	}
 
-	_declspec(dllexport) const char *update_blueprint_space(uintptr_t address)
-	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
-
-		try
-		{
-			processor->update_blueprint_space();
-		}
-		catch (const std::exception &exception)
-		{
-			static std::string message;
-
-			message = exception.what();
-
-			return message.c_str();
-		}
-
-		return nullptr;
-	}
-
 	_declspec(dllexport) const char *blueprint_element_instance_neighborhood(
 		uintptr_t address,
 		InsertMappedPairOfSizeTAndCoordinates inserter)

@@ -1277,23 +1277,6 @@ namespace OrganizationalAnalysis
             }
         }
 
-        [DllImport("OrganizationalAnalysisLibrary.dll")]
-        private static extern nint update_blueprint_space(
-           nuint processorObjectAddress);
-
-        public void UpdateBlueprintSpace()
-        {
-            string? message =
-                Marshal.PtrToStringAnsi(
-                    Processor.update_blueprint_space(
-                        this.processorObjectAddress));
-
-            if (message != null)
-            {
-                throw new Exception(message);
-            }
-        }
-
         class InstanceComparer : IComparer<Tuple<string, string>>
         {
             int IComparer<Tuple<string, string>>.Compare(Tuple<string, string> ?pair1, Tuple<string, string> ?pair2)

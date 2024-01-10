@@ -617,16 +617,6 @@ namespace xablau::organizational_analysis
 			this->construct_space();
 		}
 
-		void update_space()
-		{
-			if (this->_original_image.empty())
-			{
-				throw std::runtime_error("There is no blueprint image.");
-			}
-
-			this->construct_space();
-		}
-
 		[[nodiscard]] element_instance_neighborhood_type element_instance_neighborhood() const
 		{
 			using CoordinateSetType = std::set < std::array < size_t, 2 > >;

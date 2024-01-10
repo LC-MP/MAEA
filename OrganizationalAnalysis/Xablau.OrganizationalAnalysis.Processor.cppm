@@ -1418,11 +1418,6 @@ export namespace xablau::organizational_analysis
 			this->_blueprint.detect_instances();
 		}
 
-		void update_blueprint_space()
-		{
-			this->_blueprint.update_space();
-		}
-
 		[[nodiscard]] auto blueprint_element_instance_neighborhood() const
 		{
 			return this->_blueprint.element_instance_neighborhood();
