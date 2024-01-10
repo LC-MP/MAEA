@@ -1155,11 +1155,11 @@ namespace OrganizationalAnalysis
            out nuint absolutePositionHash,
            out nuint relativePositionHash);
 
-        public void BlueprintElementInstanceHash(
-            string identification,
-            out nuint absolutePositionHash,
-            out nuint relativePositionHash)
+        public Tuple<nuint, nuint> BlueprintElementInstanceHash(string identification)
         {
+            nuint absolutePositionHash;
+            nuint relativePositionHash;
+
             string? message =
                 Marshal.PtrToStringAnsi(
                     Processor.blueprint_element_instance_hash(
@@ -1172,6 +1172,8 @@ namespace OrganizationalAnalysis
             {
                 throw new Exception(message);
             }
+
+            return new Tuple<nuint, nuint>(absolutePositionHash, relativePositionHash);
         }
 
         [DllImport("OrganizationalAnalysisLibrary.dll")]
@@ -1242,16 +1244,16 @@ namespace OrganizationalAnalysis
         [DllImport("OrganizationalAnalysisLibrary.dll")]
         private static extern nint read_blueprint_and_detect_instances(
            nuint processorObjectAddress,
-           [MarshalAs(UnmanagedType.LPStr)] string identification,
+           [MarshalAs(UnmanagedType.LPStr)] string path,
            [MarshalAs(UnmanagedType.R4)] float referenceInMeters);
 
-        public void ReadBlueprintAndDetectInstances(string identification, float referenceInMeters)
+        public void ReadBlueprintAndDetectInstances(string path, float referenceInMeters)
         {
             string? message =
                 Marshal.PtrToStringAnsi(
                     Processor.read_blueprint_and_detect_instances(
                         this.processorObjectAddress,
-                        identification,
+                        path,
                         referenceInMeters));
 
             if (message != null)
