@@ -1540,7 +1540,7 @@ namespace MSCMD.Forms
 						try
 						{
 
-							string dir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+							string dir = AppContext.BaseDirectory;
 							string sourceFile = Path.Combine(dir, fileName);
 							string destFile = Path.Combine(fbd.SelectedPath, copyFileName);
 

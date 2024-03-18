@@ -116,12 +116,6 @@ namespace MSCMD.Service
 				var list = agentRepository.ListAll().OrderBy(x => x.AgentId.ToString());
 				foreach (var agent in list)
 				{
-					//string group = "";
-					//var groups = agent.Organizations;
-
-					//if (groups.Count > 0)
-					//	group = groups.First().SectorName;
-
 					string agentName = "";
 					if (agent.Code != null)
 					{
@@ -132,15 +126,11 @@ namespace MSCMD.Service
 					}
 
 					processor.InsertOrAssignAgent(agent.AgentId.ToString(), agentName);
-					//processor.InsertOrAssignAgent(agent.AgentId.ToString(), group, agent.Name);
-					//processor.Ins//ertOrAssignAgent(agent.Code.ToString(), group, agent.Name);
 				}
 			} 
 			catch (Exception ex)
 			{
 				errorLog += "Inserir Funções: " + ex.Message + "\n";
-
-				//MessageBox.Show(ex.Message);
 			}
 
 		}
@@ -154,13 +144,6 @@ namespace MSCMD.Service
 				activityList = list.ToList();
 				foreach (var activity in list)
 				{
-					//string group = "";
-					//var activityGroup = activity.Subprocesses;
-
-					//if (activityGroup.Count > 0)
-					//	group = activityGroup.First().Name;
-
-
 					string activityName = "";
 					if (activity.ActivityCode != null)
 					{
@@ -171,8 +154,7 @@ namespace MSCMD.Service
 						activityName = activity.ActivityName;
 					}
 
-					processor.InsertOrEditActivity(activity.ActivityId.ToString(), activity.ActivityName);
-					//processor.InsertOrEditActivity(activity.ActivityCode.ToString(), group, activity.ActivityName);
+					processor.InsertOrEditActivity(activity.ActivityId.ToString(), activityName);;
 				}
 			}
 			catch (Exception ex)
@@ -191,7 +173,6 @@ namespace MSCMD.Service
 				{
 
 					processor.InsertAgentInChargeOfActivity(rel.AgentId.ToString(), rel.ActivityId.ToString());
-					//processor.InsertAgentInChargeOfActivity(rel.ResponsibleAgent.Code.ToString(), rel.Activity.ActivityCode.ToString());
 				}
 			}
 			catch (Exception ex)
@@ -222,7 +203,6 @@ namespace MSCMD.Service
 				foreach (var rel in list)
 				{
 					processor.InsertActivityDependency(rel.ReferenceActivityId.ToString(), rel.ReferredActivityId.ToString());
-					//processor.InsertActivityDependency(rel.ReferenceActivity.ActivityCode.ToString(), rel.ReferredActivity.ActivityCode.ToString());
 				}
 			}
 			catch (Exception ex)
@@ -241,11 +221,6 @@ namespace MSCMD.Service
 				elementsList = list.ToList();
 				foreach (var element in list)
 				{
-					//string group = "";
-					//var activityGroup = element.Subsystems;
-
-					//if (activityGroup.Count > 0)
-					//	group = activityGroup.First().Name;
 
 					string elementName = "";
 					if (element.Code != null)
@@ -258,7 +233,6 @@ namespace MSCMD.Service
 					}
 
 					processor.InsertOrEditComponent(element.ElementId.ToString(), elementName);
-					//processor.InsertOrEditComponent(element.Code.ToString(), group, element.Name);
 				}
 			}
 			catch (Exception ex)
@@ -276,7 +250,6 @@ namespace MSCMD.Service
 				foreach (var rel in list)
 				{
 					processor.InsertComponentInterface(rel.ReferenceComponentId.ToString(), rel.ReferredComponentId.ToString());
-					//processor.InsertComponentInterface(rel.ReferenceComponent.Code.ToString(), rel.ReferredComponent.Code.ToString());
 				}
 			}
 			catch (Exception ex)
@@ -320,7 +293,6 @@ namespace MSCMD.Service
 					}
 
 					processor.InsertOrAssignAffiliation(rel.ActivityId.ToString(), rel.ComponentId.ToString(), rating);
-					//processor.InsertOrAssignAffiliation(rel.Activity.ActivityCode.ToString(), rel.Component.Code.ToString(), rating);
 				}
 			}
 			catch (Exception ex)
@@ -339,7 +311,6 @@ namespace MSCMD.Service
 			}
 			catch (Exception ex)
 			{
-				//MessageBox.Show(ex.Message);
 				errorLog += "Identificar paralelizações: " + ex.Message + "\n";
 				return null;
 			}

@@ -114,6 +114,7 @@
 			btn_DeleteRelSubsystem = new Button();
 			btn_New = new Button();
 			btn_NewGroup = new Button();
+			btn_DeleteDivision = new Button();
 			((System.ComponentModel.ISupportInitialize)dg_Elementos).BeginInit();
 			((System.ComponentModel.ISupportInitialize)elementBindingSource).BeginInit();
 			((System.ComponentModel.ISupportInitialize)dg_RelacaoElemento).BeginInit();
@@ -720,9 +721,9 @@
 			// 
 			// btn_SetOrganization
 			// 
-			btn_SetOrganization.Location = new Point(1563, 395);
+			btn_SetOrganization.Location = new Point(1445, 394);
 			btn_SetOrganization.Name = "btn_SetOrganization";
-			btn_SetOrganization.Size = new Size(94, 29);
+			btn_SetOrganization.Size = new Size(94, 32);
 			btn_SetOrganization.TabIndex = 32;
 			btn_SetOrganization.Text = "Editar";
 			btn_SetOrganization.UseVisualStyleBackColor = true;
@@ -988,12 +989,24 @@
 			btn_NewGroup.UseVisualStyleBackColor = true;
 			btn_NewGroup.Click += btn_NewGroup_Click;
 			// 
+			// btn_DeleteDivision
+			// 
+			btn_DeleteDivision.Location = new Point(1544, 395);
+			btn_DeleteDivision.Margin = new Padding(3, 4, 3, 4);
+			btn_DeleteDivision.Name = "btn_DeleteDivision";
+			btn_DeleteDivision.Size = new Size(114, 31);
+			btn_DeleteDivision.TabIndex = 46;
+			btn_DeleteDivision.Text = "Desvincular";
+			btn_DeleteDivision.UseVisualStyleBackColor = true;
+			btn_DeleteDivision.Click += btn_DeleteDivision_Click;
+			// 
 			// Frm_Element
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
 			AutoScaleMode = AutoScaleMode.Font;
 			AutoScroll = true;
 			ClientSize = new Size(1696, 881);
+			Controls.Add(btn_DeleteDivision);
 			Controls.Add(btn_NewGroup);
 			Controls.Add(btn_New);
 			Controls.Add(button1);
@@ -1186,5 +1199,6 @@
 		private DataGridViewTextBoxColumn subsystemIdDataGridViewTextBoxColumn;
 		private DataGridViewTextBoxColumn codeDataGridViewTextBoxColumn8;
 		private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn6;
+		private Button btn_DeleteDivision;
 	}
 }
