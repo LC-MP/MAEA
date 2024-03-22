@@ -119,8 +119,8 @@ namespace xablau::organizational_analysis
 		cv::Vec3b island_color{};
 		std::vector < cv::Point > contour{};
 		std::vector < std::vector < cv::Point > > islands{};
-		size_t hashAbsolutePosition{};
-		size_t hashRelativePosition{};
+		size_t hash_absolute_position{};
+		size_t hash_relative_position{};
 
 		bool operator<(const element_instance &other) const
 		{
@@ -494,8 +494,8 @@ namespace xablau::organizational_analysis
 					i = hierarchy[i][0];
 
 					std::tie(
-						instance.hashAbsolutePosition,
-						instance.hashRelativePosition) = blueprint::element_instance_deterministic_hash(instance);
+						instance.hash_absolute_position,
+						instance.hash_relative_position) = blueprint::element_instance_deterministic_hash(instance);
 
 					this->_element_instances.insert(std::move(instance));
 				}
@@ -1303,8 +1303,8 @@ namespace xablau::organizational_analysis
 
 			for (const auto &elementInstance : this->_element_instances)
 			{
-				if (absolute && elementInstance.hashAbsolutePosition == hash ||
-					!absolute && elementInstance.hashRelativePosition == hash)
+				if (absolute && elementInstance.hash_absolute_position == hash ||
+					!absolute && elementInstance.hash_relative_position == hash)
 				{
 					instancesFound.emplace_back(elementInstance);
 				}
@@ -1339,7 +1339,7 @@ namespace xablau::organizational_analysis
 				throw std::runtime_error(std::format("Element instance \"{}\" does not exist.", identification));
 			}
 
-			return std::make_pair(iterator->hashAbsolutePosition, iterator->hashRelativePosition);
+			return std::make_pair(iterator->hash_absolute_position, iterator->hash_relative_position);
 		}
 
 		void element_traversability(const std::string &identification, const traversability state)
