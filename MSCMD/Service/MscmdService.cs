@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using MSCMD.Model;
 using MSCMD.Repository;
@@ -15,6 +16,44 @@ namespace MSCMD.Service
 {
 	public class MscmdService
 	{
+		class Task
+		{
+			public string Activity { get; set; } = string.Empty;
+			public string Identification { get; set; } = string.Empty;
+			public string Name { get; set; } = string.Empty;
+			public float Degree { get; set; } = 0;
+			public uint X { get; set; } = 0;
+			public uint Y { get; set; } = 0;
+		}
+
+		class DependencyType
+		{
+			public string Dependent { get; set; } = string.Empty;
+			public string Dependency { get; set; } = string.Empty;
+
+		}
+
+		class TaskDependency
+		{
+			public string Activity { get; set; } = string.Empty;
+			public List<DependencyType> Dependencies { get; set; } = new();
+		}
+
+		class ElementInstance
+		{
+			public string Identification { get; set; } = string.Empty;
+			public ulong AbsolutePositionHash { get; set; } = 0;
+			public ulong RelativePositionHash { get; set; } = 0;
+
+			public ElementInstance() { }
+			public ElementInstance(string identification, ulong absolutePositionHash, ulong relativePositionHash)
+			{
+				this.Identification = identification;
+				this.AbsolutePositionHash = absolutePositionHash;
+				this.RelativePositionHash = relativePositionHash;
+			}
+		}
+
 		private static MscmdContext context;
 		private Processor processor;
 
@@ -665,6 +704,202 @@ namespace MSCMD.Service
 			{
 				return "";
 			}
+		}
+
+		// TODO: Remove this method.
+		public void ReadImage()
+		{
+			string base_path = "C:\\MSCMD\\";
+
+			if (!Directory.Exists(base_path))
+			{
+				Directory.CreateDirectory(base_path);
+			}
+
+			StreamWriter log = new(base_path + "execution.log", true);
+
+			processor.InsertBlueprintElement("door", Color.FromArgb(255, 0, 0), Traversability.Open);
+			processor.InsertBlueprintElement("balcony", Color.FromArgb(124, 0, 165), Traversability.Border);
+			processor.InsertBlueprintElement("window", Color.FromArgb(0, 165, 165), Traversability.Closed);
+			processor.InsertBlueprintElement("environment_limit", Color.FromArgb(82, 165, 0), Traversability.Open);
+			processor.InsertBlueprintElement("elevator", Color.FromArgb(240, 240, 0), Color.FromArgb(240, 240, 255), Traversability.Teleport);
+			processor.InsertBlueprintElement("stair", Color.FromArgb(250, 180, 0), Color.FromArgb(250, 180, 255), Traversability.Teleport);
+
+			List<Task> ?tasks = new();
+			List<TaskDependency> ?tasks_dependencies = new();
+
+			if (File.Exists(base_path + "tasks.json"))
+			{
+				string tasks_json = File.ReadAllText(base_path + "tasks.json");
+
+				tasks = JsonSerializer.Deserialize<List<Task>>(tasks_json);
+
+				if (tasks == null)
+				{
+					throw new Exception("Could not open \"tasks.json\" file.");
+				}
+			}
+
+			if (File.Exists(base_path + "tasks_dependencies.json"))
+			{
+				string tasks_dependencies_json = File.ReadAllText(base_path + "tasks_dependencies.json");
+
+				tasks_dependencies = JsonSerializer.Deserialize<List<TaskDependency>>(tasks_dependencies_json);
+
+				if (tasks_dependencies == null)
+				{
+					throw new Exception("Could not open \"tasks_dependencies.json\" file.");
+				}
+			}
+
+			string ?reference_string = File.OpenText(base_path + "reference_in_meters.txt").ReadLine();
+
+			if (reference_string == null)
+			{
+				throw new Exception("Could not open \"reference_in_meters.json\" file.");
+			}
+
+			processor.ReadBlueprintAndDetectInstances(base_path + "blueprint.png", float.Parse(reference_string));
+
+			foreach (var task in tasks)
+			{
+				processor.InsertTask(task.Activity, task.Identification, task.Name, task.Degree, task.X, task.Y);
+			}
+
+			foreach (var task_dependency in tasks_dependencies)
+			{
+				foreach (var dependency in task_dependency.Dependencies)
+				{
+					processor.InsertTaskDependency(task_dependency.Activity, dependency.Dependent, dependency.Dependency);
+				}
+			}
+
+			List<ElementInstance>? element_instance_hashes;
+
+			if (File.Exists(base_path + "element_instance_hashes.json"))
+			{
+				string element_instance_hashes_json = File.ReadAllText(base_path + "element_instance_hashes.json");
+
+				element_instance_hashes = JsonSerializer.Deserialize<List<ElementInstance>>(element_instance_hashes_json);
+
+				if (element_instance_hashes == null)
+				{
+					Exception exception = new("Could not parse \"element_instance_hashes.json\" file");
+
+					log.Write(exception);
+
+					throw exception;
+				}
+
+				foreach (var element_instance_hash in element_instance_hashes)
+				{
+					bool inserted = false;
+
+					try
+					{
+						processor.RenameBlueprintElementInstanceHash(true, (nuint)element_instance_hash.AbsolutePositionHash, element_instance_hash.Identification);
+
+						inserted = true;
+					} catch (Exception ex) {
+						log.WriteLine(ex);
+						log.WriteLine("Abs: " + element_instance_hash.AbsolutePositionHash + "\n");
+					}
+
+					if (inserted)
+					{
+						continue;
+					}
+
+					try
+					{
+						processor.RenameBlueprintElementInstanceHash(false, (nuint)element_instance_hash.RelativePositionHash, element_instance_hash.Identification);
+					}
+					catch (Exception ex)
+					{
+						log.WriteLine(ex);
+						log.WriteLine("Rel: " + element_instance_hash.RelativePositionHash + "\n");
+					}
+				}
+			}
+
+			var element_instance_identifications = processor.ElementInstanceIdentifications();
+			element_instance_hashes = new();
+
+			foreach (var element_instance_identification in element_instance_identifications)
+			{
+				var hashes = processor.BlueprintElementInstanceHash(element_instance_identification);
+
+				element_instance_hashes.Add(new ElementInstance(element_instance_identification, hashes.Item1, hashes.Item2));
+			}
+
+			string hashes_json = JsonSerializer.Serialize(element_instance_hashes);
+
+			File.WriteAllText(base_path + "element_instance_hashes.json", hashes_json);
+
+			log.Close();
+		}
+
+		// TODO: Remove this method.
+		public void TracePaths()
+		{
+			string base_path = "C:\\MSCMD\\";
+
+            var list = activityRepository.ListAll();
+
+			foreach (var activity in list)
+			{
+				try
+				{
+					var result = processor.TracePathOnBlueprint(activity.ActivityId.ToString());
+
+					StreamWriter tasks_log = new StreamWriter(base_path + "path_" + activity.ActivityId + "_tasks.txt", false);
+					StreamWriter instances_log = new StreamWriter(base_path + "path_" + activity.ActivityId + "_instances.txt", false);
+					StreamWriter coordinates_log = new StreamWriter(base_path + "path_" + activity.ActivityId + "_coordinates.txt", false);
+					StreamWriter distance_log = new StreamWriter(base_path + "path_" + activity.ActivityId + "_distance.txt", false);
+
+					foreach (var task in result.Item1)
+					{
+						tasks_log.WriteLine(task);
+					}
+
+					foreach (var instance in result.Item2)
+					{
+						instances_log.WriteLine(instance);
+					}
+
+					foreach (var coordinate in result.Item3)
+					{
+						coordinates_log.Write("(");
+						coordinates_log.Write(coordinate.Item1);
+						coordinates_log.Write(", ");
+						coordinates_log.Write(coordinate.Item2);
+						coordinates_log.WriteLine(")");
+					}
+
+					distance_log.WriteLine(result.Item4);
+
+					tasks_log.Close();
+					instances_log.Close();
+					coordinates_log.Close();
+                    distance_log.Close();
+                } catch (Exception ex) {
+					StreamWriter error_log = new StreamWriter(base_path + "path_" + activity.ActivityId + "_error.txt", false);
+
+					error_log.WriteLine(ex);
+				}
+			}
+		}
+
+		// TODO: Remove this method.
+		public void DumpInstances()
+		{
+			string base_path = "C:\\MSCMD\\";
+
+			processor.WriteBlueprintContours(base_path + "contours.png");
+			processor.WriteBlueprintElementInstances(base_path + "data\\", 3);
+			processor.WriteBlueprintElementInstances(base_path + "data\\", 6);
+			processor.WriteElementInstances(base_path + "instances\\", ';', ',');
+			processor.WriteElementInstanceNeighborhood(base_path + "neighborhood\\", ';', ',');
 		}
 
 		//public void CheckActivitiesWithoutComponents()

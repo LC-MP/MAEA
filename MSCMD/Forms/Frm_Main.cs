@@ -862,7 +862,22 @@ namespace MSCMD.Forms
 			new ExportDataService().ExportAll();
 		}
 
-		private void btn_Priorities_Click(object sender, EventArgs e)
+		private void btn_ReadImage_Click(object sender, EventArgs e)
+		{
+			mscmdService.ReadImage();
+		}
+
+        private void btn_TracePaths_Click(object sender, EventArgs e)
+        {
+            mscmdService.TracePaths();
+        }
+
+        private void btn_DumpInstances_Click(object sender, EventArgs e)
+        {
+            mscmdService.DumpInstances();
+        }
+
+        private void btn_Priorities_Click(object sender, EventArgs e)
 		{
 			if (activitiesPriorities != null && activitiesPriorities.Count > 0)
 			{

@@ -69,6 +69,9 @@
 			btn_DownloadActivityComparativeMatrixWithRedundancy = new Button();
 			btn_DeleteAll = new Button();
 			btn_ExportAll = new Button();
+			btn_ReadImage = new Button();
+			btn_TracePaths = new Button();
+			btn_DumpInstances = new Button();
 			btn_Priorities = new Button();
 			lbl_CheckPriorities = new Label();
 			btn_Paralelism = new Button();
@@ -505,9 +508,39 @@
 			btn_ExportAll.UseVisualStyleBackColor = true;
 			btn_ExportAll.Click += btn_ExportAll_Click;
 			// 
-			// btn_Priorities
+			// btn_ReadImage
 			// 
-			btn_Priorities.Font = new Font("Segoe UI", 8F, FontStyle.Regular, GraphicsUnit.Point);
+			btn_ReadImage.Location = new Point(509, 573);
+			btn_ReadImage.Name = "btn_ReadImage";
+			btn_ReadImage.Size = new Size(144, 65);
+			btn_ReadImage.TabIndex = 10;
+			btn_ReadImage.Text = "Ler imagem de planta";
+			btn_ReadImage.UseVisualStyleBackColor = true;
+			btn_ReadImage.Click += btn_ReadImage_Click;
+            // 
+            // btn_TracePaths
+            // 
+            btn_TracePaths.Location = new Point(509, 644);
+            btn_TracePaths.Name = "btn_TracePaths";
+            btn_TracePaths.Size = new Size(144, 65);
+            btn_TracePaths.TabIndex = 10;
+            btn_TracePaths.Text = "Traçar caminho das atividades";
+            btn_TracePaths.UseVisualStyleBackColor = true;
+            btn_TracePaths.Click += btn_TracePaths_Click;
+            // 
+            // btn_DumpInstances
+            // 
+            btn_DumpInstances.Location = new Point(509, 715);
+            btn_DumpInstances.Name = "btn_DumpInstances";
+            btn_DumpInstances.Size = new Size(144, 65);
+            btn_DumpInstances.TabIndex = 10;
+            btn_DumpInstances.Text = "Salvar instâncias";
+            btn_DumpInstances.UseVisualStyleBackColor = true;
+            btn_DumpInstances.Click += btn_DumpInstances_Click;
+            // 
+            // btn_Priorities
+            // 
+            btn_Priorities.Font = new Font("Segoe UI", 8F, FontStyle.Regular, GraphicsUnit.Point);
 			btn_Priorities.Location = new Point(919, 385);
 			btn_Priorities.Name = "btn_Priorities";
 			btn_Priorities.Size = new Size(267, 29);
@@ -633,6 +666,9 @@
 			Controls.Add(lbl_CheckPriorities);
 			Controls.Add(btn_Priorities);
 			Controls.Add(btn_ExportAll);
+			Controls.Add(btn_ReadImage);
+			Controls.Add(btn_TracePaths);
+			Controls.Add(btn_DumpInstances);
 			Controls.Add(btn_DeleteAll);
 			Controls.Add(btn_DownloadComponentComparativeMatrix);
 			Controls.Add(btn_DownloadComponentComparativeMatrixWithRedundancy);
@@ -722,6 +758,9 @@
 		private Button btn_DownloadActivityComparativeMatrixWithRedundancy;
 		private Button btn_DeleteAll;
 		private Button btn_ExportAll;
+		private Button btn_ReadImage;
+		private Button btn_TracePaths;
+		private Button btn_DumpInstances;
 		private Button btn_Priorities;
 		private Label lbl_CheckPriorities;
 		private Button btn_Paralelism;
