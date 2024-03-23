@@ -844,7 +844,7 @@ namespace MSCMD.Service
 		{
 			string base_path = "C:\\MSCMD\\";
 
-            var list = activityRepository.ListAll();
+			var list = activityRepository.ListAll();
 
 			foreach (var activity in list)
 			{
@@ -881,8 +881,8 @@ namespace MSCMD.Service
 					tasks_log.Close();
 					instances_log.Close();
 					coordinates_log.Close();
-                    distance_log.Close();
-                } catch (Exception ex) {
+					distance_log.Close();
+				} catch (Exception ex) {
 					StreamWriter error_log = new StreamWriter(base_path + "path_" + activity.ActivityId + "_error.txt", false);
 
 					error_log.WriteLine(ex);
