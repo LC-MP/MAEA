@@ -1,10 +1,6 @@
-// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
-
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-
 // MIT License
 //
-// Copyright (c) 2023 Jean Amaro <jean.amaro@outlook.com.br>
+// Copyright (c) 2023-2024 Jean Amaro <jean.amaro@outlook.com.br>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,33 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-export module xablau.algebra:algorithm;
+export module xablau.algebra:int_number_concepts;
+export import :int_number;
+export import :fundamental_concepts;
 
-export import <cmath>;
+export import std;
 
-export namespace xablau::algebra::algorithm
+export namespace xablau::algebra::concepts
 {
-	template < size_t Number >
-	requires (
-		sizeof(size_t) == 1 && Number <= 5 ||
-		sizeof(size_t) == 2 && Number <= 8 ||
-		sizeof(size_t) == 4 && Number <= 12 ||
-		sizeof(size_t) == 8 && Number <= 19)
-	[[nodiscard]] consteval size_t factorial()
-	{
-		if constexpr (Number > 0)
-		{
-			return Number * factorial < Number - 1 > ();
-		}
+	template < typename Type >
+	concept xablau_integral = std::same_as < Type, algebra::int_number >;
 
-		else
-		{
-			return 1;
-		}
-	}
-
-	[[nodiscard]] constexpr size_t factorial(const size_t number)
-	{
-		return number > 0 ? number * factorial(number - 1) : 1;
-	}
+	template < typename Type >
+	concept integral = xablau_integral < Type > || standard_integral < Type >;
 }

@@ -1,10 +1,6 @@
-// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
-
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-
 // MIT License
 //
-// Copyright (c) 2023 Jean Amaro <jean.amaro@outlook.com.br>
+// Copyright (c) 2023-2024 Jean Amaro <jean.amaro@outlook.com.br>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,12 +22,7 @@
 
 export module xablau.graph:algorithm;
 
-export import <array>;
-export import <concepts>;
-export import <functional>;
-export import <limits>;
-export import <optional>;
-export import <set>;
+export import std;
 
 export import xablau.algebra;
 
@@ -364,7 +355,7 @@ namespace xablau::graph::algorithm
 							currentCell);
 				}
 
-				auto kernel = searchTensor.kernel < KernelSize > (currentPosition);
+				auto kernel = searchTensor.template kernel < KernelSize > (currentPosition);
 
 				visit_neighbors_for_A_star < MoveDiagonally, DistanceType, 0, Rank > (
 					kernel,
@@ -408,7 +399,6 @@ namespace xablau::graph::algorithm
 					algebra::tensor_dense_dynamic <
 						CellType,
 						xablau::algebra::tensor_rank < MazeTensorType::rank() >,
-						xablau::algebra::tensor_contiguity < MazeTensorType::contiguous() >,
 						typename MazeTensorType::memory_order_indices > ();
 			}
 
@@ -418,7 +408,6 @@ namespace xablau::graph::algorithm
 					algebra::tensor_dense_fixed <
 						CellType,
 						typename MazeTensorType::fixed_dimensionalities,
-						xablau::algebra::tensor_contiguity < MazeTensorType::contiguous() >,
 						typename MazeTensorType::memory_order_indices > ();
 			}
 		}
