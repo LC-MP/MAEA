@@ -35,12 +35,7 @@ export import :fundamental_definitions;
 export import :reader;
 export import :writer;
 
-export import <charconv>;
-export import <iostream>;
-export import <numeric>;
-export import <random>;
-export import <regex>;
-export import <stdexcept>;
+export import std;
 
 export import xablau.algebra;
 export import xablau.graph;
@@ -52,7 +47,7 @@ export namespace xablau::organizational_analysis
 	class processor final
 	{
 	private:
-		using node_type = xablau::graph::node < std::string >;
+		using node_type = std::string;
 
 		enum class comparison_mode
 		{
@@ -64,8 +59,7 @@ export namespace xablau::organizational_analysis
 		using matrix_type =
 			xablau::algebra::tensor_dense_dynamic <
 				float,
-				xablau::algebra::tensor_rank < 2 >,
-				xablau::algebra::tensor_contiguity < false > >;
+				xablau::algebra::tensor_rank < 2 > >;
 
 		using blueprint_type = xablau::organizational_analysis::blueprint;
 		using task_type = xablau::organizational_analysis::activity::task;
@@ -79,7 +73,7 @@ export namespace xablau::organizational_analysis
 
 			for (const auto &activity1 : this->_activities)
 			{
-				const auto edges = this->_activity_dependencies.edges(activity1.identification);
+				const auto edges = this->_activity_dependencies.connections(activity1.identification);
 
 				if (!edges.has_value())
 				{
@@ -300,12 +294,10 @@ export namespace xablau::organizational_analysis
 		[[nodiscard]] static std::vector < std::set < std::string > > identify_parallelizations(
 			const DigraphType &activitiesSequence)
 		{
-			using node_type = xablau::graph::node < std::string >;
-
 			size_t index{};
 			const auto stronglyConnectedComponents = activitiesSequence.Tarjan_strongly_connected_components();
-			std::map < node_type, size_t > individualNodeToStronglyConnectedComponentMap;
-			std::map < size_t, std::set < node_type > > stronglyConnectedComponentToIndividualNodeMap;
+			std::map < xablau::graph::node_ref < const std::string >, size_t > individualNodeToStronglyConnectedComponentMap;
+			std::map < size_t, std::set < xablau::graph::node_ref < const std::string > > > stronglyConnectedComponentToIndividualNodeMap;
 			std::random_device randomDevice{};
 			std::default_random_engine engine(randomDevice());
 			std::uniform_int_distribution < size_t > distribution(0, std::numeric_limits < size_t > ::max());
@@ -327,7 +319,7 @@ export namespace xablau::organizational_analysis
 			}
 
 			xablau::graph::digraph <
-				xablau::graph::node < size_t >,
+				size_t,
 				xablau::graph::graph_container_type < xablau::graph::graph_container_type_value::ordered >,
 				xablau::graph::edge < float > > mappedActivitiesSequence{};
 
@@ -352,15 +344,15 @@ export namespace xablau::organizational_analysis
 
 			while (!mappedActivitiesSequence.empty())
 			{
-				const auto sourceNodes = mappedActivitiesSequence.source_nodes();
+				const auto sourceNodes = mappedActivitiesSequence.source_nodes < false > ();
 
 				finalActivitiesSequence.emplace_back();
 
 				for (const auto sourceNode : sourceNodes)
 				{
-					for (const auto &individualNode : stronglyConnectedComponentToIndividualNodeMap.at(sourceNode.value))
+					for (const auto &individualNode : stronglyConnectedComponentToIndividualNodeMap.at(sourceNode))
 					{
-						finalActivitiesSequence.back().insert(individualNode.value);
+						finalActivitiesSequence.back().insert(individualNode);
 					}
 				}
 
@@ -1448,7 +1440,7 @@ export namespace xablau::organizational_analysis
 
 			for (const auto &task : std::get < 0 > (result))
 			{
-				const auto &_task = iterator1->tasks.container().find(activity::task(task))->first.value;
+				const auto &_task = iterator1->tasks.container().find(activity::task(task))->first;
 
 				if (_task.degree == float{})
 				{
@@ -1902,8 +1894,7 @@ export namespace xablau::organizational_analysis
 			using TableType =
 				xablau::algebra::tensor_dense_dynamic <
 					std::string,
-					xablau::algebra::tensor_rank < 2 >,
-					xablau::algebra::tensor_contiguity < false > >;
+					xablau::algebra::tensor_rank < 2 > >;
 
 			constexpr auto pointCount =
 				[] (const element_instance &elementInstance) -> size_t
@@ -2021,8 +2012,7 @@ export namespace xablau::organizational_analysis
 			using TableType =
 				xablau::algebra::tensor_dense_dynamic <
 					std::string,
-					xablau::algebra::tensor_rank < 2 >,
-					xablau::algebra::tensor_contiguity < false > >;
+					xablau::algebra::tensor_rank < 2 > >;
 
 			constexpr auto relationCount =
 				[] (const blueprint::element_instance_neighborhood_type &neighborhood) -> size_t

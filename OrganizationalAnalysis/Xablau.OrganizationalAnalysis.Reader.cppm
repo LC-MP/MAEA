@@ -32,10 +32,7 @@
 export module xablau.organizational_analysis:reader;
 export import :fundamental_definitions;
 
-export import <iostream>;
-export import <format>;
-export import <locale>;
-export import <regex>;
+export import std;
 
 namespace xablau::organizational_analysis::reader
 {
@@ -302,13 +299,13 @@ namespace xablau::organizational_analysis::reader
 
 		for (const auto &dependency : activityDependencies.container())
 		{
-			if (!activities.contains(dependency.first.value))
+			if (!activities.contains(dependency.first))
 			{
 				throw
 					std::runtime_error(
 						std::format(
 							"Dependency \"{}\" does not have a description.",
-							dependency.first.value));
+							dependency.first));
 			}
 		}
 

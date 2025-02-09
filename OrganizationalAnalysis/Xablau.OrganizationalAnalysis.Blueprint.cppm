@@ -36,15 +36,7 @@ module;
 export module xablau.organizational_analysis:blueprint;
 export import :fundamental_definitions;
 
-export import <algorithm>;
-export import <array>;
-export import <filesystem>;
-export import <format>;
-export import <limits>;
-export import <map>;
-export import <set>;
-export import <string>;
-export import <type_traits>;
+export import std;
 
 export import xablau.algebra;
 export import xablau.graph;
@@ -159,8 +151,7 @@ namespace xablau::organizational_analysis
 		using space_type =
 			xablau::algebra::tensor_dense_dynamic <
 				std::optional < std::reference_wrapper < const xablau::organizational_analysis::element_instance > >,
-				xablau::algebra::tensor_rank < 2 >,
-				xablau::algebra::tensor_contiguity < true > >;
+				xablau::algebra::tensor_rank < 2 > >;
 
 		struct less_pair
 		{
@@ -181,7 +172,7 @@ namespace xablau::organizational_analysis
 	private:
 		using space_abstraction_type =
 			xablau::graph::digraph <
-				xablau::graph::node < blueprint::task_type >,
+				blueprint::task_type,
 				xablau::graph::graph_container_type < xablau::graph::graph_container_type_value::ordered >,
 				xablau::graph::edge < float > >;
 
@@ -687,7 +678,7 @@ namespace xablau::organizational_analysis
 				throw std::runtime_error("There is a cyclic dependency on the task list.");
 			}
 
-			const auto startTask = dependencies.sink_nodes();
+			const auto startTask = dependencies.sink_nodes < false > ();
 
 			if (startTask.size() != 1)
 			{
@@ -702,28 +693,28 @@ namespace xablau::organizational_analysis
 
 			for (const auto &[node, _]: dependencies.container())
 			{
-				if (node.value.coordinates[0] >= this->_space.dimensionalities()[0] ||
-					node.value.coordinates[1] >= this->_space.dimensionalities()[1])
+				if (node.coordinates[0] >= this->_space.dimensionalities()[0] ||
+					node.coordinates[1] >= this->_space.dimensionalities()[1])
 				{
 					throw
 						std::runtime_error(
 							std::format(
 								"Coordinates ({}, {}) are out of bounds: ({}, {}).",
-								node.value.coordinates[0],
-								node.value.coordinates[1],
+								node.coordinates[0],
+								node.coordinates[1],
 								this->_space.dimensionalities()[0],
 								this->_space.dimensionalities()[1]));
 				}
 
-				if (blockedPath(this->_space(node.value.coordinates)))
+				if (blockedPath(this->_space(node.coordinates)))
 				{
 					throw
 						std::runtime_error(
 							std::format(
 								"Coordinates ({}, {}) from task \"{}\" are in a blocked path.",
-								node.value.coordinates[0],
-								node.value.coordinates[1],
-								node.value.identification));
+								node.coordinates[0],
+								node.coordinates[1],
+								node.identification));
 				}
 
 				if (dependencies.edges(node, node).has_value())
@@ -732,7 +723,7 @@ namespace xablau::organizational_analysis
 						std::runtime_error(
 							std::format(
 								"Task \"{}\" is depending on itself.",
-								node.value.identification));
+								node.identification));
 				}
 			}
 
@@ -776,7 +767,7 @@ namespace xablau::organizational_analysis
 
 				for (const auto &treeNode : tree)
 				{
-					treeSets[node.value].insert(treeNode);
+					treeSets[node].insert(treeNode);
 				}
 			}
 
@@ -799,8 +790,8 @@ namespace xablau::organizational_analysis
 				std::set_difference(
 					fullTreeSet.cbegin(),
 					fullTreeSet.cend(),
-					treeSets[node.value].cbegin(),
-					treeSets[node.value].cend(),
+					treeSets[node].cbegin(),
+					treeSets[node].cend(),
 					std::inserter(auxDestinationsSet, auxDestinationsSet.begin()));
 
 				std::set_difference(
@@ -821,7 +812,7 @@ namespace xablau::organizational_analysis
 							continue;
 						}
 
-						if (treeSets[connection2.value].contains(connection1.value))
+						if (treeSets[connection2].contains(connection1))
 						{
 							validConnection = false;
 
@@ -831,13 +822,13 @@ namespace xablau::organizational_analysis
 
 					if (validConnection)
 					{
-						destinationsSet.insert(connection1.value);
+						destinationsSet.insert(connection1);
 					}
 				}
 
 				for (const auto &destination : destinationsSet)
 				{
-					if (calculatedPaths.contains(std::make_pair(destination, node.value)))
+					if (calculatedPaths.contains(std::make_pair(destination, node)))
 					{
 						continue;
 					}
@@ -846,7 +837,7 @@ namespace xablau::organizational_analysis
 						xablau::graph::algorithm::A_star(
 							this->_space,
 							destination.coordinates,
-							node.value.coordinates,
+							node.coordinates,
 							blockedPath);
 
 					if (path.empty())
@@ -855,7 +846,7 @@ namespace xablau::organizational_analysis
 							std::format(
 								"Could not find a path between tasks \"{}\" and \"{}\".",
 								destination.identification,
-								node.value.identification));
+								node.identification));
 					}
 
 					auto distance = this->calculate_distance(path);
@@ -867,7 +858,7 @@ namespace xablau::organizational_analysis
 
 					calculatedPaths.insert(
 						std::make_pair(
-							std::make_pair(destination, node.value),
+							std::make_pair(destination, node),
 							std::make_pair(std::move(path), distance)));
 				}
 			}
@@ -889,17 +880,17 @@ namespace xablau::organizational_analysis
 				}
 			}
 
-			std::vector < xablau::graph::node < blueprint::task_type > > _tasks{};
+			std::vector < xablau::graph::node_ref < const blueprint::task_type > > _tasks{};
 			float distance{};
 
 			if (dependencies.edge_count() == 0)
 			{
-				std::tie(_tasks, distance) = spaceAbstraction.traveling_salesman_problem(*(startTask.cbegin()));
+				std::tie(_tasks, distance) = spaceAbstraction.traveling_salesman_problem < false > (*(startTask.cbegin()));
 			}
 
 			else
 			{
-				std::tie(_tasks, distance) = spaceAbstraction.traveling_salesman_problem(*(startTask.cbegin()), dependencies);
+				std::tie(_tasks, distance) = spaceAbstraction.traveling_salesman_problem < false > (*(startTask.cbegin()), dependencies);
 			}
 
 			std::vector < std::reference_wrapper < const blueprint::task_type > > tasks;
@@ -910,10 +901,10 @@ namespace xablau::organizational_analysis
 
 			for (const auto &node : _tasks)
 			{
-				tasks.push_back(node.value);
+				tasks.push_back(node);
 			}
 
-			instances.push_back(this->_space(_tasks.cbegin()->value.coordinates).value());
+			instances.push_back(this->_space(_tasks.cbegin()->get().coordinates).value());
 
 			for (auto previous = tasks.begin(), next = ++(tasks.begin());
 				next != tasks.end();
