@@ -29,13 +29,13 @@
 // funding this research project.
 // FAPESP process number: 2020/15909-8
 
-export module xablau.organizational_analysis:fundamental_definitions;
+export module MAEA.organizational_analysis:fundamental_definitions;
 
 export import std;
 
 export import xablau.graph;
 
-namespace xablau::organizational_analysis
+namespace MAEA::organizational_analysis
 {
 	struct agent final
 	{

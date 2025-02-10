@@ -29,6 +29,6 @@
 // funding this research project.
 // FAPESP process number: 2020/15909-8
 
-export module xablau.organizational_analysis;
+export module MAEA.organizational_analysis;
 
 export import :processor;

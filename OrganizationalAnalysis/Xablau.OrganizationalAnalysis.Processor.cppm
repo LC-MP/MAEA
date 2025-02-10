@@ -29,7 +29,7 @@
 // funding this research project.
 // FAPESP process number: 2020/15909-8
 
-export module xablau.organizational_analysis:processor;
+export module MAEA.organizational_analysis:processor;
 export import :blueprint;
 export import :fundamental_definitions;
 export import :reader;
@@ -41,7 +41,7 @@ export import xablau.algebra;
 export import xablau.graph;
 export import xablau.io;
 
-export namespace xablau::organizational_analysis
+export namespace MAEA::organizational_analysis
 {
 	template < bool ComponentsInterfacesAreReciprocal >
 	class processor final
@@ -61,8 +61,8 @@ export namespace xablau::organizational_analysis
 				float,
 				xablau::algebra::tensor_rank < 2 > >;
 
-		using blueprint_type = xablau::organizational_analysis::blueprint;
-		using task_type = xablau::organizational_analysis::activity::task;
+		using blueprint_type = MAEA::organizational_analysis::blueprint;
+		using task_type = MAEA::organizational_analysis::activity::task;
 
 		[[nodiscard]] matrix_type create_activities_matrix(
 			const std::map < std::string, size_t > &activityKeyToIndexMap) const
