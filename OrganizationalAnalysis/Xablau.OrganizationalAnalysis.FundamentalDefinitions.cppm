@@ -29,16 +29,13 @@
 // funding this research project.
 // FAPESP process number: 2020/15909-8
 
-export module xablau.organizational_analysis:fundamental_definitions;
+export module MAEA.organizational_analysis:fundamental_definitions;
 
-export import <array>;
-export import <map>;
-export import <set>;
-export import <string>;
+export import std;
 
 export import xablau.graph;
 
-namespace xablau::organizational_analysis
+namespace MAEA::organizational_analysis
 {
 	struct agent final
 	{
@@ -118,7 +115,7 @@ namespace xablau::organizational_analysis
 
 		using tasks_type =
 			xablau::graph::digraph <
-				xablau::graph::node < activity::task >,
+				activity::task,
 				xablau::graph::graph_container_type < xablau::graph::graph_container_type_value::ordered >,
 				xablau::graph::edge < float > >;
 
@@ -155,7 +152,7 @@ namespace xablau::organizational_analysis
 
 	using activity_dependencies_type =
 		xablau::graph::digraph <
-			xablau::graph::node < std::string >,
+			std::string,
 			xablau::graph::graph_container_type < xablau::graph::graph_container_type_value::ordered >,
 			xablau::graph::edge < float > >;
 
@@ -196,11 +193,11 @@ namespace xablau::organizational_analysis
 		typename std::conditional <
 			InterfacesAreReciprocal,
 			xablau::graph::graph <
-				xablau::graph::node < std::string >,
+				std::string,
 				xablau::graph::graph_container_type < xablau::graph::graph_container_type_value::ordered >,
 				xablau::graph::edge < float > >,
 			xablau::graph::digraph <
-				xablau::graph::node < std::string >,
+				std::string,
 				xablau::graph::graph_container_type < xablau::graph::graph_container_type_value::ordered >,
 				xablau::graph::edge < float > > > ::type;
 

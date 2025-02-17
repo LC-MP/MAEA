@@ -1,9 +1,9 @@
-export module xablau.organizational_analysis_c_sharp;
+export module MAEA.organizational_analysis_c_sharp;
 
 export import <cstdint>;
 export import <fstream>;
 
-export import xablau.organizational_analysis;
+export import MAEA.organizational_analysis;
 
 using ResizeContainer = void(*)(const size_t size);
 using InsertStringIntoPosition1 = void(*)(const char *string, const size_t i);
@@ -23,19 +23,19 @@ extern "C"
 	{
 		return
 			reinterpret_cast < uintptr_t > (
-				new xablau::organizational_analysis::processor < true > ());
+				new MAEA::organizational_analysis::processor < true > ());
 	}
 
 	_declspec(dllexport) void destroy(uintptr_t address)
 	{
-		delete reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		delete reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 	}
 
 	_declspec(dllexport) const char *indirectly_related_degree(
 		const uintptr_t address,
 		const float degree)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		processor->indirectly_related_degree(degree);
 
@@ -46,7 +46,7 @@ extern "C"
 		const uintptr_t address,
 		const float degree)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		processor->related_degree(degree);
 
@@ -57,7 +57,7 @@ extern "C"
 		const uintptr_t address,
 		const float degree)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		processor->directly_related_degree(degree);
 
@@ -69,7 +69,7 @@ extern "C"
 		const char *agent,
 		const char *role)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -91,7 +91,7 @@ extern "C"
 		uintptr_t address,
 		const char *agent)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -114,7 +114,7 @@ extern "C"
 		const char *agent,
 		const char *group)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -137,7 +137,7 @@ extern "C"
 		const char *agent,
 		const char *group)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -160,7 +160,7 @@ extern "C"
 		const char *activity,
 		const char *description)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -182,7 +182,7 @@ extern "C"
 		uintptr_t address,
 		const char *activity)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -205,7 +205,7 @@ extern "C"
 		const char *activity,
 		const char *group)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -228,7 +228,7 @@ extern "C"
 		const char *activity,
 		const char *group)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -255,7 +255,7 @@ extern "C"
 		const size_t x,
 		const size_t y)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -279,7 +279,7 @@ extern "C"
 		const char *task_dependent,
 		const char *task_dependency)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -302,7 +302,7 @@ extern "C"
 		const char *activity,
 		const char *task)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -326,7 +326,7 @@ extern "C"
 		const char *task_dependent,
 		const char *task_dependency)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -349,7 +349,7 @@ extern "C"
 		const char *agent,
 		const char *activity)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -372,7 +372,7 @@ extern "C"
 		const char *agent,
 		const char *activity)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -395,7 +395,7 @@ extern "C"
 		const char *dependent,
 		const char *dependency)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -418,7 +418,7 @@ extern "C"
 		const char *dependent,
 		const char *dependency)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -441,7 +441,7 @@ extern "C"
 		const char *component,
 		const char *description)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -463,7 +463,7 @@ extern "C"
 		uintptr_t address,
 		const char *component)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -486,7 +486,7 @@ extern "C"
 		const char *component,
 		const char *group)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -509,7 +509,7 @@ extern "C"
 		const char *component,
 		const char *group)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -532,7 +532,7 @@ extern "C"
 		const char *component1,
 		const char *component2)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -555,7 +555,7 @@ extern "C"
 		const char *component1,
 		const char *component2)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -579,7 +579,7 @@ extern "C"
 		const char *component,
 		const float degree)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -602,7 +602,7 @@ extern "C"
 		const char *activity,
 		const char *component)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -622,7 +622,7 @@ extern "C"
 
 	_declspec(dllexport) void clear(uintptr_t address)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		processor->clear();
 	}
@@ -632,7 +632,7 @@ extern "C"
 		ResizeContainer resizer,
 		InsertStringIntoPosition1 inserter)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -664,7 +664,7 @@ extern "C"
 		uintptr_t address,
 		InsertPairOfStringAndSizeT inserter)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -691,7 +691,7 @@ extern "C"
 		uintptr_t address,
 		InsertStringInContainer inserter)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -718,7 +718,7 @@ extern "C"
 		uintptr_t address,
 		InsertStringInContainer inserter)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -745,7 +745,7 @@ extern "C"
 		uintptr_t address,
 		float degree)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -768,7 +768,7 @@ extern "C"
 		const char *agent,
 		CopyNativeStringToManagedString copier)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -791,7 +791,7 @@ extern "C"
 		const char *activity,
 		CopyNativeStringToManagedString copier)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -814,7 +814,7 @@ extern "C"
 		const char *component,
 		CopyNativeStringToManagedString copier)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -834,7 +834,7 @@ extern "C"
 
 	_declspec(dllexport) const char *compare_activities_and_organization(uintptr_t address)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -856,7 +856,7 @@ extern "C"
 		uintptr_t address,
 		float minimumRelationDegreeForAgentsInChargeOfComponents)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -879,7 +879,7 @@ extern "C"
 		ResizeMatrix resizer,
 		InsertFloatIntoPosition2 inserter)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -912,7 +912,7 @@ extern "C"
 		ResizeMatrix resizer,
 		InsertFloatIntoPosition2 inserter)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -945,7 +945,7 @@ extern "C"
 		ResizeMatrix resizer,
 		InsertFloatIntoPosition2 inserter)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -978,7 +978,7 @@ extern "C"
 		ResizeMatrix resizer,
 		InsertFloatIntoPosition2 inserter)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1011,7 +1011,7 @@ extern "C"
 		ResizeMatrix resizer,
 		InsertFloatIntoPosition2 inserter)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1044,7 +1044,7 @@ extern "C"
 		ResizeMatrix resizer,
 		InsertFloatIntoPosition2 inserter)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1077,7 +1077,7 @@ extern "C"
 		ResizeMatrix resizer,
 		InsertFloatIntoPosition2 inserter)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1111,9 +1111,9 @@ extern "C"
 		const unsigned char red,
 		const unsigned char green,
 		const unsigned char blue,
-		const xablau::organizational_analysis::traversability state)
+		const MAEA::organizational_analysis::traversability state)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1140,9 +1140,9 @@ extern "C"
 		const unsigned char maxRed,
 		const unsigned char maxGreen,
 		const unsigned char maxBlue,
-		const xablau::organizational_analysis::traversability state)
+		const MAEA::organizational_analysis::traversability state)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1169,7 +1169,7 @@ extern "C"
 		const char *oldIdentification,
 		const char *newIdentification)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1193,7 +1193,7 @@ extern "C"
 		const size_t hash,
 		const char *newIdentification)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1217,7 +1217,7 @@ extern "C"
 		size_t &absolutePositionHash,
 		size_t &relativePositionHash)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1239,9 +1239,9 @@ extern "C"
 	_declspec(dllexport) const char *set_blueprint_element_traversability(
 		uintptr_t address,
 		const char *identification,
-		const xablau::organizational_analysis::traversability state)
+		const MAEA::organizational_analysis::traversability state)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1262,9 +1262,9 @@ extern "C"
 	_declspec(dllexport) const char *set_blueprint_element_instance_traversability(
 		uintptr_t address,
 		const char *identification,
-		const xablau::organizational_analysis::traversability state)
+		const MAEA::organizational_analysis::traversability state)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1284,7 +1284,7 @@ extern "C"
 
 	_declspec(dllexport) const char *erase_blueprint_element(uintptr_t address, const char *identification)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1307,7 +1307,7 @@ extern "C"
 		const char *path,
 		const float referenceInMeters)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1327,7 +1327,7 @@ extern "C"
 
 	_declspec(dllexport) const char *detect_blueprint_instances(uintptr_t address)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1349,7 +1349,7 @@ extern "C"
 		uintptr_t address,
 		InsertMappedPairOfSizeTAndCoordinates inserter)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1383,7 +1383,7 @@ extern "C"
 		InsertPairOfSizeTInContainer coordinateInserter,
 		float &distance)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1426,7 +1426,7 @@ extern "C"
 		InsertPairOfSizeTInContainer coordinateInserter,
 		float &distance)
 	{
-		auto processor = reinterpret_cast < xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1470,7 +1470,7 @@ extern "C"
 		size_t &absoluteX,
 		size_t &absoluteY)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1502,7 +1502,7 @@ extern "C"
 		const size_t y,
 		CopyNativeStringToManagedString copier)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1524,7 +1524,7 @@ extern "C"
 		uintptr_t address,
 		InsertStringInContainer inserter)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1549,7 +1549,7 @@ extern "C"
 
 	_declspec(dllexport) const char *write_blueprint(uintptr_t address, const char *path)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1569,7 +1569,7 @@ extern "C"
 
 	_declspec(dllexport) const char *write_blueprint_contours(uintptr_t address, const char *path)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1593,7 +1593,7 @@ extern "C"
 		const char *identification,
 		const int cameraDistanceLevel)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1618,7 +1618,7 @@ extern "C"
 		StringFromVector getter,
 		const size_t vectorSize)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1653,7 +1653,7 @@ extern "C"
 		unsigned char &maxGreen,
 		unsigned char &maxBlue)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1682,9 +1682,9 @@ extern "C"
 	_declspec(dllexport) const char *get_blueprint_element_traversability(
 		uintptr_t address,
 		const char *identification,
-		xablau::organizational_analysis::traversability &state)
+		MAEA::organizational_analysis::traversability &state)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1705,9 +1705,9 @@ extern "C"
 	_declspec(dllexport) const char *get_blueprint_element_instance_traversability(
 		uintptr_t address,
 		const char *identification,
-		xablau::organizational_analysis::traversability &state)
+		MAEA::organizational_analysis::traversability &state)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1729,7 +1729,7 @@ extern "C"
 		uintptr_t address,
 		float &metersPerPixel)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1753,7 +1753,7 @@ extern "C"
 		const char separator,
 		const char lister)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1779,7 +1779,7 @@ extern "C"
 		const char separator,
 		const char lister)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1805,7 +1805,7 @@ extern "C"
 		const char separator,
 		const char lister)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1831,7 +1831,7 @@ extern "C"
 		const char separator,
 		const char lister)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1857,7 +1857,7 @@ extern "C"
 		const char separator,
 		const char lister)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1883,7 +1883,7 @@ extern "C"
 		const char separator,
 		const char lister)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1909,7 +1909,7 @@ extern "C"
 		const char separator,
 		const char lister)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1935,7 +1935,7 @@ extern "C"
 		const char separator,
 		const char lister)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1961,7 +1961,7 @@ extern "C"
 		const char separator,
 		const char lister)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -1987,7 +1987,7 @@ extern "C"
 		const char separator,
 		const char lister)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -2013,7 +2013,7 @@ extern "C"
 		const char separator,
 		const char lister)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -2039,7 +2039,7 @@ extern "C"
 		const char separator,
 		const char lister)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -2065,7 +2065,7 @@ extern "C"
 		const char separator,
 		const char lister)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{
@@ -2089,7 +2089,7 @@ extern "C"
 		const char separator,
 		const char lister)
 	{
-		auto processor = reinterpret_cast < const xablau::organizational_analysis::processor < true > * > (address);
+		auto processor = reinterpret_cast < const MAEA::organizational_analysis::processor < true > * > (address);
 
 		try
 		{

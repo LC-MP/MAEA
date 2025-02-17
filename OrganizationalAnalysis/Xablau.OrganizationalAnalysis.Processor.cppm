@@ -29,30 +29,25 @@
 // funding this research project.
 // FAPESP process number: 2020/15909-8
 
-export module xablau.organizational_analysis:processor;
+export module MAEA.organizational_analysis:processor;
 export import :blueprint;
 export import :fundamental_definitions;
 export import :reader;
 export import :writer;
 
-export import <charconv>;
-export import <iostream>;
-export import <numeric>;
-export import <random>;
-export import <regex>;
-export import <stdexcept>;
+export import std;
 
 export import xablau.algebra;
 export import xablau.graph;
 export import xablau.io;
 
-export namespace xablau::organizational_analysis
+export namespace MAEA::organizational_analysis
 {
 	template < bool ComponentsInterfacesAreReciprocal >
 	class processor final
 	{
 	private:
-		using node_type = xablau::graph::node < std::string >;
+		using node_type = std::string;
 
 		enum class comparison_mode
 		{
@@ -64,11 +59,10 @@ export namespace xablau::organizational_analysis
 		using matrix_type =
 			xablau::algebra::tensor_dense_dynamic <
 				float,
-				xablau::algebra::tensor_rank < 2 >,
-				xablau::algebra::tensor_contiguity < false > >;
+				xablau::algebra::tensor_rank < 2 > >;
 
-		using blueprint_type = xablau::organizational_analysis::blueprint;
-		using task_type = xablau::organizational_analysis::activity::task;
+		using blueprint_type = MAEA::organizational_analysis::blueprint;
+		using task_type = MAEA::organizational_analysis::activity::task;
 
 		[[nodiscard]] matrix_type create_activities_matrix(
 			const std::map < std::string, size_t > &activityKeyToIndexMap) const
@@ -79,7 +73,7 @@ export namespace xablau::organizational_analysis
 
 			for (const auto &activity1 : this->_activities)
 			{
-				const auto edges = this->_activity_dependencies.edges(activity1.identification);
+				const auto edges = this->_activity_dependencies.connections(activity1.identification);
 
 				if (!edges.has_value())
 				{
@@ -198,13 +192,12 @@ export namespace xablau::organizational_analysis
 						continue;
 					}
 
-					auto &finalComparativeMatrixCell = comparativeMatrix(i, j);
 					const auto strongPotentialMatrixCell = strongPotentialMatrix(i, j);
 					const auto baseMatrixCell = baseMatrix(i, j);
 
 					if (strongPotentialMatrixCell > float{} && baseMatrixCell == float{})
 					{
-						finalComparativeMatrixCell = this->_indirectly_related_degree;
+						comparativeMatrix(i, j) = this->_indirectly_related_degree;
 					}
 				}
 			}
@@ -219,26 +212,22 @@ export namespace xablau::organizational_analysis
 			{
 				for (size_t j = 0; j < finalComparativeMatrix.dimensionalities()[1]; j++)
 				{
-					if (i == j)
+					if (i == j || baseMatrix(i, j) == float{})
 					{
 						continue;
 					}
 
 					auto &finalComparativeMatrixCell = finalComparativeMatrix(i, j);
 					const auto totalPotentialMatrixCell = totalPotentialMatrix(i, j);
-					const auto baseMatrixCell = baseMatrix(i, j);
 
-					if (baseMatrixCell != float{})
+					if (totalPotentialMatrixCell != float{})
 					{
-						if (totalPotentialMatrixCell != float{})
-						{
-							finalComparativeMatrixCell = this->_related_degree;
-						}
+						finalComparativeMatrixCell = this->_related_degree;
+					}
 
-						else
-						{
-							finalComparativeMatrixCell = this->_directly_related_degree;
-						}
+					else
+					{
+						finalComparativeMatrixCell = this->_directly_related_degree;
 					}
 				}
 			}
@@ -258,37 +247,39 @@ export namespace xablau::organizational_analysis
 				{
 					auto &cell = copyStrongPotentialMatrixWithRedundancies(i, j);
 
-					if (cell != float{})
+					if (cell == float{})
 					{
-						const auto &key1 = baseIndexToKeyMap.at(i);
-						const auto &key2 = baseIndexToKeyMap.at(j);
-						const auto &agentsInCharge1 = base.find(key1)->agents_in_charge;
-						const auto &agentsInCharge2 = base.find(key2)->agents_in_charge;
+						continue;
+					}
 
-						bool thereAreRedundancies = false;
+					const auto &key1 = baseIndexToKeyMap.at(i);
+					const auto &key2 = baseIndexToKeyMap.at(j);
+					const auto &agentsInCharge1 = base.find(key1)->agents_in_charge;
+					const auto &agentsInCharge2 = base.find(key2)->agents_in_charge;
 
-						for (const auto agentInCharge1 : agentsInCharge1)
+					bool thereAreRedundancies = false;
+
+					for (const auto agentInCharge1 : agentsInCharge1)
+					{
+						for (const auto agentInCharge2 : agentsInCharge2)
 						{
-							for (const auto agentInCharge2 : agentsInCharge2)
+							if (agentInCharge1 == agentInCharge2)
 							{
-								if (agentInCharge1 == agentInCharge2)
-								{
-									thereAreRedundancies = true;
+								thereAreRedundancies = true;
 
-									break;
-								}
-							}
-
-							if (thereAreRedundancies)
-							{
 								break;
 							}
 						}
 
 						if (thereAreRedundancies)
 						{
-							cell = float{};
+							break;
 						}
+					}
+
+					if (thereAreRedundancies)
+					{
+						cell = float{};
 					}
 				}
 			}
@@ -300,12 +291,10 @@ export namespace xablau::organizational_analysis
 		[[nodiscard]] static std::vector < std::set < std::string > > identify_parallelizations(
 			const DigraphType &activitiesSequence)
 		{
-			using node_type = xablau::graph::node < std::string >;
-
 			size_t index{};
 			const auto stronglyConnectedComponents = activitiesSequence.Tarjan_strongly_connected_components();
-			std::map < node_type, size_t > individualNodeToStronglyConnectedComponentMap;
-			std::map < size_t, std::set < node_type > > stronglyConnectedComponentToIndividualNodeMap;
+			std::map < xablau::graph::node_ref < const std::string >, size_t > individualNodeToStronglyConnectedComponentMap;
+			std::map < size_t, std::set < xablau::graph::node_ref < const std::string > > > stronglyConnectedComponentToIndividualNodeMap;
 			std::random_device randomDevice{};
 			std::default_random_engine engine(randomDevice());
 			std::uniform_int_distribution < size_t > distribution(0, std::numeric_limits < size_t > ::max());
@@ -327,7 +316,7 @@ export namespace xablau::organizational_analysis
 			}
 
 			xablau::graph::digraph <
-				xablau::graph::node < size_t >,
+				size_t,
 				xablau::graph::graph_container_type < xablau::graph::graph_container_type_value::ordered >,
 				xablau::graph::edge < float > > mappedActivitiesSequence{};
 
@@ -352,15 +341,15 @@ export namespace xablau::organizational_analysis
 
 			while (!mappedActivitiesSequence.empty())
 			{
-				const auto sourceNodes = mappedActivitiesSequence.source_nodes();
+				const auto sourceNodes = mappedActivitiesSequence.source_nodes < false > ();
 
 				finalActivitiesSequence.emplace_back();
 
 				for (const auto sourceNode : sourceNodes)
 				{
-					for (const auto &individualNode : stronglyConnectedComponentToIndividualNodeMap.at(sourceNode.value))
+					for (const auto &individualNode : stronglyConnectedComponentToIndividualNodeMap.at(sourceNode))
 					{
-						finalActivitiesSequence.back().insert(individualNode.value);
+						finalActivitiesSequence.back().insert(individualNode);
 					}
 				}
 
@@ -371,6 +360,20 @@ export namespace xablau::organizational_analysis
 			}
 
 			return finalActivitiesSequence;
+		}
+
+		static void make_matrix_symmetric(matrix_type &matrix)
+		{
+			for (size_t i = 0; i < matrix.dimensionalities()[0]; i++)
+			{
+				for (size_t j = 0; j < i; j++)
+				{
+					const auto value = xablau::algebra::functions::max < float, float > ::invoke(matrix(i, j), matrix(j, i));
+
+					matrix(i, j) = value;
+					matrix(j, i) = value;
+				}
+			}
 		}
 
 		template < comparison_mode ComparisonMode >
@@ -393,7 +396,7 @@ export namespace xablau::organizational_analysis
 
 			if constexpr (ComparisonMode == comparison_mode::component_and_organization)
 			{
-				if (this->components_without_agents_in_charge().size() != 0)
+				if (!this->components_without_agents_in_charge().empty())
 				{
 					throw std::runtime_error("There are components without agents in charge.");
 				}
@@ -401,7 +404,7 @@ export namespace xablau::organizational_analysis
 
 			else if constexpr (ComparisonMode == comparison_mode::activity_and_organization)
 			{
-				if (this->activities_without_agents_in_charge().size() != 0)
+				if (!this->activities_without_agents_in_charge().empty())
 				{
 					throw std::runtime_error("There are activities without agents in charge.");
 				}
@@ -461,6 +464,12 @@ export namespace xablau::organizational_analysis
 
 				this->_potential_matrices[1] =
 					this->_affiliations_matrices[1].transpose() * this->_activities_dependencies_matrix * this->_affiliations_matrices[1];
+
+				if constexpr (ComponentsInterfacesAreReciprocal)
+				{
+					processor::make_matrix_symmetric(this->_potential_matrices[0]);
+					processor::make_matrix_symmetric(this->_potential_matrices[1]);
+				}
 
 				this->_strong_potential_matrix_without_redundancies =
 					this->erase_redundancies(
@@ -1448,7 +1457,7 @@ export namespace xablau::organizational_analysis
 
 			for (const auto &task : std::get < 0 > (result))
 			{
-				const auto &_task = iterator1->tasks.container().find(activity::task(task))->first.value;
+				const auto &_task = iterator1->tasks.container().find(activity::task(task))->first;
 
 				if (_task.degree == float{})
 				{
@@ -1902,8 +1911,7 @@ export namespace xablau::organizational_analysis
 			using TableType =
 				xablau::algebra::tensor_dense_dynamic <
 					std::string,
-					xablau::algebra::tensor_rank < 2 >,
-					xablau::algebra::tensor_contiguity < false > >;
+					xablau::algebra::tensor_rank < 2 > >;
 
 			constexpr auto pointCount =
 				[] (const element_instance &elementInstance) -> size_t
@@ -2021,8 +2029,7 @@ export namespace xablau::organizational_analysis
 			using TableType =
 				xablau::algebra::tensor_dense_dynamic <
 					std::string,
-					xablau::algebra::tensor_rank < 2 >,
-					xablau::algebra::tensor_contiguity < false > >;
+					xablau::algebra::tensor_rank < 2 > >;
 
 			constexpr auto relationCount =
 				[] (const blueprint::element_instance_neighborhood_type &neighborhood) -> size_t

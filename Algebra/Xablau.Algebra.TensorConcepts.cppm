@@ -1,10 +1,6 @@
-// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
-
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-
 // MIT License
 //
-// Copyright (c) 2023 Jean Amaro <jean.amaro@outlook.com.br>
+// Copyright (c) 2023-2024 Jean Amaro <jean.amaro@outlook.com.br>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -29,13 +25,7 @@ export import :fundamental_concepts;
 export import :tensor_dense_dynamic;
 export import :tensor_dense_fixed;
 
-export import <algorithm>;
-export import <array>;
-export import <complex>;
-export import <concepts>;
-export import <ranges>;
-export import <type_traits>;
-export import <tuple>;
+export import std;
 
 namespace xablau::algebra::concepts
 {
@@ -47,14 +37,12 @@ namespace xablau::algebra::concepts
 		template <
 			typename Type,
 			concepts::tensor_rank Rank,
-			concepts::tensor_contiguity Contiguous,
 			concepts::tensor_memory_order_indices MemoryOrderIndices,
 			concepts::tensor_type TensorType >
 		struct is_tensor_dense_dynamic <
 			xablau::algebra::tensor_dense_dynamic <
 				Type,
 				Rank,
-				Contiguous,
 				MemoryOrderIndices,
 				TensorType > > : std::true_type {};
 
@@ -64,14 +52,12 @@ namespace xablau::algebra::concepts
 		template <
 			typename Type,
 			concepts::tensor_fixed_dimensionalities FixedDimensionalities,
-			concepts::tensor_contiguity Contiguous,
 			concepts::tensor_memory_order_indices MemoryOrderIndices,
 			concepts::tensor_type TensorType >
 		struct is_tensor_dense_fixed <
 			xablau::algebra::tensor_dense_fixed <
 				Type,
 				FixedDimensionalities,
-				Contiguous,
 				MemoryOrderIndices,
 				TensorType > > : std::true_type {};
 

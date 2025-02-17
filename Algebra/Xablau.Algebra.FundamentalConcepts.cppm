@@ -1,10 +1,6 @@
-// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
-
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-
 // MIT License
 //
-// Copyright (c) 2023 Jean Amaro <jean.amaro@outlook.com.br>
+// Copyright (c) 2023-2024 Jean Amaro <jean.amaro@outlook.com.br>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,13 +24,7 @@ export module xablau.algebra:fundamental_concepts;
 export import :complex_configurations;
 export import :tensor_configurations;
 
-export import <algorithm>;
-export import <array>;
-export import <complex>;
-export import <concepts>;
-export import <ranges>;
-export import <type_traits>;
-export import <tuple>;
+export import std;
 
 namespace xablau::algebra::concepts
 {
@@ -197,9 +187,6 @@ namespace xablau::algebra::concepts
 
 	export template < typename Rank >
 	concept tensor_rank = internals::is_specialization_size_t_pack < Rank, algebra::tensor_rank > ::value;
-
-	export template < typename Contiguity >
-	concept tensor_contiguity = internals::is_specialization_bool < Contiguity, algebra::tensor_contiguity > ::value;
 
 	export template < typename MemoryOrderIndices >
 	concept tensor_memory_order_indices =

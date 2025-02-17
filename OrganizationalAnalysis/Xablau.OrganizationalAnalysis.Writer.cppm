@@ -29,24 +29,14 @@
 // funding this research project.
 // FAPESP process number: 2020/15909-8
 
-export module xablau.organizational_analysis:writer;
+export module MAEA.organizational_analysis:writer;
 export import :fundamental_definitions;
 
-export import <algorithm>;
-export import <concepts>;
-export import <iostream>;
-export import <format>;
-export import <locale>;
-export import <optional>;
-export import <ranges>;
-export import <regex>;
-export import <set>;
-export import <stdexcept>;
-export import <vector>;
+export import std;
 
 import xablau.algebra;
 
-namespace xablau::organizational_analysis::writer
+namespace MAEA::organizational_analysis::writer
 {
 	namespace internals
 	{

@@ -75,6 +75,11 @@
     <VcpkgManifestInstall>false</VcpkgManifestInstall>
     <VcpkgAutoLink>true</VcpkgAutoLink>
   </PropertyGroup>
+  <ItemDefinitionGroup Label="Globals">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(VcPkgRoot)\installed\$(VcPkgTriplet)\include\opencv4;$(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>

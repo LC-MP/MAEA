@@ -30,7 +30,7 @@
 // FAPESP process number: 2020/15909-8
 
 import xablau.io;
-import xablau.organizational_analysis;
+import MAEA.organizational_analysis;
 
 int main(int argc, char** argv)
 {
@@ -46,7 +46,7 @@ int main(int argc, char** argv)
 		char separator{argv[23][0]};
 		char lister{argv[24][0]};
 
-		xablau::organizational_analysis::processor < true > processor{};
+		MAEA::organizational_analysis::processor < true > processor{};
 
 		processor.indirectly_related_degree(1.0f);
 		processor.related_degree(2.0f);

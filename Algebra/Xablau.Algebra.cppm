@@ -1,10 +1,6 @@
-// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
-
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-
 // MIT License
 //
-// Copyright (c) 2023 Jean Amaro <jean.amaro@outlook.com.br>
+// Copyright (c) 2023-2024 Jean Amaro <jean.amaro@outlook.com.br>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +22,6 @@
 
 export module xablau.algebra;
 
-export import :algorithm;
 export import :complex;
 export import :complex_concepts;
 export import :complex_configurations;
@@ -36,6 +31,8 @@ export import :fundamental_concepts;
 export import :fundamental_configurations;
 export import :fundamental_definitions;
 export import :fundamental_functions;
+export import :int_number;
+export import :int_number_concepts;
 export import :standard_definitions;
 export import :standard_functions;
 export import :tensor_concepts;

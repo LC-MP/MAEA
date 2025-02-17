@@ -36,9 +36,9 @@ namespace MSCMD.Forms.DataVisualization
 					HeatMap = new[]
 					{
 					SKColors.LightGray.AsLvcColor(), // the first element is the "coldest"
-					SKColors.Green.AsLvcColor(),
+					SKColors.Red.AsLvcColor(),
 					SKColors.Blue.AsLvcColor(),
-					SKColors.Red.AsLvcColor() // the last element is the "hottest"
+					SKColors.Green.AsLvcColor() // the last element is the "hottest"
 					 },
 					Values = matrix,
 					PointPadding = new LiveChartsCore.Drawing.Padding(0.2,0.2,0.2,0.2),

@@ -1,10 +1,6 @@
-// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
-
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-
 // MIT License
 //
-// Copyright (c) 2023 Jean Amaro <jean.amaro@outlook.com.br>
+// Copyright (c) 2023-2024 Jean Amaro <jean.amaro@outlook.com.br>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,15 +23,7 @@
 export module xablau.geometry:vertex;
 export import :forward_declarations;
 
-export import <array>;
-export import <algorithm>;
-export import <functional>;
-export import <iostream>;
-export import <numeric>;
-export import <optional>;
-export import <stdexcept>;
-export import <type_traits>;
-export import <utility>;
+export import std;
 
 export import xablau.algebra;
 
@@ -980,9 +968,9 @@ export namespace xablau::geometry
 			std::same_as < std::ranges::range_value_t < Range >, std::function < Type(const vertex &) > >)
 		[[nodiscard]] constexpr vertex transform(const Range &transformFunctions) const
 		{
-			if (std::ranges::size(transformFunctions) >= SpatialDimensionality.dimensionality())
+			if (std::ranges::size(transformFunctions) >= SpatialDimensionality::dimensionality())
 			{
-				throw std::out_of_range("\"transformFunctions.size() >= SpatialDimensionality.dimensionality()\"");
+				throw std::out_of_range("\"transformFunctions.size() >= SpatialDimensionality::dimensionality()\"");
 			}
 
 			vertex vertex;
@@ -1014,9 +1002,9 @@ export namespace xablau::geometry
 			std::same_as < std::ranges::range_value_t < Range >, std::function < Type(const vertex &) > >)
 		constexpr vertex &transform_in_place(const Range &transformFunctions)
 		{
-			if (std::ranges::size(transformFunctions) >= SpatialDimensionality.dimensionality())
+			if (std::ranges::size(transformFunctions) >= SpatialDimensionality::dimensionality())
 			{
-				throw std::out_of_range("\"transformFunctions.size() >= SpatialDimensionality.dimensionality()\"");
+				throw std::out_of_range("\"transformFunctions.size() >= SpatialDimensionality::dimensionality()\"");
 			}
 
 			const auto vertex = *this;
@@ -1024,7 +1012,7 @@ export namespace xablau::geometry
 			std::transform(std::ranges::cbegin(transformFunctions), std::ranges::cend(transformFunctions), this->coordinates.begin(),
 				[&vertex](const std::function < Type(const geometry::vertex &) > &transformFunction) -> Type
 				{
-					return transformFunction(vector);
+					return transformFunction(vertex);
 				});
 
 			return *this;

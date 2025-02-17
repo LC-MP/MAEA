@@ -33,23 +33,15 @@ module;
 
 #include <opencv2/opencv.hpp>
 
-export module xablau.organizational_analysis:blueprint;
+export module MAEA.organizational_analysis:blueprint;
 export import :fundamental_definitions;
 
-export import <algorithm>;
-export import <array>;
-export import <filesystem>;
-export import <format>;
-export import <limits>;
-export import <map>;
-export import <set>;
-export import <string>;
-export import <type_traits>;
+export import std;
 
 export import xablau.algebra;
 export import xablau.graph;
 
-namespace xablau::organizational_analysis
+namespace MAEA::organizational_analysis
 {
 	const cv::Vec3b wall_color(0, 0, 0);
 	const cv::Vec3b external_color(100, 100, 100);
@@ -70,7 +62,7 @@ namespace xablau::organizational_analysis
 	public:
 		std::string identification{};
 		std::pair < cv::Vec3b, cv::Vec3b > domain{};
-		xablau::organizational_analysis::traversability traversability = xablau::organizational_analysis::traversability::closed;
+		MAEA::organizational_analysis::traversability traversability = MAEA::organizational_analysis::traversability::closed;
 
 		bool operator<(const element &other) const
 		{
@@ -87,7 +79,7 @@ namespace xablau::organizational_analysis
 		element(
 			const char *identification,
 			const std::pair < cv::Vec3b, cv::Vec3b > domain = std::make_pair(cv::Vec3b{}, cv::Vec3b{}),
-			const xablau::organizational_analysis::traversability traversability = xablau::organizational_analysis::traversability::closed) :
+			const MAEA::organizational_analysis::traversability traversability = MAEA::organizational_analysis::traversability::closed) :
 
 			identification(identification),
 			domain(domain),
@@ -98,7 +90,7 @@ namespace xablau::organizational_analysis
 		element(
 			const std::string &identification,
 			const std::pair < cv::Vec3b, cv::Vec3b > domain = std::make_pair(cv::Vec3b{}, cv::Vec3b{}),
-			const xablau::organizational_analysis::traversability traversability = xablau::organizational_analysis::traversability::closed) :
+			const MAEA::organizational_analysis::traversability traversability = MAEA::organizational_analysis::traversability::closed) :
 
 			identification(identification),
 			domain(domain),
@@ -113,8 +105,8 @@ namespace xablau::organizational_analysis
 	{
 	public:
 		std::string identification{};
-		const xablau::organizational_analysis::element &element;
-		xablau::organizational_analysis::traversability traversability = xablau::organizational_analysis::traversability::closed;
+		const MAEA::organizational_analysis::element &element;
+		MAEA::organizational_analysis::traversability traversability = MAEA::organizational_analysis::traversability::closed;
 		cv::Vec3b color{};
 		cv::Vec3b island_color{};
 		std::vector < cv::Point > contour{};
@@ -134,7 +126,7 @@ namespace xablau::organizational_analysis
 
 		element_instance(
 			const std::string &identification,
-			const xablau::organizational_analysis::element &element = null_element,
+			const MAEA::organizational_analysis::element &element = null_element,
 			const cv::Vec3b &color = cv::Vec3b{},
 			const cv::Vec3b &islandColor = cv::Vec3b{},
 			std::vector < cv::Point > contour = {}) :
@@ -158,9 +150,8 @@ namespace xablau::organizational_analysis
 
 		using space_type =
 			xablau::algebra::tensor_dense_dynamic <
-				std::optional < std::reference_wrapper < const xablau::organizational_analysis::element_instance > >,
-				xablau::algebra::tensor_rank < 2 >,
-				xablau::algebra::tensor_contiguity < true > >;
+				std::optional < std::reference_wrapper < const MAEA::organizational_analysis::element_instance > >,
+				xablau::algebra::tensor_rank < 2 > >;
 
 		struct less_pair
 		{
@@ -181,13 +172,13 @@ namespace xablau::organizational_analysis
 	private:
 		using space_abstraction_type =
 			xablau::graph::digraph <
-				xablau::graph::node < blueprint::task_type >,
+				blueprint::task_type,
 				xablau::graph::graph_container_type < xablau::graph::graph_container_type_value::ordered >,
 				xablau::graph::edge < float > >;
 
 		bool _up_to_date{};
-		std::set < xablau::organizational_analysis::element > _elements{};
-		std::set < xablau::organizational_analysis::element_instance > _element_instances{};
+		std::set < MAEA::organizational_analysis::element > _elements{};
+		std::set < MAEA::organizational_analysis::element_instance > _element_instances{};
 		space_type _space{};
 		float _meters_per_pixel{};
 		cv::Mat _original_image{};
@@ -302,7 +293,7 @@ namespace xablau::organizational_analysis
 					contourHash(p, m, hash, pPow, relativeContour, relativeIslands));
 		}
 
-		const xablau::organizational_analysis::element &find_element(const cv::Vec3b &color) const
+		const MAEA::organizational_analysis::element &find_element(const cv::Vec3b &color) const
 		{
 			for (const auto &element : this->_elements)
 			{
@@ -337,12 +328,12 @@ namespace xablau::organizational_analysis
 
 					if (element.identification == "reference")
 					{
-						pixel = xablau::organizational_analysis::floor_color;
+						pixel = MAEA::organizational_analysis::floor_color;
 					}
 
 					else
 					{
-						pixel = xablau::organizational_analysis::wall_color;
+						pixel = MAEA::organizational_analysis::wall_color;
 					}
 				});
 
@@ -386,7 +377,7 @@ namespace xablau::organizational_analysis
 						return point1.y < point2.y;
 					});
 
-			cv::fillPoly(this->_original_image, contours, xablau::organizational_analysis::external_color);
+			cv::fillPoly(this->_original_image, contours, MAEA::organizational_analysis::external_color);
 
 			if (maxX->x - minX->x > maxY->y - minY->y)
 			{
@@ -416,12 +407,12 @@ namespace xablau::organizational_analysis
 
 						if (candidateElement.identification != element.identification)
 						{
-							pixel = xablau::organizational_analysis::wall_color;
+							pixel = MAEA::organizational_analysis::wall_color;
 						}
 
 						else
 						{
-							pixel = xablau::organizational_analysis::floor_color;
+							pixel = MAEA::organizational_analysis::floor_color;
 						}
 					});
 
@@ -471,10 +462,10 @@ namespace xablau::organizational_analysis
 						element,
 						colorIdentification,
 						element.identification == "floor" ?
-							xablau::organizational_analysis::floor_island_color :
+							MAEA::organizational_analysis::floor_island_color :
 							element.identification == "external" ?
-								xablau::organizational_analysis::external_color :
-								xablau::organizational_analysis::wall_color,
+								MAEA::organizational_analysis::external_color :
+								MAEA::organizational_analysis::wall_color,
 						std::move(contour));
 
 					for (int j = hierarchy[i][2]; j != -1;)
@@ -687,7 +678,7 @@ namespace xablau::organizational_analysis
 				throw std::runtime_error("There is a cyclic dependency on the task list.");
 			}
 
-			const auto startTask = dependencies.sink_nodes();
+			const auto startTask = dependencies.sink_nodes < false > ();
 
 			if (startTask.size() != 1)
 			{
@@ -695,35 +686,35 @@ namespace xablau::organizational_analysis
 			}
 
 			constexpr auto blockedPath =
-				[] (const std::optional < std::reference_wrapper < const xablau::organizational_analysis::element_instance > > &cell) -> bool
+				[] (const std::optional < std::reference_wrapper < const MAEA::organizational_analysis::element_instance > > &cell) -> bool
 				{
 					return !cell.has_value() || cell.value().get().traversability != traversability::open;
 				};
 
 			for (const auto &[node, _]: dependencies.container())
 			{
-				if (node.value.coordinates[0] >= this->_space.dimensionalities()[0] ||
-					node.value.coordinates[1] >= this->_space.dimensionalities()[1])
+				if (node.coordinates[0] >= this->_space.dimensionalities()[0] ||
+					node.coordinates[1] >= this->_space.dimensionalities()[1])
 				{
 					throw
 						std::runtime_error(
 							std::format(
 								"Coordinates ({}, {}) are out of bounds: ({}, {}).",
-								node.value.coordinates[0],
-								node.value.coordinates[1],
+								node.coordinates[0],
+								node.coordinates[1],
 								this->_space.dimensionalities()[0],
 								this->_space.dimensionalities()[1]));
 				}
 
-				if (blockedPath(this->_space(node.value.coordinates)))
+				if (blockedPath(this->_space(node.coordinates)))
 				{
 					throw
 						std::runtime_error(
 							std::format(
 								"Coordinates ({}, {}) from task \"{}\" are in a blocked path.",
-								node.value.coordinates[0],
-								node.value.coordinates[1],
-								node.value.identification));
+								node.coordinates[0],
+								node.coordinates[1],
+								node.identification));
 				}
 
 				if (dependencies.edges(node, node).has_value())
@@ -732,7 +723,7 @@ namespace xablau::organizational_analysis
 						std::runtime_error(
 							std::format(
 								"Task \"{}\" is depending on itself.",
-								node.value.identification));
+								node.identification));
 				}
 			}
 
@@ -776,7 +767,7 @@ namespace xablau::organizational_analysis
 
 				for (const auto &treeNode : tree)
 				{
-					treeSets[node.value].insert(treeNode);
+					treeSets[node].insert(treeNode);
 				}
 			}
 
@@ -799,8 +790,8 @@ namespace xablau::organizational_analysis
 				std::set_difference(
 					fullTreeSet.cbegin(),
 					fullTreeSet.cend(),
-					treeSets[node.value].cbegin(),
-					treeSets[node.value].cend(),
+					treeSets[node].cbegin(),
+					treeSets[node].cend(),
 					std::inserter(auxDestinationsSet, auxDestinationsSet.begin()));
 
 				std::set_difference(
@@ -821,7 +812,7 @@ namespace xablau::organizational_analysis
 							continue;
 						}
 
-						if (treeSets[connection2.value].contains(connection1.value))
+						if (treeSets[connection2].contains(connection1))
 						{
 							validConnection = false;
 
@@ -831,13 +822,13 @@ namespace xablau::organizational_analysis
 
 					if (validConnection)
 					{
-						destinationsSet.insert(connection1.value);
+						destinationsSet.insert(connection1);
 					}
 				}
 
 				for (const auto &destination : destinationsSet)
 				{
-					if (calculatedPaths.contains(std::make_pair(destination, node.value)))
+					if (calculatedPaths.contains(std::make_pair(destination, node)))
 					{
 						continue;
 					}
@@ -846,7 +837,7 @@ namespace xablau::organizational_analysis
 						xablau::graph::algorithm::A_star(
 							this->_space,
 							destination.coordinates,
-							node.value.coordinates,
+							node.coordinates,
 							blockedPath);
 
 					if (path.empty())
@@ -855,7 +846,7 @@ namespace xablau::organizational_analysis
 							std::format(
 								"Could not find a path between tasks \"{}\" and \"{}\".",
 								destination.identification,
-								node.value.identification));
+								node.identification));
 					}
 
 					auto distance = this->calculate_distance(path);
@@ -867,7 +858,7 @@ namespace xablau::organizational_analysis
 
 					calculatedPaths.insert(
 						std::make_pair(
-							std::make_pair(destination, node.value),
+							std::make_pair(destination, node),
 							std::make_pair(std::move(path), distance)));
 				}
 			}
@@ -889,17 +880,17 @@ namespace xablau::organizational_analysis
 				}
 			}
 
-			std::vector < xablau::graph::node < blueprint::task_type > > _tasks{};
+			std::vector < xablau::graph::node_ref < const blueprint::task_type > > _tasks{};
 			float distance{};
 
 			if (dependencies.edge_count() == 0)
 			{
-				std::tie(_tasks, distance) = spaceAbstraction.traveling_salesman_problem(*(startTask.cbegin()));
+				std::tie(_tasks, distance) = spaceAbstraction.traveling_salesman_problem < false > (*(startTask.cbegin()));
 			}
 
 			else
 			{
-				std::tie(_tasks, distance) = spaceAbstraction.traveling_salesman_problem(*(startTask.cbegin()), dependencies);
+				std::tie(_tasks, distance) = spaceAbstraction.traveling_salesman_problem < false > (*(startTask.cbegin()), dependencies);
 			}
 
 			std::vector < std::reference_wrapper < const blueprint::task_type > > tasks;
@@ -910,10 +901,10 @@ namespace xablau::organizational_analysis
 
 			for (const auto &node : _tasks)
 			{
-				tasks.push_back(node.value);
+				tasks.push_back(node);
 			}
 
-			instances.push_back(this->_space(_tasks.cbegin()->value.coordinates).value());
+			instances.push_back(this->_space(_tasks.cbegin()->get().coordinates).value());
 
 			for (auto previous = tasks.begin(), next = ++(tasks.begin());
 				next != tasks.end();
@@ -1099,7 +1090,7 @@ namespace xablau::organizational_analysis
 
 		void write_contours(const std::string &path) const
 		{
-			cv::Mat image(this->_original_image.rows, this->_original_image.cols, CV_8UC3, xablau::organizational_analysis::floor_color);
+			cv::Mat image(this->_original_image.rows, this->_original_image.cols, CV_8UC3, MAEA::organizational_analysis::floor_color);
 
 			for (const auto &elementInstance : this->_element_instances)
 			{
@@ -1109,8 +1100,8 @@ namespace xablau::organizational_analysis
 					image,
 					contours,
 					0,
-					elementInstance.color == xablau::organizational_analysis::floor_color ?
-						xablau::organizational_analysis::reference_color :
+					elementInstance.color == MAEA::organizational_analysis::floor_color ?
+						MAEA::organizational_analysis::reference_color :
 						elementInstance.color);
 
 				cv::drawContours(image, elementInstance.islands, -1, elementInstance.island_color);
@@ -1179,7 +1170,7 @@ namespace xablau::organizational_analysis
 					point.y -= startY;
 				});
 
-			cv::fillPoly(element, contours, xablau::organizational_analysis::reference_color);
+			cv::fillPoly(element, contours, MAEA::organizational_analysis::reference_color);
 
 			if (!elementInstance.islands.empty())
 			{
@@ -1196,7 +1187,7 @@ namespace xablau::organizational_analysis
 							});
 					});
 
-				cv::fillPoly(element, islands, xablau::organizational_analysis::floor_island_color);
+				cv::fillPoly(element, islands, MAEA::organizational_analysis::floor_island_color);
 			}
 
 			cv::imwrite(
@@ -1400,11 +1391,11 @@ namespace xablau::organizational_analysis
 			this->_space.clear();
 			this->_original_image.release();
 
-			this->_elements.insert({ "wall", { std::make_pair(xablau::organizational_analysis::wall_color, xablau::organizational_analysis::wall_color) }, traversability::closed });
-			this->_elements.insert({ "floor_island", { std::make_pair(xablau::organizational_analysis::floor_island_color, xablau::organizational_analysis::floor_island_color) }, traversability::closed });
-			this->_elements.insert({ "floor", { std::make_pair(xablau::organizational_analysis::floor_color, xablau::organizational_analysis::floor_color) }, traversability::open });
-			this->_elements.insert({ "external", { std::make_pair(xablau::organizational_analysis::external_color, xablau::organizational_analysis::external_color) }, traversability::closed });
-			this->_elements.insert({ "reference", { std::make_pair(xablau::organizational_analysis::reference_color, xablau::organizational_analysis::reference_color) }, traversability::open });
+			this->_elements.insert({ "wall", { std::make_pair(MAEA::organizational_analysis::wall_color, MAEA::organizational_analysis::wall_color) }, traversability::closed });
+			this->_elements.insert({ "floor_island", { std::make_pair(MAEA::organizational_analysis::floor_island_color, MAEA::organizational_analysis::floor_island_color) }, traversability::closed });
+			this->_elements.insert({ "floor", { std::make_pair(MAEA::organizational_analysis::floor_color, MAEA::organizational_analysis::floor_color) }, traversability::open });
+			this->_elements.insert({ "external", { std::make_pair(MAEA::organizational_analysis::external_color, MAEA::organizational_analysis::external_color) }, traversability::closed });
+			this->_elements.insert({ "reference", { std::make_pair(MAEA::organizational_analysis::reference_color, MAEA::organizational_analysis::reference_color) }, traversability::open });
 		}
 
 		[[nodiscard]] std::pair < std::array < unsigned char, 3 >, std::array < unsigned char, 3 > > domain(const std::string &identification) const
@@ -1471,11 +1462,11 @@ namespace xablau::organizational_analysis
 
 		blueprint()
 		{
-			this->_elements.insert({ "wall", { std::make_pair(xablau::organizational_analysis::wall_color, xablau::organizational_analysis::wall_color) }, traversability::closed });
-			this->_elements.insert({ "floor_island", { std::make_pair(xablau::organizational_analysis::floor_island_color, xablau::organizational_analysis::floor_island_color) }, traversability::closed });
-			this->_elements.insert({ "floor", { std::make_pair(xablau::organizational_analysis::floor_color, xablau::organizational_analysis::floor_color) }, traversability::open });
-			this->_elements.insert({ "external", { std::make_pair(xablau::organizational_analysis::external_color, xablau::organizational_analysis::external_color) }, traversability::closed });
-			this->_elements.insert({ "reference", { std::make_pair(xablau::organizational_analysis::reference_color, xablau::organizational_analysis::reference_color) }, traversability::open });
+			this->_elements.insert({ "wall", { std::make_pair(MAEA::organizational_analysis::wall_color, MAEA::organizational_analysis::wall_color) }, traversability::closed });
+			this->_elements.insert({ "floor_island", { std::make_pair(MAEA::organizational_analysis::floor_island_color, MAEA::organizational_analysis::floor_island_color) }, traversability::closed });
+			this->_elements.insert({ "floor", { std::make_pair(MAEA::organizational_analysis::floor_color, MAEA::organizational_analysis::floor_color) }, traversability::open });
+			this->_elements.insert({ "external", { std::make_pair(MAEA::organizational_analysis::external_color, MAEA::organizational_analysis::external_color) }, traversability::closed });
+			this->_elements.insert({ "reference", { std::make_pair(MAEA::organizational_analysis::reference_color, MAEA::organizational_analysis::reference_color) }, traversability::open });
 		}
 	};
 }
