@@ -192,13 +192,12 @@ export namespace MAEA::organizational_analysis
 						continue;
 					}
 
-					auto &finalComparativeMatrixCell = comparativeMatrix(i, j);
 					const auto strongPotentialMatrixCell = strongPotentialMatrix(i, j);
 					const auto baseMatrixCell = baseMatrix(i, j);
 
 					if (strongPotentialMatrixCell > float{} && baseMatrixCell == float{})
 					{
-						finalComparativeMatrixCell = this->_indirectly_related_degree;
+						comparativeMatrix(i, j) = this->_indirectly_related_degree;
 					}
 				}
 			}
@@ -213,26 +212,22 @@ export namespace MAEA::organizational_analysis
 			{
 				for (size_t j = 0; j < finalComparativeMatrix.dimensionalities()[1]; j++)
 				{
-					if (i == j)
+					if (i == j || baseMatrix(i, j) == float{})
 					{
 						continue;
 					}
 
 					auto &finalComparativeMatrixCell = finalComparativeMatrix(i, j);
 					const auto totalPotentialMatrixCell = totalPotentialMatrix(i, j);
-					const auto baseMatrixCell = baseMatrix(i, j);
 
-					if (baseMatrixCell != float{})
+					if (totalPotentialMatrixCell != float{})
 					{
-						if (totalPotentialMatrixCell != float{})
-						{
-							finalComparativeMatrixCell = this->_related_degree;
-						}
+						finalComparativeMatrixCell = this->_related_degree;
+					}
 
-						else
-						{
-							finalComparativeMatrixCell = this->_directly_related_degree;
-						}
+					else
+					{
+						finalComparativeMatrixCell = this->_directly_related_degree;
 					}
 				}
 			}
@@ -252,37 +247,39 @@ export namespace MAEA::organizational_analysis
 				{
 					auto &cell = copyStrongPotentialMatrixWithRedundancies(i, j);
 
-					if (cell != float{})
+					if (cell == float{})
 					{
-						const auto &key1 = baseIndexToKeyMap.at(i);
-						const auto &key2 = baseIndexToKeyMap.at(j);
-						const auto &agentsInCharge1 = base.find(key1)->agents_in_charge;
-						const auto &agentsInCharge2 = base.find(key2)->agents_in_charge;
+						continue;
+					}
 
-						bool thereAreRedundancies = false;
+					const auto &key1 = baseIndexToKeyMap.at(i);
+					const auto &key2 = baseIndexToKeyMap.at(j);
+					const auto &agentsInCharge1 = base.find(key1)->agents_in_charge;
+					const auto &agentsInCharge2 = base.find(key2)->agents_in_charge;
 
-						for (const auto agentInCharge1 : agentsInCharge1)
+					bool thereAreRedundancies = false;
+
+					for (const auto agentInCharge1 : agentsInCharge1)
+					{
+						for (const auto agentInCharge2 : agentsInCharge2)
 						{
-							for (const auto agentInCharge2 : agentsInCharge2)
+							if (agentInCharge1 == agentInCharge2)
 							{
-								if (agentInCharge1 == agentInCharge2)
-								{
-									thereAreRedundancies = true;
+								thereAreRedundancies = true;
 
-									break;
-								}
-							}
-
-							if (thereAreRedundancies)
-							{
 								break;
 							}
 						}
 
 						if (thereAreRedundancies)
 						{
-							cell = float{};
+							break;
 						}
+					}
+
+					if (thereAreRedundancies)
+					{
+						cell = float{};
 					}
 				}
 			}
@@ -365,6 +362,20 @@ export namespace MAEA::organizational_analysis
 			return finalActivitiesSequence;
 		}
 
+		static void make_matrix_symmetric(matrix_type &matrix)
+		{
+			for (size_t i = 0; i < matrix.dimensionalities()[0]; i++)
+			{
+				for (size_t j = 0; j < i; j++)
+				{
+					const auto value = xablau::algebra::functions::max < float, float > ::invoke(matrix(i, j), matrix(j, i));
+
+					matrix(i, j) = value;
+					matrix(j, i) = value;
+				}
+			}
+		}
+
 		template < comparison_mode ComparisonMode >
 		void align_architecture_process(
 			std::map < size_t, std::string > &baseIndexToKeyMap)
@@ -385,7 +396,7 @@ export namespace MAEA::organizational_analysis
 
 			if constexpr (ComparisonMode == comparison_mode::component_and_organization)
 			{
-				if (this->components_without_agents_in_charge().size() != 0)
+				if (!this->components_without_agents_in_charge().empty())
 				{
 					throw std::runtime_error("There are components without agents in charge.");
 				}
@@ -393,7 +404,7 @@ export namespace MAEA::organizational_analysis
 
 			else if constexpr (ComparisonMode == comparison_mode::activity_and_organization)
 			{
-				if (this->activities_without_agents_in_charge().size() != 0)
+				if (!this->activities_without_agents_in_charge().empty())
 				{
 					throw std::runtime_error("There are activities without agents in charge.");
 				}
@@ -453,6 +464,12 @@ export namespace MAEA::organizational_analysis
 
 				this->_potential_matrices[1] =
 					this->_affiliations_matrices[1].transpose() * this->_activities_dependencies_matrix * this->_affiliations_matrices[1];
+
+				if constexpr (ComponentsInterfacesAreReciprocal)
+				{
+					processor::make_matrix_symmetric(this->_potential_matrices[0]);
+					processor::make_matrix_symmetric(this->_potential_matrices[1]);
+				}
 
 				this->_strong_potential_matrix_without_redundancies =
 					this->erase_redundancies(
